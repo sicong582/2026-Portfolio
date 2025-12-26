@@ -13,19 +13,22 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const AnimatedRoutes = () => {
+const AppContent = () => {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/work" element={<Work />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/project/:id" element={<ProjectDetail />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
+    <>
+      <CustomCursor />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Index />} />
+          <Route path="/work" element={<Work />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/project/:id" element={<ProjectDetail />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AnimatePresence>
+    </>
   );
 };
 
@@ -35,8 +38,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <CustomCursor />
-        <AnimatedRoutes />
+        <AppContent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
