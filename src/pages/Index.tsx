@@ -63,9 +63,9 @@ const Index = () => {
       <main className="pt-20">
         {/* Hero Section */}
         <section className="container-wide py-12 lg:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="flex flex-row items-center justify-between gap-8">
             {/* Left - Text */}
-            <div className="pt-8">
+            <div className="flex-1">
               <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
                 Hi, I'm Sicong
               </h1>
@@ -75,8 +75,8 @@ const Index = () => {
             </div>
 
             {/* Right - Botanical Illustration */}
-            <div className="flex justify-end">
-              <div className="w-72 h-80 lg:w-96 lg:h-[420px]">
+            <div className="flex-shrink-0">
+              <div className="w-48 h-56 sm:w-64 sm:h-72 lg:w-96 lg:h-[420px]">
                 <img 
                   src={botanicalIllustration} 
                   alt="Botanical illustration" 
