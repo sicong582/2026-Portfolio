@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
 import botanicalIllustration from "@/assets/botanical-illustration.gif";
 
@@ -115,6 +116,7 @@ const Index = () => {
         </section>
       </main>
 
+      <IllustrationSection />
       <Footer />
     </>
   );

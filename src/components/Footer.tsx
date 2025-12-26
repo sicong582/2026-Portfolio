@@ -1,28 +1,8 @@
-import footerIllustration from "@/assets/footer-illustration.gif";
-
 const Footer = () => {
   return (
-    <footer className="footer py-16">
-      <section className="footer-container container-wide">
-        {/* Top section */}
-        <article className="footer-content flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
-          <figure className="footer-branding flex items-start gap-6">
-            <picture className="footer-illustration w-24 h-32">
-              <img 
-                src={footerIllustration} 
-                alt="Footer illustration" 
-                className="w-full h-full object-contain mix-blend-darken"
-              />
-            </picture>
-            <figcaption className="footer-description space-y-2 font-sans text-sm text-muted-foreground max-w-xs">
-              <p>I design tools and workflows that help businesses work smarter and grow faster.</p>
-              <p>I design tools and workflows that help businesses work smarter and grow faster.</p>
-            </figcaption>
-          </figure>
-        </article>
-
-        {/* Bottom section */}
-        <nav className="footer-nav flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-8 border-t border-border">
+    <footer className="footer py-8">
+      <nav className="footer-container container-wide">
+        <section className="footer-nav flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-8 border-t border-border">
           <p className="footer-cta font-sans text-sm text-foreground">
             Let's connect and work together
           </p>
@@ -42,8 +22,8 @@ const Footer = () => {
               LinkedIn
             </a>
           </address>
-        </nav>
-      </section>
+        </section>
+      </nav>
     </footer>
   );
 };
