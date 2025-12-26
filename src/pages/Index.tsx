@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProjectCard from "@/components/ProjectCard";
-import BotanicalIllustration from "@/components/BotanicalIllustration";
+import botanicalIllustration from "@/assets/botanical-illustration.gif";
 
 const projects = [
   {
@@ -77,7 +77,11 @@ const Index = () => {
             {/* Right - Botanical Illustration */}
             <div className="flex justify-end">
               <div className="w-72 h-80 lg:w-96 lg:h-[420px]">
-                <BotanicalIllustration />
+                <img 
+                  src={botanicalIllustration} 
+                  alt="Botanical illustration" 
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
           </div>
