@@ -76,11 +76,11 @@ const Index = () => {
 
             {/* Right - Botanical Illustration */}
             <div className="flex-shrink-0">
-              <div className="w-48 h-56 sm:w-64 sm:h-72 lg:w-96 lg:h-[420px]">
+              <div className="w-48 h-56 sm:w-64 sm:h-72 lg:w-96 lg:h-[420px] bg-background rounded-lg">
                 <img 
                   src={botanicalIllustration} 
                   alt="Botanical illustration" 
-                  className="w-full h-full object-contain mix-blend-multiply"
+                  className="w-full h-full object-contain mix-blend-darken"
                 />
               </div>
             </div>
