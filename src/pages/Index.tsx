@@ -62,21 +62,21 @@ const Index = () => {
       
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="container-wide py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <section className="container-wide py-12 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Left - Text */}
-            <div>
-              <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-6">
+            <div className="pt-8">
+              <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
                 Hi, I'm Sicong
               </h1>
-              <p className="font-sans text-xl lg:text-2xl text-muted-foreground leading-relaxed">
+              <p className="font-sans text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-md">
                 I design tools and workflows that help businesses work smarter and grow faster.
               </p>
             </div>
 
             {/* Right - Botanical Illustration */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="w-64 h-80 lg:w-80 lg:h-96">
+            <div className="flex justify-end">
+              <div className="w-72 h-80 lg:w-96 lg:h-[420px]">
                 <BotanicalIllustration />
               </div>
             </div>
@@ -85,32 +85,30 @@ const Index = () => {
 
         {/* Work Section */}
         <section className="container-wide pb-16 lg:pb-24">
-          <h2 className="font-sans text-base mb-8 text-center lg:text-left">Work</h2>
-
-          {/* Asymmetric Grid matching mockup layout */}
-          <div className="space-y-8">
-            {/* Row 1 - Large left, Medium right */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <ProjectCard {...projects[0]} variant="large" />
-              <div className="md:mt-16">
+          {/* Row 1 - Large left with "Work" label on right */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <ProjectCard {...projects[0]} variant="large" />
+            <div className="flex flex-col">
+              <span className="font-sans text-sm mb-8 text-foreground">Work</span>
+              <div className="mt-auto">
                 <ProjectCard {...projects[1]} variant="large" />
               </div>
             </div>
+          </div>
 
-            {/* Row 2 - Medium left, Large right */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <ProjectCard {...projects[2]} variant="large" />
-              <div className="md:mt-16">
-                <ProjectCard {...projects[3]} variant="large" />
-              </div>
+          {/* Row 2 - Offset layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <ProjectCard {...projects[2]} variant="large" />
+            <div className="md:mt-24">
+              <ProjectCard {...projects[3]} variant="large" />
             </div>
+          </div>
 
-            {/* Row 3 - Three small cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              <ProjectCard {...projects[4]} variant="small" />
-              <ProjectCard {...projects[5]} variant="small" />
-              <ProjectCard {...projects[6]} variant="small" />
-            </div>
+          {/* Row 3 - Three small cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <ProjectCard {...projects[4]} variant="small" />
+            <ProjectCard {...projects[5]} variant="small" />
+            <ProjectCard {...projects[6]} variant="small" />
           </div>
         </section>
       </main>
