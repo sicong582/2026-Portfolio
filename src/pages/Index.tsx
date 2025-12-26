@@ -80,7 +80,7 @@ const Index = () => {
                 <img 
                   src={botanicalIllustration} 
                   alt="Botanical illustration" 
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain mix-blend-multiply"
                 />
               </div>
             </div>
