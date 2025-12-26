@@ -1,13 +1,26 @@
 import { Link, useLocation } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import logoImage from "@/assets/logo.avif";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const projects = [
+  { id: "project-1", title: "Project 1" },
+  { id: "project-2", title: "Project 2" },
+  { id: "project-3", title: "Project 3" },
+  { id: "project-4", title: "Project 4" },
+  { id: "project-5", title: "Project 5" },
+  { id: "project-6", title: "Project 6" },
+  { id: "project-7", title: "Project 7" },
+];
 
 const Header = () => {
   const location = useLocation();
-
-  const navItems = [
-    { label: "Work", path: "/work" },
-    { label: "About", path: "/about" },
-  ];
+  const isWorkActive = location.pathname.startsWith("/project") || location.pathname === "/work";
 
   return (
     <header className="site-header fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
@@ -17,20 +30,46 @@ const Header = () => {
         </Link>
 
         <ul className="nav-links flex items-center gap-8">
-          {navItems.map((item) => (
-            <li key={item.path} className="nav-item">
-              <Link
-                to={item.path}
-                className={`nav-link font-sans text-sm transition-colors ${
-                  location.pathname === item.path
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          <li className="nav-item">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={`nav-link font-sans text-sm transition-colors flex items-center gap-1 ${
+                    isWorkActive
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Work
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-background border border-border">
+                {projects.map((project) => (
+                  <DropdownMenuItem key={project.id} asChild>
+                    <Link
+                      to={`/project/${project.id}`}
+                      className="cursor-pointer"
+                    >
+                      {project.title}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
+          <li className="nav-item">
+            <Link
+              to="/about"
+              className={`nav-link font-sans text-sm transition-colors ${
+                location.pathname === "/about"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              About
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
