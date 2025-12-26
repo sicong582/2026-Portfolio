@@ -1,142 +1,114 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-
 const BotanicalIllustration = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 15]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
   return (
-    <motion.div
-      ref={ref}
-      className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] lg:w-[500px] xl:w-[600px] pointer-events-none select-none"
-      style={{ y, rotate, opacity }}
-    >
+    <div className="w-full h-full">
       <svg
-        viewBox="0 0 400 500"
+        viewBox="0 0 300 400"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-auto opacity-30"
+        className="w-full h-full"
       >
-        {/* Elegant botanical line art */}
-        <motion.path
-          d="M200 450 C200 350 180 280 200 200 C220 120 250 80 200 50"
+        {/* Main stem */}
+        <path
+          d="M150 380 C150 320 140 280 150 220 C160 160 180 120 150 60"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 2, ease: "easeInOut" }}
+          className="text-foreground/60"
         />
         
-        {/* Left leaves */}
-        <motion.path
-          d="M200 300 C150 280 100 290 80 260 C100 250 150 240 200 260"
+        {/* Left leaves - elegant flowing shapes */}
+        <path
+          d="M150 300 C100 280 60 290 40 250 C70 245 110 240 150 270"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }}
+          className="text-foreground/50"
         />
-        <motion.path
-          d="M200 240 C160 220 120 230 100 200 C120 190 160 180 200 200"
+        <path
+          d="M150 250 C90 225 50 240 30 200 C60 190 100 180 150 215"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 0.7, ease: "easeInOut" }}
+          className="text-foreground/50"
         />
-        <motion.path
-          d="M200 180 C170 160 140 170 120 140 C140 130 170 120 200 140"
+        <path
+          d="M150 200 C100 175 70 185 50 150 C75 142 105 135 150 165"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 0.9, ease: "easeInOut" }}
+          className="text-foreground/50"
+        />
+        <path
+          d="M150 150 C110 130 85 140 70 110 C90 105 115 100 150 125"
+          stroke="currentColor"
+          strokeWidth="0.8"
+          fill="none"
+          className="text-foreground/50"
         />
         
         {/* Right leaves */}
-        <motion.path
-          d="M200 320 C250 300 300 310 320 280 C300 270 250 260 200 280"
+        <path
+          d="M150 320 C200 300 240 310 260 270 C230 265 190 260 150 290"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 0.6, ease: "easeInOut" }}
+          className="text-foreground/50"
         />
-        <motion.path
-          d="M200 260 C240 240 280 250 300 220 C280 210 240 200 200 220"
+        <path
+          d="M150 270 C210 245 250 255 270 215 C240 205 200 195 150 230"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
+          className="text-foreground/50"
         />
-        <motion.path
-          d="M200 200 C230 180 260 190 280 160 C260 150 230 140 200 160"
+        <path
+          d="M150 220 C200 195 230 205 250 170 C225 162 195 155 150 185"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 1, ease: "easeInOut" }}
+          className="text-foreground/50"
+        />
+        <path
+          d="M150 170 C190 150 215 158 230 130 C210 125 185 120 150 145"
+          stroke="currentColor"
+          strokeWidth="0.8"
+          fill="none"
+          className="text-foreground/50"
         />
         
-        {/* Flower at top */}
-        <motion.circle
-          cx="200"
+        {/* Top flower/bud */}
+        <ellipse
+          cx="150"
           cy="50"
-          r="25"
+          rx="25"
+          ry="35"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.5, ease: "easeOut" }}
+          className="text-foreground/40"
         />
-        <motion.circle
-          cx="200"
-          cy="50"
-          r="15"
+        <ellipse
+          cx="150"
+          cy="45"
+          rx="15"
+          ry="22"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="0.8"
           fill="none"
-          className="text-foreground"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.7, ease: "easeOut" }}
+          className="text-foreground/40"
         />
-        <motion.circle
-          cx="200"
-          cy="50"
-          r="5"
-          fill="currentColor"
-          className="text-foreground"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1.9, ease: "easeOut" }}
-        />
+        
+        {/* Decorative dots/speckles */}
+        <circle cx="45" cy="265" r="1.5" fill="currentColor" className="text-foreground/30" />
+        <circle cx="255" cy="285" r="1.5" fill="currentColor" className="text-foreground/30" />
+        <circle cx="35" cy="210" r="1" fill="currentColor" className="text-foreground/30" />
+        <circle cx="265" cy="225" r="1" fill="currentColor" className="text-foreground/30" />
+        <circle cx="55" cy="155" r="1.5" fill="currentColor" className="text-foreground/30" />
+        <circle cx="245" cy="175" r="1" fill="currentColor" className="text-foreground/30" />
+        <circle cx="130" cy="40" r="1" fill="currentColor" className="text-foreground/30" />
+        <circle cx="170" cy="35" r="1.5" fill="currentColor" className="text-foreground/30" />
       </svg>
-    </motion.div>
+    </div>
   );
 };
 
