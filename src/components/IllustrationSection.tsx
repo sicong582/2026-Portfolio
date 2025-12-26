@@ -8,7 +8,7 @@ const IllustrationSection = () => {
           <img 
             src={footerIllustration} 
             alt="Character illustration" 
-            className="max-w-[200px] h-auto object-contain mix-blend-darken"
+            className="max-w-[200px] h-auto object-contain mix-blend-darken bg-background"
           />
         </figure>
         <figcaption className="illustration-description w-full md:w-1/2 space-y-4 font-sans text-sm text-muted-foreground">
