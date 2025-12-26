@@ -1,59 +1,41 @@
-import { motion } from "framer-motion";
+import BotanicalIllustration from "@/components/BotanicalIllustration";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    { label: "LinkedIn", href: "https://linkedin.com" },
-    { label: "Email", href: "mailto:hello@sicongchen.com" },
-    { label: "Dribbble", href: "https://dribbble.com" },
-  ];
-
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="border-t border-border"
-    >
-      <div className="container-wide py-16 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Left side */}
-          <div className="space-y-6">
-            <h3 className="font-serif text-3xl lg:text-4xl">
-              Let's work together
-            </h3>
-            <p className="text-muted-foreground font-sans text-lg max-w-md">
-              Always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-            </p>
+    <footer className="py-16">
+      <div className="container-wide">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          {/* Left - illustration and text */}
+          <div className="flex items-start gap-6">
+            <div className="w-24 h-32 opacity-60">
+              <BotanicalIllustration />
+            </div>
+            <div className="space-y-2 font-sans text-sm text-muted-foreground max-w-xs">
+              <p>I design tools and workflows that help businesses work smarter and grow faster.</p>
+              <p>I design tools and workflows that help businesses work smarter and grow faster.</p>
+            </div>
           </div>
 
-          {/* Right side */}
-          <div className="flex flex-col lg:items-end justify-between gap-8">
-            <ul className="flex gap-8">
-              {socialLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-cursor="Open"
-                    className="link-underline font-sans text-sm font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <p className="font-sans text-sm text-muted-foreground">
-              © {currentYear} Sicong Chen. All rights reserved.
-            </p>
+          {/* Right - links */}
+          <div className="flex flex-col gap-2 font-sans text-sm uppercase tracking-wider">
+            <a
+              href="mailto:hello@sicongchen.com"
+              className="text-foreground hover:text-muted-foreground transition-colors"
+            >
+              Email
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-muted-foreground transition-colors"
+            >
+              LinkedIn
+            </a>
           </div>
         </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 };
 
