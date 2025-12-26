@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProjectCard from "@/components/ProjectCard";
-import InteractivePlant from "@/components/InteractivePlant";
+import botanicalIllustration from "@/assets/botanical-illustration.gif";
 
 const projects = [
   {
@@ -74,9 +74,13 @@ const Index = () => {
             </header>
 
             <figure className="hero-illustration w-1/2 flex justify-end">
-              <div className="w-full max-w-[420px] aspect-[1/1.1]">
-                <InteractivePlant />
-              </div>
+              <picture className="w-full max-w-[420px] aspect-[1/1.1] bg-background rounded-lg">
+                <img 
+                  src={botanicalIllustration} 
+                  alt="Botanical illustration" 
+                  className="w-full h-full object-contain mix-blend-darken"
+                />
+              </picture>
             </figure>
           </article>
         </section>
