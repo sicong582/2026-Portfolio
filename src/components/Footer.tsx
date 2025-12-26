@@ -1,4 +1,4 @@
-import BotanicalIllustration from "@/components/BotanicalIllustration";
+import footerIllustration from "@/assets/footer-illustration.gif";
 
 const Footer = () => {
   return (
@@ -7,8 +7,12 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           {/* Left - illustration and text */}
           <div className="flex items-start gap-6">
-            <div className="w-24 h-32 opacity-60">
-              <BotanicalIllustration />
+            <div className="w-24 h-32">
+              <img 
+                src={footerIllustration} 
+                alt="Footer illustration" 
+                className="w-full h-full object-contain mix-blend-darken"
+              />
             </div>
             <div className="space-y-2 font-sans text-sm text-muted-foreground max-w-xs">
               <p>I design tools and workflows that help businesses work smarter and grow faster.</p>
