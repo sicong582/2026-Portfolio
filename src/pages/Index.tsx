@@ -63,20 +63,20 @@ const Index = () => {
       <main className="pt-20">
         {/* Hero Section */}
         <section className="container-wide py-12 lg:py-20">
-          <div className="flex flex-row items-center justify-between gap-8">
-            {/* Left - Text */}
-            <div className="flex-1">
+          <div className="flex flex-row items-center gap-8">
+            {/* Left - Text (50%) */}
+            <div className="w-1/2">
               <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
                 Hi, I'm Sicong
               </h1>
-              <p className="font-sans text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-md">
+              <p className="font-sans text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 I design tools and workflows that help businesses work smarter and grow faster.
               </p>
             </div>
 
-            {/* Right - Botanical Illustration */}
-            <div className="flex-shrink-0">
-              <div className="w-48 h-56 sm:w-64 sm:h-72 lg:w-96 lg:h-[420px] bg-background rounded-lg">
+            {/* Right - Botanical Illustration (50%) */}
+            <div className="w-1/2 flex justify-end">
+              <div className="w-full max-w-[420px] aspect-[1/1.1] bg-background rounded-lg">
                 <img 
                   src={botanicalIllustration} 
                   alt="Botanical illustration" 
