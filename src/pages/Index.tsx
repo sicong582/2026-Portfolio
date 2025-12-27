@@ -92,7 +92,6 @@ const Index = () => {
           <article className="projects-row-primary grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <ProjectCard {...projects[0]} variant="large" />
             <aside className="projects-row-label flex flex-col">
-              <span className="section-title font-sans text-sm mb-8 text-foreground">Work</span>
               <figure className="mt-auto">
                 <ProjectCard {...projects[1]} variant="large" />
               </figure>
