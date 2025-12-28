@@ -244,69 +244,51 @@ const ProjectDetail = () => {
           </Link>
 
           {/* Project header */}
-          <header className="mb-16">
+          <div className="mb-12">
             <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground mb-8">
+            <p className="font-sans text-muted-foreground">
               {project.type} | {project.date}
             </p>
-            
-            {/* Project metadata */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-border pt-8">
-              <div>
-                <h4 className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Role</h4>
-                <p className="font-sans text-foreground">{project.role}</p>
-              </div>
-              <div>
-                <h4 className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Duration</h4>
-                <p className="font-sans text-foreground">{project.duration}</p>
-              </div>
-              <div>
-                <h4 className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Team</h4>
-                <p className="font-sans text-foreground">{project.team}</p>
-              </div>
-            </div>
-          </header>
+          </div>
 
-          {/* Hero image */}
+          {/* Description */}
+          <p className="font-sans text-lg text-muted-foreground max-w-2xl mb-16 leading-relaxed">
+            {project.overview}
+          </p>
+
+          {/* First image - full width */}
           {project.images[0] && (
-            <div className="bg-card rounded-2xl overflow-hidden mb-20">
+            <div className="bg-card rounded-2xl overflow-hidden mb-16">
               <img
                 src={project.images[0]}
-                alt={`${project.title} - Hero`}
+                alt={`${project.title} - Image 1`}
                 className="w-full h-auto"
               />
             </div>
           )}
 
-          {/* Project Overview */}
-          <section className="mb-20">
+          {/* Process section */}
+          <section className="mb-16">
             <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              Project Overview
+              The Process
             </h2>
-            <p className="font-sans text-lg text-muted-foreground max-w-3xl leading-relaxed">
-              {project.overview}
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
             </p>
-          </section>
-
-          {/* The Problem */}
-          <section className="mb-20">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              {project.problem.title}
-            </h2>
-            <p className="font-sans text-muted-foreground max-w-3xl leading-relaxed">
-              {project.problem.description}
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
             </p>
           </section>
 
           {/* Side by side images */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
             {project.images[1] && (
               <div className="bg-card rounded-2xl overflow-hidden">
                 <img
                   src={project.images[1]}
-                  alt={`${project.title} - Process 1`}
+                  alt={`${project.title} - Image 2`}
                   className="w-full h-auto"
                 />
               </div>
@@ -315,76 +297,44 @@ const ProjectDetail = () => {
               <div className="bg-card rounded-2xl overflow-hidden">
                 <img
                   src={project.images[2]}
-                  alt={`${project.title} - Process 2`}
+                  alt={`${project.title} - Image 3`}
                   className="w-full h-auto"
                 />
               </div>
             )}
           </div>
 
-          {/* Design Process */}
-          <section className="mb-20">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-8">
-              {project.process.title}
-            </h2>
-            <div className="space-y-6 max-w-3xl">
-              {project.process.steps.map((step, index) => (
-                <div key={index} className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center font-sans text-sm font-medium">
-                    {index + 1}
-                  </span>
-                  <p className="font-sans text-muted-foreground leading-relaxed pt-1">
-                    {step}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* The Approach */}
-          <section className="mb-20">
+          {/* Approach section */}
+          <section className="mb-16">
             <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              {project.approach.title}
+              The Approach
             </h2>
-            <p className="font-sans text-muted-foreground max-w-3xl leading-relaxed">
-              {project.approach.description}
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.
+            </p>
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
+              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
             </p>
           </section>
 
-          {/* Final image */}
+          {/* Final image - full width */}
           {project.images[3] && (
-            <div className="bg-card rounded-2xl overflow-hidden mb-20">
+            <div className="bg-card rounded-2xl overflow-hidden mb-16">
               <img
                 src={project.images[3]}
-                alt={`${project.title} - Final`}
+                alt={`${project.title} - Image 4`}
                 className="w-full h-auto"
               />
             </div>
           )}
 
-          {/* The Results */}
+          {/* Results section */}
           <section className="mb-16">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-8">
-              {project.results.title}
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
+              The Results
             </h2>
-            
-            {project.results.metrics.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
-                {project.results.metrics.map((metric, index) => (
-                  <div key={index} className="text-center p-6 bg-card rounded-2xl">
-                    <p className="font-serif text-4xl lg:text-5xl font-medium text-foreground mb-2">
-                      {metric.value}
-                    </p>
-                    <p className="font-sans text-sm text-muted-foreground">
-                      {metric.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            <p className="font-sans text-muted-foreground max-w-3xl leading-relaxed">
-              {project.results.description}
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.
             </p>
           </section>
 
