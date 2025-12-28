@@ -261,65 +261,102 @@ const ProjectDetail = () => {
             ← Back
           </Link>
 
-          {/* Side by side layout: Text left, Media right */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Left column - Text content */}
-            <div className="lg:sticky lg:top-32 lg:self-start space-y-8">
-              {/* Project header */}
+          {/* Project header */}
+          <div className="mb-16">
+            <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
+              {project.title}
+            </h1>
+            <p className="font-sans text-muted-foreground mb-6">
+              {project.type} | {project.date}
+            </p>
+            <div className="flex gap-8">
               <div>
-                <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
-                  {project.title}
-                </h1>
-                <p className="font-sans text-muted-foreground">
-                  {project.type} | {project.date}
-                </p>
+                <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Role</p>
+                <p className="font-sans text-sm">{project.role}</p>
               </div>
-
-              {/* Project details */}
-              <div className="space-y-4">
-                <div className="flex gap-8">
-                  <div>
-                    <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Role</p>
-                    <p className="font-sans text-sm">{project.role}</p>
-                  </div>
-                  <div>
-                    <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Duration</p>
-                    <p className="font-sans text-sm">{project.duration}</p>
-                  </div>
-                </div>
-                <div>
-                  <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Team</p>
-                  <p className="font-sans text-sm">{project.team}</p>
-                </div>
-              </div>
-
-              {/* Overview */}
               <div>
-                <h2 className="font-serif text-xl font-medium mb-3">Overview</h2>
+                <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Duration</p>
+                <p className="font-sans text-sm">{project.duration}</p>
+              </div>
+              <div>
+                <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Team</p>
+                <p className="font-sans text-sm">{project.team}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Alternating text and media sections */}
+          <div className="space-y-24">
+            {/* Overview with first media */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              <div>
+                <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
                 <p className="font-sans text-muted-foreground leading-relaxed">
                   {project.overview}
                 </p>
               </div>
+              {project.media[0] && (
+                <div className="bg-card rounded-2xl overflow-hidden">
+                  {project.media[0].type === "video" ? (
+                    <video src={project.media[0].src} controls className="w-full h-auto" playsInline />
+                  ) : (
+                    <img src={project.media[0].src} alt={`${project.title} - 1`} className="w-full h-auto" />
+                  )}
+                </div>
+              )}
+            </div>
 
-              {/* Problem */}
-              <div>
-                <h2 className="font-serif text-xl font-medium mb-3">{project.problem.title}</h2>
+            {/* Problem with second media - reversed */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              {project.media[1] && (
+                <div className="bg-card rounded-2xl overflow-hidden lg:order-1">
+                  {project.media[1].type === "video" ? (
+                    <video src={project.media[1].src} controls className="w-full h-auto" playsInline />
+                  ) : (
+                    <img src={project.media[1].src} alt={`${project.title} - 2`} className="w-full h-auto" />
+                  )}
+                </div>
+              )}
+              <div className="lg:order-2">
+                <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
                 <p className="font-sans text-muted-foreground leading-relaxed">
                   {project.problem.description}
                 </p>
               </div>
+            </div>
 
-              {/* Approach */}
+            {/* Approach with third media */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               <div>
-                <h2 className="font-serif text-xl font-medium mb-3">{project.approach.title}</h2>
+                <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
                 <p className="font-sans text-muted-foreground leading-relaxed">
                   {project.approach.description}
                 </p>
               </div>
+              {project.media[2] && (
+                <div className="bg-card rounded-2xl overflow-hidden">
+                  {project.media[2].type === "video" ? (
+                    <video src={project.media[2].src} controls className="w-full h-auto" playsInline />
+                  ) : (
+                    <img src={project.media[2].src} alt={`${project.title} - 3`} className="w-full h-auto" />
+                  )}
+                </div>
+              )}
+            </div>
 
-              {/* Results */}
-              <div>
-                <h2 className="font-serif text-xl font-medium mb-3">{project.results.title}</h2>
+            {/* Results with fourth media - reversed */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              {project.media[3] && (
+                <div className="bg-card rounded-2xl overflow-hidden lg:order-1">
+                  {project.media[3].type === "video" ? (
+                    <video src={project.media[3].src} controls className="w-full h-auto" playsInline />
+                  ) : (
+                    <img src={project.media[3].src} alt={`${project.title} - 4`} className="w-full h-auto" />
+                  )}
+                </div>
+              )}
+              <div className="lg:order-2">
+                <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
                 {project.results.metrics.length > 0 && (
                   <div className="flex gap-6 mb-4">
                     {project.results.metrics.map((metric, index) => (
@@ -336,27 +373,20 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            {/* Right column - Media */}
-            <div className="space-y-6">
-              {project.media.map((item, index) => (
-                <div key={index} className="bg-card rounded-2xl overflow-hidden">
-                  {item.type === "video" ? (
-                    <video
-                      src={item.src}
-                      controls
-                      className="w-full h-auto"
-                      playsInline
-                    />
-                  ) : (
-                    <img
-                      src={item.src}
-                      alt={`${project.title} - Image ${index + 1}`}
-                      className="w-full h-auto"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+            {/* Additional media items */}
+            {project.media.length > 4 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {project.media.slice(4).map((item, index) => (
+                  <div key={index} className="bg-card rounded-2xl overflow-hidden">
+                    {item.type === "video" ? (
+                      <video src={item.src} controls className="w-full h-auto" playsInline />
+                    ) : (
+                      <img src={item.src} alt={`${project.title} - ${index + 5}`} className="w-full h-auto" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Project navigation */}
