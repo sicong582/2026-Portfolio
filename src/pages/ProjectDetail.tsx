@@ -327,6 +327,19 @@ const ProjectDetail = () => {
           {useAlternatingLayout ? (
             /* Side-by-side layout for AI Exploration: text left, media right */
             <div className="space-y-24">
+              {/* High-level introduction */}
+              <motion.div 
+                className="max-w-3xl"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <p className="font-serif text-2xl lg:text-3xl leading-relaxed text-foreground">
+                  This project is an ongoing creative journey exploring the intersection of artificial intelligence and visual design. Through experimentation with generative AI tools, I push the boundaries of what's possible when human creativity meets machine learning.
+                </p>
+              </motion.div>
+
               {/* Overview with first media */}
               <motion.div 
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
