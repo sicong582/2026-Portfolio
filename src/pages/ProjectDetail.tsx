@@ -11,8 +11,8 @@ const projectsData: Record<string, {
 }> = {
   "project-1": {
     title: "Rewording Poster Design",
-    type: "Type",
-    date: "Date",
+    type: "Graphic Design",
+    date: "2025",
     description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
     images: [
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
