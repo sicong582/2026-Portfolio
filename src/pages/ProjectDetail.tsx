@@ -215,15 +215,27 @@ const ProjectDetail = () => {
             </p>
           </section>
 
-          {/* Next project link */}
-          <div className="mt-20 text-center">
-            <Link
-              to="/"
-              className="font-sans text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              View All Work →
-            </Link>
-          </div>
+          {/* Project navigation */}
+          <nav className="mt-20 border-t border-border pt-12">
+            <h3 className="font-sans text-sm text-muted-foreground mb-6 text-center">
+              More Projects
+            </h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              {Object.entries(projectsData).map(([projectId, projectData]) => (
+                <Link
+                  key={projectId}
+                  to={`/project/${projectId}`}
+                  className={`font-sans text-sm px-4 py-2 rounded-full border transition-colors ${
+                    id === projectId
+                      ? "bg-foreground text-background border-foreground"
+                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
+                  }`}
+                >
+                  {projectData.title}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
       </main>
 
