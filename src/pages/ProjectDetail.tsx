@@ -1,6 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import project1Image1 from "@/assets/project1-image1.png";
+import project1Image2 from "@/assets/project1-image2.png";
+import project1Image3 from "@/assets/project1-image3.png";
+import project1Image4 from "@/assets/project1-image4.png";
 
 const projectsData: Record<string, {
   title: string;
@@ -15,9 +19,10 @@ const projectsData: Record<string, {
     date: "2025",
     description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
     images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
-      "https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=1200&q=80",
+      project1Image1,
+      project1Image2,
+      project1Image3,
+      project1Image4,
     ],
   },
   "project-2": {
