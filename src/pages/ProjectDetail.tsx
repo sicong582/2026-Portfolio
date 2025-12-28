@@ -7,6 +7,8 @@ import project1Image3 from "@/assets/project1-image3.png";
 import project1Image4 from "@/assets/project1-image4.png";
 import rewording2025Cover from "@/assets/rewording-2025-cover.png";
 import aiExplorationVideo from "@/assets/ai-exploration-video.mp4";
+import aiExplorationVideo2 from "@/assets/ai-exploration-video-2.mp4";
+import aiExplorationVideo3 from "@/assets/ai-exploration-video-3.mp4";
 
 interface MediaItem {
   type: "image" | "video";
@@ -215,6 +217,8 @@ const projectsData: Record<string, ProjectData> = {
     results: { title: "The Results", metrics: [], description: "A collection of unique AI-generated artworks that showcase the potential of human-AI creative collaboration." },
     media: [
       { type: "video", src: aiExplorationVideo },
+      { type: "video", src: aiExplorationVideo2 },
+      { type: "video", src: aiExplorationVideo3 },
       { type: "image", src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80" },
       { type: "image", src: "https://images.unsplash.com/photo-1684369175833-4b445ad6bfb5?w=1200&q=80" },
       { type: "image", src: "https://images.unsplash.com/photo-1686191128892-3b37add4ad7b?w=1200&q=80" },
