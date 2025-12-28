@@ -7,7 +7,7 @@ interface ProjectCardProps {
   type: string;
   date: string;
   image: string;
-  variant?: "large" | "small" | "full";
+  variant?: "large" | "small";
 }
 
 const ProjectCard = ({
@@ -18,35 +18,6 @@ const ProjectCard = ({
   image,
   variant = "large",
 }: ProjectCardProps) => {
-  const isFull = variant === "full";
-
-  if (isFull) {
-    return (
-      <Link to={`/project/${id}`} className="project-card group block">
-        <motion.article 
-          className="card-container bg-card rounded-2xl overflow-hidden"
-          whileHover={{ 
-            scale: 1.01,
-            boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.15)"
-          }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <figure className="w-full aspect-[16/9]">
-            <img
-              src={image}
-              alt={title}
-              className="w-full h-full object-cover"
-            />
-          </figure>
-        </motion.article>
-        
-        <figcaption className="card-meta mt-4 font-sans text-sm text-foreground group-hover:text-foreground/80 transition-colors duration-300">
-          {title} <span className="card-details text-muted-foreground">| {type} | {date}</span>
-        </figcaption>
-      </Link>
-    );
-  }
-
   const isLarge = variant === "large";
   const cardSize = isLarge ? "large" : "small";
 

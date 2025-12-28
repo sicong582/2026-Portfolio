@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
 import flowerHero from "@/assets/flower-hero.gif";
-import projectPlaceholder from "@/assets/project-placeholder.jpg";
 
 const projects = [
   {
@@ -11,28 +10,49 @@ const projects = [
     title: "project name",
     type: "Type",
     date: "Date",
-    image: projectPlaceholder,
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
   },
   {
     id: "project-2",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: projectPlaceholder,
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
   },
   {
     id: "project-3",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: projectPlaceholder,
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
   },
   {
     id: "project-4",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: projectPlaceholder,
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+  },
+  {
+    id: "project-5",
+    title: "project name",
+    type: "Type",
+    date: "Date",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+  },
+  {
+    id: "project-6",
+    title: "project name",
+    type: "Type",
+    date: "Date",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+  },
+  {
+    id: "project-7",
+    title: "project name",
+    type: "Type",
+    date: "Date",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
   },
 ];
 
@@ -68,13 +88,31 @@ const Index = () => {
 
         {/* Work Section */}
         <section className="work-section container-wide pb-16 lg:pb-24">
-          <span className="section-title font-sans text-sm mb-8 block text-foreground">Work</span>
-          
-          <div className="space-y-8">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} {...project} variant="full" />
-            ))}
-          </div>
+          {/* Row 1 */}
+          <article className="projects-row-primary grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <ProjectCard {...projects[0]} variant="large" />
+            <aside className="projects-row-label flex flex-col">
+              <span className="section-title font-sans text-sm mb-8 text-foreground">Work</span>
+              <figure className="mt-auto">
+                <ProjectCard {...projects[1]} variant="large" />
+              </figure>
+            </aside>
+          </article>
+
+          {/* Row 2 */}
+          <article className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <ProjectCard {...projects[2]} variant="large" />
+            <figure className="md:mt-24">
+              <ProjectCard {...projects[3]} variant="large" />
+            </figure>
+          </article>
+
+          {/* Row 3 */}
+          <article className="projects-row-small grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <ProjectCard {...projects[4]} variant="small" />
+            <ProjectCard {...projects[5]} variant="small" />
+            <ProjectCard {...projects[6]} variant="small" />
+          </article>
         </section>
       </main>
 
