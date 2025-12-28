@@ -277,7 +277,7 @@ const ProjectDetail = () => {
           </p>
 
           {/* Media Gallery */}
-          <div className="space-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {project.media.map((item, index) => (
               <div key={index} className="bg-card rounded-2xl overflow-hidden">
                 {item.type === "video" ? (
