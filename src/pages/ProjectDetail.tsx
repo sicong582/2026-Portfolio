@@ -336,7 +336,7 @@ const ProjectDetail = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <p className="font-serif text-2xl lg:text-3xl leading-relaxed text-foreground">
-                  This project is an ongoing creative journey exploring the intersection of artificial intelligence and visual design. Through experimentation with generative AI tools, I push the boundaries of what's possible when human creativity meets machine learning.
+                  This project is an ongoing creative journey exploring the intersection of artificial intelligence and visual design. Through experimentation with Midjourney and Nano Banana, I push the boundaries of what's possible when human creativity meets machine learning.
                 </p>
               </motion.div>
 
