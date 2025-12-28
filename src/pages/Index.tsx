@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
 import flowerHero from "@/assets/flower-hero.gif";
+import projectPlaceholder from "@/assets/project-placeholder.jpg";
 
 const projects = [
   {
@@ -10,49 +11,49 @@ const projects = [
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
   {
     id: "project-2",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
   {
     id: "project-3",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
   {
     id: "project-4",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
   {
     id: "project-5",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
   {
     id: "project-6",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
   {
     id: "project-7",
     title: "project name",
     type: "Type",
     date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectPlaceholder,
   },
 ];
 
