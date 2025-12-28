@@ -330,7 +330,7 @@ const ProjectDetail = () => {
           </div>
 
           {useAlternatingLayout ? (
-            /* Alternating text and media sections for AI Exploration */
+            /* Side-by-side layout for AI Exploration: text left, media right */
             <div className="space-y-24">
               {/* Overview with first media */}
               <motion.div 
@@ -351,7 +351,7 @@ const ProjectDetail = () => {
                 )}
               </motion.div>
 
-              {/* Problem with second media - reversed */}
+              {/* Problem with second media */}
               <motion.div 
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
                 initial={{ opacity: 0, y: 40 }}
@@ -359,15 +359,15 @@ const ProjectDetail = () => {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                {project.media[1] && (
-                  <ParallaxMedia item={project.media[1]} alt={`${project.title} - 2`} className="lg:order-1" />
-                )}
-                <div className="lg:order-2">
+                <div>
                   <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed">
                     {project.problem.description}
                   </p>
                 </div>
+                {project.media[1] && (
+                  <ParallaxMedia item={project.media[1]} alt={`${project.title} - 2`} />
+                )}
               </motion.div>
 
               {/* Approach with third media */}
@@ -389,7 +389,7 @@ const ProjectDetail = () => {
                 )}
               </motion.div>
 
-              {/* Results with fourth media - reversed */}
+              {/* Results with fourth media */}
               <motion.div 
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
                 initial={{ opacity: 0, y: 40 }}
@@ -397,10 +397,7 @@ const ProjectDetail = () => {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                {project.media[3] && (
-                  <ParallaxMedia item={project.media[3]} alt={`${project.title} - 4`} className="lg:order-1" />
-                )}
-                <div className="lg:order-2">
+                <div>
                   <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
                   {project.results.metrics.length > 0 && (
                     <div className="flex gap-6 mb-4">
@@ -416,6 +413,9 @@ const ProjectDetail = () => {
                     {project.results.description}
                   </p>
                 </div>
+                {project.media[3] && (
+                  <ParallaxMedia item={project.media[3]} alt={`${project.title} - 4`} />
+                )}
               </motion.div>
 
               {/* Additional media items */}
