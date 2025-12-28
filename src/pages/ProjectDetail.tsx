@@ -10,7 +10,7 @@ const projectsData: Record<string, {
   images: string[];
 }> = {
   "project-1": {
-    title: "Project Name",
+    title: "Rewording Poster Design",
     type: "Type",
     date: "Date",
     description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
