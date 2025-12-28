@@ -272,6 +272,9 @@ const projectsData: Record<string, ProjectData> = {
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const project = id ? projectsData[id] : null;
+  
+  // Use new side-by-side layout only for project-7 (AI Exploration)
+  const useAlternatingLayout = id === "project-7";
 
   if (!project) {
     return (
@@ -326,107 +329,181 @@ const ProjectDetail = () => {
             </div>
           </div>
 
-          {/* Alternating text and media sections */}
-          <div className="space-y-24">
-            {/* Overview with first media */}
-            <motion.div 
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <div>
+          {useAlternatingLayout ? (
+            /* Alternating text and media sections for AI Exploration */
+            <div className="space-y-24">
+              {/* Overview with first media */}
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <div>
+                  <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
+                  <p className="font-sans text-muted-foreground leading-relaxed">
+                    {project.overview}
+                  </p>
+                </div>
+                {project.media[0] && (
+                  <ParallaxMedia item={project.media[0]} alt={`${project.title} - 1`} />
+                )}
+              </motion.div>
+
+              {/* Problem with second media - reversed */}
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                {project.media[1] && (
+                  <ParallaxMedia item={project.media[1]} alt={`${project.title} - 2`} className="lg:order-1" />
+                )}
+                <div className="lg:order-2">
+                  <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
+                  <p className="font-sans text-muted-foreground leading-relaxed">
+                    {project.problem.description}
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Approach with third media */}
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <div>
+                  <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
+                  <p className="font-sans text-muted-foreground leading-relaxed">
+                    {project.approach.description}
+                  </p>
+                </div>
+                {project.media[2] && (
+                  <ParallaxMedia item={project.media[2]} alt={`${project.title} - 3`} />
+                )}
+              </motion.div>
+
+              {/* Results with fourth media - reversed */}
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                {project.media[3] && (
+                  <ParallaxMedia item={project.media[3]} alt={`${project.title} - 4`} className="lg:order-1" />
+                )}
+                <div className="lg:order-2">
+                  <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
+                  {project.results.metrics.length > 0 && (
+                    <div className="flex gap-6 mb-4">
+                      {project.results.metrics.map((metric, index) => (
+                        <div key={index}>
+                          <p className="font-serif text-2xl font-medium">{metric.value}</p>
+                          <p className="font-sans text-xs text-muted-foreground">{metric.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <p className="font-sans text-muted-foreground leading-relaxed">
+                    {project.results.description}
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Additional media items */}
+              {project.media.length > 4 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {project.media.slice(4).map((item, index) => (
+                    <ParallaxMedia 
+                      key={index} 
+                      item={item} 
+                      alt={`${project.title} - ${index + 5}`} 
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Original stacked layout for other projects */
+            <div className="space-y-16">
+              {/* Overview */}
+              <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed">
+                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
                   {project.overview}
                 </p>
-              </div>
-              {project.media[0] && (
-                <ParallaxMedia item={project.media[0]} alt={`${project.title} - 1`} />
-              )}
-            </motion.div>
+              </section>
 
-            {/* Problem with second media - reversed */}
-            <motion.div 
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              {project.media[1] && (
-                <ParallaxMedia item={project.media[1]} alt={`${project.title} - 2`} className="lg:order-1" />
-              )}
-              <div className="lg:order-2">
+              {/* Problem */}
+              <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed">
+                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
                   {project.problem.description}
                 </p>
-              </div>
-            </motion.div>
+              </section>
 
-            {/* Approach with third media */}
-            <motion.div 
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <div>
+              {/* Process */}
+              <section>
+                <h2 className="font-serif text-2xl font-medium mb-4">{project.process.title}</h2>
+                <ul className="space-y-3 max-w-3xl">
+                  {project.process.steps.map((step, index) => (
+                    <li key={index} className="font-sans text-muted-foreground leading-relaxed">
+                      {step}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              {/* Approach */}
+              <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed">
+                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
                   {project.approach.description}
                 </p>
-              </div>
-              {project.media[2] && (
-                <ParallaxMedia item={project.media[2]} alt={`${project.title} - 3`} />
-              )}
-            </motion.div>
+              </section>
 
-            {/* Results with fourth media - reversed */}
-            <motion.div 
-              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              {project.media[3] && (
-                <ParallaxMedia item={project.media[3]} alt={`${project.title} - 4`} className="lg:order-1" />
-              )}
-              <div className="lg:order-2">
+              {/* Results */}
+              <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
                 {project.results.metrics.length > 0 && (
-                  <div className="flex gap-6 mb-4">
+                  <div className="flex gap-8 mb-6">
                     {project.results.metrics.map((metric, index) => (
                       <div key={index}>
-                        <p className="font-serif text-2xl font-medium">{metric.value}</p>
-                        <p className="font-sans text-xs text-muted-foreground">{metric.label}</p>
+                        <p className="font-serif text-3xl font-medium">{metric.value}</p>
+                        <p className="font-sans text-sm text-muted-foreground">{metric.label}</p>
                       </div>
                     ))}
                   </div>
                 )}
-                <p className="font-sans text-muted-foreground leading-relaxed">
+                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
                   {project.results.description}
                 </p>
-              </div>
-            </motion.div>
+              </section>
 
-            {/* Additional media items */}
-            {project.media.length > 4 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {project.media.slice(4).map((item, index) => (
-                  <ParallaxMedia 
-                    key={index} 
-                    item={item} 
-                    alt={`${project.title} - ${index + 5}`} 
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+              {/* Media Gallery */}
+              <section>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {project.media.map((item, index) => (
+                    <div key={index} className="bg-card rounded-2xl overflow-hidden">
+                      {item.type === "video" ? (
+                        <video src={item.src} controls className="w-full h-auto" playsInline />
+                      ) : (
+                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          )}
 
           {/* Project navigation */}
           <nav className="mt-20 border-t border-border pt-12">
