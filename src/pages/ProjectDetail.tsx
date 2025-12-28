@@ -135,21 +135,85 @@ const ProjectDetail = () => {
             {project.description}
           </p>
 
-          {/* Project images */}
-          <div className="space-y-8">
-            {project.images.map((image, index) => (
-              <div
-                key={index}
-                className="bg-card rounded-2xl overflow-hidden"
-              >
+          {/* First image - full width */}
+          {project.images[0] && (
+            <div className="bg-card rounded-2xl overflow-hidden mb-16">
+              <img
+                src={project.images[0]}
+                alt={`${project.title} - Image 1`}
+                className="w-full h-auto"
+              />
+            </div>
+          )}
+
+          {/* Process section */}
+          <section className="mb-16">
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
+              The Process
+            </h2>
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+            </p>
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+            </p>
+          </section>
+
+          {/* Side by side images */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+            {project.images[1] && (
+              <div className="bg-card rounded-2xl overflow-hidden">
                 <img
-                  src={image}
-                  alt={`${project.title} - Image ${index + 1}`}
+                  src={project.images[1]}
+                  alt={`${project.title} - Image 2`}
                   className="w-full h-auto"
                 />
               </div>
-            ))}
+            )}
+            {project.images[2] && (
+              <div className="bg-card rounded-2xl overflow-hidden">
+                <img
+                  src={project.images[2]}
+                  alt={`${project.title} - Image 3`}
+                  className="w-full h-auto"
+                />
+              </div>
+            )}
           </div>
+
+          {/* Approach section */}
+          <section className="mb-16">
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
+              The Approach
+            </h2>
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.
+            </p>
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
+              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+            </p>
+          </section>
+
+          {/* Final image - full width */}
+          {project.images[3] && (
+            <div className="bg-card rounded-2xl overflow-hidden mb-16">
+              <img
+                src={project.images[3]}
+                alt={`${project.title} - Image 4`}
+                className="w-full h-auto"
+              />
+            </div>
+          )}
+
+          {/* Results section */}
+          <section className="mb-16">
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
+              The Results
+            </h2>
+            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.
+            </p>
+          </section>
 
           {/* Next project link */}
           <div className="mt-20 text-center">
