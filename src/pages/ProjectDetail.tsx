@@ -272,14 +272,15 @@ const ProjectDetail = () => {
           {/* Process section */}
           <section className="mb-16">
             <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              The Process
+              {project.process.title}
             </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-            </p>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-            </p>
+            <div className="space-y-4 max-w-2xl">
+              {project.process.steps.map((step, index) => (
+                <p key={index} className="font-sans text-muted-foreground leading-relaxed">
+                  {step}
+                </p>
+              ))}
+            </div>
           </section>
 
           {/* Side by side images */}
@@ -307,13 +308,10 @@ const ProjectDetail = () => {
           {/* Approach section */}
           <section className="mb-16">
             <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              The Approach
+              {project.approach.title}
             </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.
-            </p>
             <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+              {project.approach.description}
             </p>
           </section>
 
@@ -331,10 +329,10 @@ const ProjectDetail = () => {
           {/* Results section */}
           <section className="mb-16">
             <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              The Results
+              {project.results.title}
             </h2>
             <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.
+              {project.results.description}
             </p>
           </section>
 
