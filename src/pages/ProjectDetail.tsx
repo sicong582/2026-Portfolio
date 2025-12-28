@@ -259,83 +259,18 @@ const ProjectDetail = () => {
             {project.overview}
           </p>
 
-          {/* First image - full width */}
-          {project.images[0] && (
-            <div className="bg-card rounded-2xl overflow-hidden mb-16">
-              <img
-                src={project.images[0]}
-                alt={`${project.title} - Image 1`}
-                className="w-full h-auto"
-              />
-            </div>
-          )}
-
-          {/* Process section */}
-          <section className="mb-16">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              {project.process.title}
-            </h2>
-            <div className="space-y-4 max-w-2xl">
-              {project.process.steps.map((step, index) => (
-                <p key={index} className="font-sans text-muted-foreground leading-relaxed">
-                  {step}
-                </p>
-              ))}
-            </div>
-          </section>
-
-          {/* Side by side images */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-            {project.images[1] && (
-              <div className="bg-card rounded-2xl overflow-hidden">
+          {/* Image Gallery */}
+          <div className="space-y-8">
+            {project.images.map((image, index) => (
+              <div key={index} className="bg-card rounded-2xl overflow-hidden">
                 <img
-                  src={project.images[1]}
-                  alt={`${project.title} - Image 2`}
+                  src={image}
+                  alt={`${project.title} - Image ${index + 1}`}
                   className="w-full h-auto"
                 />
               </div>
-            )}
-            {project.images[2] && (
-              <div className="bg-card rounded-2xl overflow-hidden">
-                <img
-                  src={project.images[2]}
-                  alt={`${project.title} - Image 3`}
-                  className="w-full h-auto"
-                />
-              </div>
-            )}
+            ))}
           </div>
-
-          {/* Approach section */}
-          <section className="mb-16">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              {project.approach.title}
-            </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              {project.approach.description}
-            </p>
-          </section>
-
-          {/* Final image - full width */}
-          {project.images[3] && (
-            <div className="bg-card rounded-2xl overflow-hidden mb-16">
-              <img
-                src={project.images[3]}
-                alt={`${project.title} - Image 4`}
-                className="w-full h-auto"
-              />
-            </div>
-          )}
-
-          {/* Results section */}
-          <section className="mb-16">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              {project.results.title}
-            </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              {project.results.description}
-            </p>
-          </section>
 
           {/* Project navigation */}
           <nav className="mt-20 border-t border-border pt-12">
