@@ -207,7 +207,13 @@ const projectsData: Record<string, ProjectData> = {
     process: { title: "Design Process", steps: ["Prompt Engineering: Crafting effective prompts for AI image generation", "Iteration: Refining outputs through multiple generations", "Curation: Selecting and combining the best results", "Enhancement: Post-processing and final touches"] },
     approach: { title: "The Approach", description: "Leveraging cutting-edge AI tools to augment creative capabilities, exploring new visual territories that blend human creativity with machine learning." },
     results: { title: "The Results", metrics: [], description: "A collection of unique AI-generated artworks that showcase the potential of human-AI creative collaboration." },
-    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
+    images: [
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80",
+      "https://images.unsplash.com/photo-1684369175833-4b445ad6bfb5?w=1200&q=80",
+      "https://images.unsplash.com/photo-1686191128892-3b37add4ad7b?w=1200&q=80",
+      "https://images.unsplash.com/photo-1675271591211-126ad94e495d?w=1200&q=80",
+      "https://images.unsplash.com/photo-1699825179966-70f7f8d1d1c4?w=1200&q=80",
+    ],
   },
 };
 
@@ -260,7 +266,7 @@ const ProjectDetail = () => {
           </p>
 
           {/* Image Gallery */}
-          <div className="space-y-8">
+          <div className="space-y-16">
             {project.images.map((image, index) => (
               <div key={index} className="bg-card rounded-2xl overflow-hidden">
                 <img
