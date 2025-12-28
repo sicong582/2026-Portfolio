@@ -259,7 +259,6 @@ const projectsData: Record<string, ProjectData> = {
     media: [
       { type: "video", src: aiExplorationVideo },
       { type: "video", src: aiExplorationVideo2 },
-      { type: "video", src: aiExplorationVideo3 },
     ],
   },
 };
