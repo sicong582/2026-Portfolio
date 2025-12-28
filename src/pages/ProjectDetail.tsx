@@ -260,11 +260,6 @@ const projectsData: Record<string, ProjectData> = {
       { type: "video", src: aiExplorationVideo },
       { type: "video", src: aiExplorationVideo2 },
       { type: "video", src: aiExplorationVideo3 },
-      { type: "image", src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80" },
-      { type: "image", src: "https://images.unsplash.com/photo-1684369175833-4b445ad6bfb5?w=1200&q=80" },
-      { type: "image", src: "https://images.unsplash.com/photo-1686191128892-3b37add4ad7b?w=1200&q=80" },
-      { type: "image", src: "https://images.unsplash.com/photo-1675271591211-126ad94e495d?w=1200&q=80" },
-      { type: "image", src: "https://images.unsplash.com/photo-1699825179966-70f7f8d1d1c4?w=1200&q=80" },
     ],
   },
 };
