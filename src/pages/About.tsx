@@ -9,9 +9,14 @@ const About = () => {
       
       <main className="pt-32 pb-24">
         <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-16 items-start">
-            <div>
-              <h1 className="font-serif text-5xl font-medium mb-8">About</h1>
+          <div className="max-w-2xl">
+            <img
+              src={headshot}
+              alt="Sicong Chen"
+              className="w-64 h-64 object-cover rounded-lg mb-12"
+            />
+            
+            <h1 className="font-serif text-5xl font-medium mb-8">About</h1>
             
             <div className="space-y-8 font-sans text-lg text-muted-foreground leading-relaxed">
               <p className="text-xl text-foreground">
@@ -57,32 +62,23 @@ const About = () => {
                   Currently, I serve as a design mentor through ADPList, driven by my passion for human connection and meaningful relationships. I enjoy engaging with people, learning from their unique experiences and stories. Having benefited greatly from the support I received as a junior designer, I'm committed to giving back to the community and helping the next generation of designers thrive.
                 </p>
               </div>
-              </div>
-
-              <div className="mt-12 flex gap-6 font-sans text-sm uppercase tracking-wider">
-                <a
-                  href="mailto:hello@sicongchen.com"
-                  className="text-foreground hover:text-muted-foreground transition-colors"
-                >
-                  Email
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-muted-foreground transition-colors"
-                >
-                  LinkedIn
-                </a>
-              </div>
             </div>
 
-            <div className="lg:sticky lg:top-32">
-              <img
-                src={headshot}
-                alt="Sicong Chen"
-                className="w-full rounded-lg"
-              />
+            <div className="mt-12 flex gap-6 font-sans text-sm uppercase tracking-wider">
+              <a
+                href="mailto:hello@sicongchen.com"
+                className="text-foreground hover:text-muted-foreground transition-colors"
+              >
+                Email
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground hover:text-muted-foreground transition-colors"
+              >
+                LinkedIn
+              </a>
             </div>
           </div>
         </div>
