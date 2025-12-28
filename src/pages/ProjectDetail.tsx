@@ -6,6 +6,12 @@ import project1Image2 from "@/assets/project1-image2.png";
 import project1Image3 from "@/assets/project1-image3.png";
 import project1Image4 from "@/assets/project1-image4.png";
 import rewording2025Cover from "@/assets/rewording-2025-cover.png";
+import aiExplorationVideo from "@/assets/ai-exploration-video.mp4";
+
+interface MediaItem {
+  type: "image" | "video";
+  src: string;
+}
 
 interface ProjectData {
   title: string;
@@ -32,7 +38,7 @@ interface ProjectData {
     metrics: { label: string; value: string }[];
     description: string;
   };
-  images: string[];
+  media: MediaItem[];
 }
 
 const projectsData: Record<string, ProjectData> = {
@@ -70,11 +76,11 @@ const projectsData: Record<string, ProjectData> = {
       ],
       description: "The final designs exceeded expectations, resulting in increased brand visibility and positive feedback from the target audience.",
     },
-    images: [
-      rewording2025Cover,
-      project1Image1,
-      project1Image2,
-      project1Image3,
+    media: [
+      { type: "image", src: rewording2025Cover },
+      { type: "image", src: project1Image1 },
+      { type: "image", src: project1Image2 },
+      { type: "image", src: project1Image3 },
     ],
   },
   "project-2": {
@@ -110,9 +116,9 @@ const projectsData: Record<string, ProjectData> = {
       ],
       description: "Summary of the outcomes and impact of the design solution.",
     },
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
+    media: [
+      { type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" },
+      { type: "image", src: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80" },
     ],
   },
   "project-3": {
@@ -148,9 +154,9 @@ const projectsData: Record<string, ProjectData> = {
       ],
       description: "Summary of the outcomes and impact of the design solution.",
     },
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
+    media: [
+      { type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" },
+      { type: "image", src: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80" },
     ],
   },
   "project-4": {
@@ -165,7 +171,7 @@ const projectsData: Record<string, ProjectData> = {
     process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
     approach: { title: "The Approach", description: "Approach description." },
     results: { title: "The Results", metrics: [], description: "Results description." },
-    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
+    media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
   },
   "project-5": {
     title: "Project Name",
@@ -179,7 +185,7 @@ const projectsData: Record<string, ProjectData> = {
     process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
     approach: { title: "The Approach", description: "Approach description." },
     results: { title: "The Results", metrics: [], description: "Results description." },
-    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
+    media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
   },
   "project-6": {
     title: "Project Name",
@@ -193,7 +199,7 @@ const projectsData: Record<string, ProjectData> = {
     process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
     approach: { title: "The Approach", description: "Approach description." },
     results: { title: "The Results", metrics: [], description: "Results description." },
-    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
+    media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
   },
   "project-7": {
     title: "AI Exploration",
@@ -207,12 +213,13 @@ const projectsData: Record<string, ProjectData> = {
     process: { title: "Design Process", steps: ["Prompt Engineering: Crafting effective prompts for AI image generation", "Iteration: Refining outputs through multiple generations", "Curation: Selecting and combining the best results", "Enhancement: Post-processing and final touches"] },
     approach: { title: "The Approach", description: "Leveraging cutting-edge AI tools to augment creative capabilities, exploring new visual territories that blend human creativity with machine learning." },
     results: { title: "The Results", metrics: [], description: "A collection of unique AI-generated artworks that showcase the potential of human-AI creative collaboration." },
-    images: [
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80",
-      "https://images.unsplash.com/photo-1684369175833-4b445ad6bfb5?w=1200&q=80",
-      "https://images.unsplash.com/photo-1686191128892-3b37add4ad7b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1675271591211-126ad94e495d?w=1200&q=80",
-      "https://images.unsplash.com/photo-1699825179966-70f7f8d1d1c4?w=1200&q=80",
+    media: [
+      { type: "video", src: aiExplorationVideo },
+      { type: "image", src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80" },
+      { type: "image", src: "https://images.unsplash.com/photo-1684369175833-4b445ad6bfb5?w=1200&q=80" },
+      { type: "image", src: "https://images.unsplash.com/photo-1686191128892-3b37add4ad7b?w=1200&q=80" },
+      { type: "image", src: "https://images.unsplash.com/photo-1675271591211-126ad94e495d?w=1200&q=80" },
+      { type: "image", src: "https://images.unsplash.com/photo-1699825179966-70f7f8d1d1c4?w=1200&q=80" },
     ],
   },
 };
@@ -265,15 +272,24 @@ const ProjectDetail = () => {
             {project.overview}
           </p>
 
-          {/* Image Gallery */}
+          {/* Media Gallery */}
           <div className="space-y-16">
-            {project.images.map((image, index) => (
+            {project.media.map((item, index) => (
               <div key={index} className="bg-card rounded-2xl overflow-hidden">
-                <img
-                  src={image}
-                  alt={`${project.title} - Image ${index + 1}`}
-                  className="w-full h-auto"
-                />
+                {item.type === "video" ? (
+                  <video
+                    src={item.src}
+                    controls
+                    className="w-full h-auto"
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={item.src}
+                    alt={`${project.title} - Image ${index + 1}`}
+                    className="w-full h-auto"
+                  />
+                )}
               </div>
             ))}
           </div>
