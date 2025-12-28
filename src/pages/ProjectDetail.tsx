@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import project1Image1 from "@/assets/project1-image1.png";
@@ -288,7 +289,13 @@ const ProjectDetail = () => {
           {/* Alternating text and media sections */}
           <div className="space-y-24">
             {/* Overview with first media */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               <div>
                 <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
                 <p className="font-sans text-muted-foreground leading-relaxed">
@@ -296,26 +303,44 @@ const ProjectDetail = () => {
                 </p>
               </div>
               {project.media[0] && (
-                <div className="bg-card rounded-2xl overflow-hidden">
+                <motion.div 
+                  className="bg-card rounded-2xl overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                >
                   {project.media[0].type === "video" ? (
                     <video src={project.media[0].src} controls className="w-full h-auto" playsInline />
                   ) : (
                     <img src={project.media[0].src} alt={`${project.title} - 1`} className="w-full h-auto" />
                   )}
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
 
             {/* Problem with second media - reversed */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               {project.media[1] && (
-                <div className="bg-card rounded-2xl overflow-hidden lg:order-1">
+                <motion.div 
+                  className="bg-card rounded-2xl overflow-hidden lg:order-1"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                >
                   {project.media[1].type === "video" ? (
                     <video src={project.media[1].src} controls className="w-full h-auto" playsInline />
                   ) : (
                     <img src={project.media[1].src} alt={`${project.title} - 2`} className="w-full h-auto" />
                   )}
-                </div>
+                </motion.div>
               )}
               <div className="lg:order-2">
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
@@ -323,10 +348,16 @@ const ProjectDetail = () => {
                   {project.problem.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Approach with third media */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               <div>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
                 <p className="font-sans text-muted-foreground leading-relaxed">
@@ -334,26 +365,44 @@ const ProjectDetail = () => {
                 </p>
               </div>
               {project.media[2] && (
-                <div className="bg-card rounded-2xl overflow-hidden">
+                <motion.div 
+                  className="bg-card rounded-2xl overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                >
                   {project.media[2].type === "video" ? (
                     <video src={project.media[2].src} controls className="w-full h-auto" playsInline />
                   ) : (
                     <img src={project.media[2].src} alt={`${project.title} - 3`} className="w-full h-auto" />
                   )}
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
 
             {/* Results with fourth media - reversed */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            <motion.div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
               {project.media[3] && (
-                <div className="bg-card rounded-2xl overflow-hidden lg:order-1">
+                <motion.div 
+                  className="bg-card rounded-2xl overflow-hidden lg:order-1"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                >
                   {project.media[3].type === "video" ? (
                     <video src={project.media[3].src} controls className="w-full h-auto" playsInline />
                   ) : (
                     <img src={project.media[3].src} alt={`${project.title} - 4`} className="w-full h-auto" />
                   )}
-                </div>
+                </motion.div>
               )}
               <div className="lg:order-2">
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
@@ -371,21 +420,34 @@ const ProjectDetail = () => {
                   {project.results.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Additional media items */}
             {project.media.length > 4 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
                 {project.media.slice(4).map((item, index) => (
-                  <div key={index} className="bg-card rounded-2xl overflow-hidden">
+                  <motion.div 
+                    key={index} 
+                    className="bg-card rounded-2xl overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+                  >
                     {item.type === "video" ? (
                       <video src={item.src} controls className="w-full h-auto" playsInline />
                     ) : (
                       <img src={item.src} alt={`${project.title} - ${index + 5}`} className="w-full h-auto" />
                     )}
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
           </div>
 
