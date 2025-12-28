@@ -3,14 +3,15 @@ import Footer from "@/components/Footer";
 import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
 import flowerHero from "@/assets/flower-hero.gif";
+import rewording2025Cover from "@/assets/rewording-2025-cover.png";
 
 const projects = [
   {
     id: "project-1",
-    title: "project name",
-    type: "Type",
-    date: "Date",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    title: "Rewording 2025",
+    type: "Graphic Design",
+    date: "2025",
+    image: rewording2025Cover,
   },
   {
     id: "project-2",
