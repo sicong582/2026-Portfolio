@@ -6,18 +6,69 @@ import project1Image2 from "@/assets/project1-image2.png";
 import project1Image3 from "@/assets/project1-image3.png";
 import project1Image4 from "@/assets/project1-image4.png";
 
-const projectsData: Record<string, {
+interface ProjectData {
   title: string;
   type: string;
   date: string;
-  description: string;
+  role: string;
+  duration: string;
+  team: string;
+  overview: string;
+  problem: {
+    title: string;
+    description: string;
+  };
+  process: {
+    title: string;
+    steps: string[];
+  };
+  approach: {
+    title: string;
+    description: string;
+  };
+  results: {
+    title: string;
+    metrics: { label: string; value: string }[];
+    description: string;
+  };
   images: string[];
-}> = {
+}
+
+const projectsData: Record<string, ProjectData> = {
   "project-1": {
     title: "Rewording Poster Design",
     type: "Graphic Design",
     date: "2025",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
+    role: "Lead Designer",
+    duration: "4 weeks",
+    team: "2 Designers, 1 Developer",
+    overview: "A comprehensive poster design project focused on visual communication and typographic exploration to convey complex messages through minimal design elements.",
+    problem: {
+      title: "The Problem",
+      description: "The client needed a series of posters that could effectively communicate abstract concepts while maintaining visual appeal and brand consistency. The challenge was to balance artistic expression with clear messaging.",
+    },
+    process: {
+      title: "Design Process",
+      steps: [
+        "Research & Discovery: Conducted competitive analysis and gathered visual inspiration",
+        "Concept Development: Created multiple design directions and mood boards",
+        "Iteration: Refined designs based on feedback and testing",
+        "Final Production: Prepared assets for print and digital distribution",
+      ],
+    },
+    approach: {
+      title: "The Approach",
+      description: "We adopted a human-centered design approach, focusing on the emotional impact of visual elements. Through iterative prototyping and user testing, we refined the designs to achieve maximum impact while maintaining clarity of message.",
+    },
+    results: {
+      title: "The Results",
+      metrics: [
+        { label: "Engagement Increase", value: "45%" },
+        { label: "Brand Recognition", value: "60%" },
+        { label: "Client Satisfaction", value: "100%" },
+      ],
+      description: "The final designs exceeded expectations, resulting in increased brand visibility and positive feedback from the target audience.",
+    },
     images: [
       project1Image1,
       project1Image2,
@@ -27,9 +78,37 @@ const projectsData: Record<string, {
   },
   "project-2": {
     title: "Project Name",
-    type: "Type",
-    date: "Date",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
+    type: "UX Design",
+    date: "2024",
+    role: "UX Designer",
+    duration: "8 weeks",
+    team: "3 Designers",
+    overview: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
+    problem: {
+      title: "The Problem",
+      description: "Description of the design problem and user pain points that needed to be addressed.",
+    },
+    process: {
+      title: "Design Process",
+      steps: [
+        "User Research: Conducted interviews and surveys",
+        "Analysis: Synthesized findings into actionable insights",
+        "Design: Created wireframes and prototypes",
+        "Testing: Validated designs with real users",
+      ],
+    },
+    approach: {
+      title: "The Approach",
+      description: "Description of the methodology and design thinking applied to solve the problem.",
+    },
+    results: {
+      title: "The Results",
+      metrics: [
+        { label: "Metric 1", value: "XX%" },
+        { label: "Metric 2", value: "XX%" },
+      ],
+      description: "Summary of the outcomes and impact of the design solution.",
+    },
     images: [
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
       "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
@@ -37,9 +116,37 @@ const projectsData: Record<string, {
   },
   "project-3": {
     title: "Project Name",
-    type: "Type",
-    date: "Date",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
+    type: "Product Design",
+    date: "2024",
+    role: "Product Designer",
+    duration: "12 weeks",
+    team: "Cross-functional team",
+    overview: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
+    problem: {
+      title: "The Problem",
+      description: "Description of the design problem and user pain points that needed to be addressed.",
+    },
+    process: {
+      title: "Design Process",
+      steps: [
+        "Discovery: Understanding the problem space",
+        "Definition: Framing the design challenge",
+        "Development: Creating and testing solutions",
+        "Delivery: Implementing the final design",
+      ],
+    },
+    approach: {
+      title: "The Approach",
+      description: "Description of the methodology and design thinking applied to solve the problem.",
+    },
+    results: {
+      title: "The Results",
+      metrics: [
+        { label: "Metric 1", value: "XX%" },
+        { label: "Metric 2", value: "XX%" },
+      ],
+      description: "Summary of the outcomes and impact of the design solution.",
+    },
     images: [
       "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
       "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
@@ -49,41 +156,57 @@ const projectsData: Record<string, {
     title: "Project Name",
     type: "Type",
     date: "Date",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
-    ],
+    role: "Role",
+    duration: "Duration",
+    team: "Team",
+    overview: "A brief description of the project.",
+    problem: { title: "The Problem", description: "Problem description." },
+    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
+    approach: { title: "The Approach", description: "Approach description." },
+    results: { title: "The Results", metrics: [], description: "Results description." },
+    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
   },
   "project-5": {
     title: "Project Name",
     type: "Type",
     date: "Date",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
-    ],
+    role: "Role",
+    duration: "Duration",
+    team: "Team",
+    overview: "A brief description of the project.",
+    problem: { title: "The Problem", description: "Problem description." },
+    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
+    approach: { title: "The Approach", description: "Approach description." },
+    results: { title: "The Results", metrics: [], description: "Results description." },
+    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
   },
   "project-6": {
     title: "Project Name",
     type: "Type",
     date: "Date",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
-    ],
+    role: "Role",
+    duration: "Duration",
+    team: "Team",
+    overview: "A brief description of the project.",
+    problem: { title: "The Problem", description: "Problem description." },
+    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
+    approach: { title: "The Approach", description: "Approach description." },
+    results: { title: "The Results", metrics: [], description: "Results description." },
+    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
   },
   "project-7": {
     title: "Project Name",
     type: "Type",
     date: "Date",
-    description: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80",
-    ],
+    role: "Role",
+    duration: "Duration",
+    team: "Team",
+    overview: "A brief description of the project.",
+    problem: { title: "The Problem", description: "Problem description." },
+    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
+    approach: { title: "The Approach", description: "Approach description." },
+    results: { title: "The Results", metrics: [], description: "Results description." },
+    images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"],
   },
 };
 
@@ -121,51 +244,69 @@ const ProjectDetail = () => {
           </Link>
 
           {/* Project header */}
-          <div className="mb-12">
+          <header className="mb-16">
             <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground">
+            <p className="font-sans text-muted-foreground mb-8">
               {project.type} | {project.date}
             </p>
-          </div>
+            
+            {/* Project metadata */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-border pt-8">
+              <div>
+                <h4 className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Role</h4>
+                <p className="font-sans text-foreground">{project.role}</p>
+              </div>
+              <div>
+                <h4 className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Duration</h4>
+                <p className="font-sans text-foreground">{project.duration}</p>
+              </div>
+              <div>
+                <h4 className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">Team</h4>
+                <p className="font-sans text-foreground">{project.team}</p>
+              </div>
+            </div>
+          </header>
 
-          {/* Description */}
-          <p className="font-sans text-lg text-muted-foreground max-w-2xl mb-16 leading-relaxed">
-            {project.description}
-          </p>
-
-          {/* First image - full width */}
+          {/* Hero image */}
           {project.images[0] && (
-            <div className="bg-card rounded-2xl overflow-hidden mb-16">
+            <div className="bg-card rounded-2xl overflow-hidden mb-20">
               <img
                 src={project.images[0]}
-                alt={`${project.title} - Image 1`}
+                alt={`${project.title} - Hero`}
                 className="w-full h-auto"
               />
             </div>
           )}
 
-          {/* Process section */}
-          <section className="mb-16">
+          {/* Project Overview */}
+          <section className="mb-20">
             <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              The Process
+              Project Overview
             </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+            <p className="font-sans text-lg text-muted-foreground max-w-3xl leading-relaxed">
+              {project.overview}
             </p>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+          </section>
+
+          {/* The Problem */}
+          <section className="mb-20">
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
+              {project.problem.title}
+            </h2>
+            <p className="font-sans text-muted-foreground max-w-3xl leading-relaxed">
+              {project.problem.description}
             </p>
           </section>
 
           {/* Side by side images */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
             {project.images[1] && (
               <div className="bg-card rounded-2xl overflow-hidden">
                 <img
                   src={project.images[1]}
-                  alt={`${project.title} - Image 2`}
+                  alt={`${project.title} - Process 1`}
                   className="w-full h-auto"
                 />
               </div>
@@ -174,44 +315,76 @@ const ProjectDetail = () => {
               <div className="bg-card rounded-2xl overflow-hidden">
                 <img
                   src={project.images[2]}
-                  alt={`${project.title} - Image 3`}
+                  alt={`${project.title} - Process 2`}
                   className="w-full h-auto"
                 />
               </div>
             )}
           </div>
 
-          {/* Approach section */}
-          <section className="mb-16">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              The Approach
+          {/* Design Process */}
+          <section className="mb-20">
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-8">
+              {project.process.title}
             </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed mb-4">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.
-            </p>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+            <div className="space-y-6 max-w-3xl">
+              {project.process.steps.map((step, index) => (
+                <div key={index} className="flex gap-4">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground text-background flex items-center justify-center font-sans text-sm font-medium">
+                    {index + 1}
+                  </span>
+                  <p className="font-sans text-muted-foreground leading-relaxed pt-1">
+                    {step}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* The Approach */}
+          <section className="mb-20">
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
+              {project.approach.title}
+            </h2>
+            <p className="font-sans text-muted-foreground max-w-3xl leading-relaxed">
+              {project.approach.description}
             </p>
           </section>
 
-          {/* Final image - full width */}
+          {/* Final image */}
           {project.images[3] && (
-            <div className="bg-card rounded-2xl overflow-hidden mb-16">
+            <div className="bg-card rounded-2xl overflow-hidden mb-20">
               <img
                 src={project.images[3]}
-                alt={`${project.title} - Image 4`}
+                alt={`${project.title} - Final`}
                 className="w-full h-auto"
               />
             </div>
           )}
 
-          {/* Results section */}
+          {/* The Results */}
           <section className="mb-16">
-            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-6">
-              The Results
+            <h2 className="font-serif text-2xl lg:text-3xl font-medium mb-8">
+              {project.results.title}
             </h2>
-            <p className="font-sans text-muted-foreground max-w-2xl leading-relaxed">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.
+            
+            {project.results.metrics.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
+                {project.results.metrics.map((metric, index) => (
+                  <div key={index} className="text-center p-6 bg-card rounded-2xl">
+                    <p className="font-serif text-4xl lg:text-5xl font-medium text-foreground mb-2">
+                      {metric.value}
+                    </p>
+                    <p className="font-sans text-sm text-muted-foreground">
+                      {metric.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <p className="font-sans text-muted-foreground max-w-3xl leading-relaxed">
+              {project.results.description}
             </p>
           </section>
 
