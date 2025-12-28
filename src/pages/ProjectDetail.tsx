@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import project1Image1 from "@/assets/project1-image1.png";
@@ -10,6 +11,45 @@ import rewording2025Cover from "@/assets/rewording-2025-cover.png";
 import aiExplorationVideo from "@/assets/ai-exploration-video.mp4";
 import aiExplorationVideo2 from "@/assets/ai-exploration-video-2.mp4";
 import aiExplorationVideo3 from "@/assets/ai-exploration-video-3.mp4";
+
+// Parallax Media Component
+const ParallaxMedia = ({ 
+  item, 
+  alt, 
+  className = "" 
+}: { 
+  item: MediaItem; 
+  alt: string; 
+  className?: string;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+
+  return (
+    <motion.div 
+      ref={ref}
+      className={`bg-card rounded-2xl overflow-hidden ${className}`}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+    >
+      <motion.div style={{ y, scale }} className="w-full h-full">
+        {item.type === "video" ? (
+          <video src={item.src} controls className="w-full h-auto" playsInline />
+        ) : (
+          <img src={item.src} alt={alt} className="w-full h-auto" />
+        )}
+      </motion.div>
+    </motion.div>
+  );
+};
 
 interface MediaItem {
   type: "image" | "video";
@@ -303,19 +343,7 @@ const ProjectDetail = () => {
                 </p>
               </div>
               {project.media[0] && (
-                <motion.div 
-                  className="bg-card rounded-2xl overflow-hidden"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                >
-                  {project.media[0].type === "video" ? (
-                    <video src={project.media[0].src} controls className="w-full h-auto" playsInline />
-                  ) : (
-                    <img src={project.media[0].src} alt={`${project.title} - 1`} className="w-full h-auto" />
-                  )}
-                </motion.div>
+                <ParallaxMedia item={project.media[0]} alt={`${project.title} - 1`} />
               )}
             </motion.div>
 
@@ -328,19 +356,7 @@ const ProjectDetail = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               {project.media[1] && (
-                <motion.div 
-                  className="bg-card rounded-2xl overflow-hidden lg:order-1"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                >
-                  {project.media[1].type === "video" ? (
-                    <video src={project.media[1].src} controls className="w-full h-auto" playsInline />
-                  ) : (
-                    <img src={project.media[1].src} alt={`${project.title} - 2`} className="w-full h-auto" />
-                  )}
-                </motion.div>
+                <ParallaxMedia item={project.media[1]} alt={`${project.title} - 2`} className="lg:order-1" />
               )}
               <div className="lg:order-2">
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
@@ -365,19 +381,7 @@ const ProjectDetail = () => {
                 </p>
               </div>
               {project.media[2] && (
-                <motion.div 
-                  className="bg-card rounded-2xl overflow-hidden"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                >
-                  {project.media[2].type === "video" ? (
-                    <video src={project.media[2].src} controls className="w-full h-auto" playsInline />
-                  ) : (
-                    <img src={project.media[2].src} alt={`${project.title} - 3`} className="w-full h-auto" />
-                  )}
-                </motion.div>
+                <ParallaxMedia item={project.media[2]} alt={`${project.title} - 3`} />
               )}
             </motion.div>
 
@@ -390,19 +394,7 @@ const ProjectDetail = () => {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               {project.media[3] && (
-                <motion.div 
-                  className="bg-card rounded-2xl overflow-hidden lg:order-1"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                >
-                  {project.media[3].type === "video" ? (
-                    <video src={project.media[3].src} controls className="w-full h-auto" playsInline />
-                  ) : (
-                    <img src={project.media[3].src} alt={`${project.title} - 4`} className="w-full h-auto" />
-                  )}
-                </motion.div>
+                <ParallaxMedia item={project.media[3]} alt={`${project.title} - 4`} className="lg:order-1" />
               )}
               <div className="lg:order-2">
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
@@ -424,30 +416,15 @@ const ProjectDetail = () => {
 
             {/* Additional media items */}
             {project.media.length > 4 && (
-              <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {project.media.slice(4).map((item, index) => (
-                  <motion.div 
+                  <ParallaxMedia 
                     key={index} 
-                    className="bg-card rounded-2xl overflow-hidden"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-                  >
-                    {item.type === "video" ? (
-                      <video src={item.src} controls className="w-full h-auto" playsInline />
-                    ) : (
-                      <img src={item.src} alt={`${project.title} - ${index + 5}`} className="w-full h-auto" />
-                    )}
-                  </motion.div>
+                    item={item} 
+                    alt={`${project.title} - ${index + 5}`} 
+                  />
                 ))}
-              </motion.div>
+              </div>
             )}
           </div>
 
