@@ -5,6 +5,7 @@ import project1Image1 from "@/assets/project1-image1.png";
 import project1Image2 from "@/assets/project1-image2.png";
 import project1Image3 from "@/assets/project1-image3.png";
 import project1Image4 from "@/assets/project1-image4.png";
+import rewording2025Cover from "@/assets/rewording-2025-cover.png";
 
 interface ProjectData {
   title: string;
@@ -36,7 +37,7 @@ interface ProjectData {
 
 const projectsData: Record<string, ProjectData> = {
   "project-1": {
-    title: "Rewording Poster Design",
+    title: "Rewording 2025",
     type: "Graphic Design",
     date: "2025",
     role: "Lead Designer",
@@ -70,10 +71,10 @@ const projectsData: Record<string, ProjectData> = {
       description: "The final designs exceeded expectations, resulting in increased brand visibility and positive feedback from the target audience.",
     },
     images: [
+      rewording2025Cover,
       project1Image1,
       project1Image2,
       project1Image3,
-      project1Image4,
     ],
   },
   "project-2": {
