@@ -50,9 +50,9 @@ const projects = [
   },
   {
     id: "project-7",
-    title: "project name",
-    type: "Type",
-    date: "Date",
+    title: "AI Exploration",
+    type: "AI Design",
+    date: "2024",
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
   },
 ];
