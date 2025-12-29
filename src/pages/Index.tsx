@@ -10,6 +10,7 @@ import projectCoverPaypal from "@/assets/project-cover-paypal.png";
 import projectCoverAirbnb from "@/assets/project-cover-airbnb.png";
 import projectCoverWeather from "@/assets/project-cover-weather.png";
 import projectCoverAI from "@/assets/project-cover-ai.png";
+import rewordingCover from "@/assets/rewording-2025-cover.png";
 import { motion } from "framer-motion";
 
 const productDesignProjects = [
@@ -45,9 +46,6 @@ const productDesignProjects = [
     image: projectCoverPaypal,
     description: "Redesigned payment platform experience focused on simplicity, security, and trust for millions of users worldwide.",
   },
-];
-
-const brandingProjects = [
   {
     id: "project-5",
     title: "Airbnb Connect",
@@ -64,6 +62,9 @@ const brandingProjects = [
     image: projectCoverWeather,
     description: "Weather intelligence platform delivering accurate forecasts and climate data through beautiful, accessible interfaces.",
   },
+];
+
+const brandingProjects = [
   {
     id: "project-7",
     title: "AI Exploration",
@@ -71,6 +72,14 @@ const brandingProjects = [
     date: "2024",
     image: projectCoverAI,
     description: "Experimental AI-generated visuals exploring the creative potential of human-machine collaboration in design.",
+  },
+  {
+    id: "project-8",
+    title: "Rewording Poster Design",
+    type: "Graphic Design",
+    date: "2025",
+    image: rewordingCover,
+    description: "Typography-focused poster series exploring the visual impact of words and language through bold graphic treatments.",
   },
 ];
 
@@ -168,7 +177,7 @@ const Index = () => {
 
           {/* Row 2 */}
           <motion.article 
-            className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8"
+            className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8 mb-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
@@ -183,6 +192,26 @@ const Index = () => {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <ProjectCard {...productDesignProjects[3]} variant="large" />
+            </motion.figure>
+          </motion.article>
+
+          {/* Row 3 */}
+          <motion.article 
+            className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...productDesignProjects[4]} variant="large" />
+            </motion.div>
+            <motion.figure 
+              className="md:mt-24"
+              variants={fadeInUp} 
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <ProjectCard {...productDesignProjects[5]} variant="large" />
             </motion.figure>
           </motion.article>
         </section>
@@ -200,7 +229,7 @@ const Index = () => {
           </motion.h2>
           
           <motion.article 
-            className="projects-row-small grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+            className="projects-row-small grid grid-cols-1 sm:grid-cols-2 gap-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
@@ -211,9 +240,6 @@ const Index = () => {
             </motion.div>
             <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
               <ProjectCard {...brandingProjects[1]} variant="small" />
-            </motion.div>
-            <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...brandingProjects[2]} variant="small" />
             </motion.div>
           </motion.article>
         </section>
