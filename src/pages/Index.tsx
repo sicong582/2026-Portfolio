@@ -12,7 +12,7 @@ import projectCoverWeather from "@/assets/project-cover-weather.png";
 import projectCoverAI from "@/assets/project-cover-ai.png";
 import { motion } from "framer-motion";
 
-const projects = [
+const productDesignProjects = [
   {
     id: "project-1",
     title: "Purchase Order Dashboard",
@@ -45,6 +45,9 @@ const projects = [
     image: projectCoverPaypal,
     description: "Redesigned payment platform experience focused on simplicity, security, and trust for millions of users worldwide.",
   },
+];
+
+const brandingProjects = [
   {
     id: "project-5",
     title: "Airbnb Connect",
@@ -135,8 +138,18 @@ const Index = () => {
           </motion.article>
         </section>
 
-        {/* Work Section */}
+        {/* Product Design Section */}
         <section className="work-section container-wide pb-16 lg:pb-24">
+          <motion.h2 
+            className="font-serif text-3xl lg:text-4xl font-medium mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Product Design
+          </motion.h2>
+          
           {/* Row 1 */}
           <motion.article 
             className="projects-row-primary grid grid-cols-1 md:grid-cols-2 gap-8 mb-8"
@@ -146,34 +159,46 @@ const Index = () => {
             variants={staggerContainer}
           >
             <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...projects[0]} variant="large" />
+              <ProjectCard {...productDesignProjects[0]} variant="large" />
             </motion.div>
             <motion.figure variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...projects[1]} variant="large" />
+              <ProjectCard {...productDesignProjects[1]} variant="large" />
             </motion.figure>
           </motion.article>
 
           {/* Row 2 */}
           <motion.article 
-            className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8 mb-8"
+            className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
           >
             <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...projects[2]} variant="large" />
+              <ProjectCard {...productDesignProjects[2]} variant="large" />
             </motion.div>
             <motion.figure 
               className="md:mt-24"
               variants={fadeInUp} 
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <ProjectCard {...projects[3]} variant="large" />
+              <ProjectCard {...productDesignProjects[3]} variant="large" />
             </motion.figure>
           </motion.article>
+        </section>
 
-          {/* Row 3 */}
+        {/* Branding and Graphic Design Section */}
+        <section className="work-section container-wide pb-16 lg:pb-24">
+          <motion.h2 
+            className="font-serif text-3xl lg:text-4xl font-medium mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Branding and Graphic Design
+          </motion.h2>
+          
           <motion.article 
             className="projects-row-small grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
             initial="hidden"
@@ -182,13 +207,13 @@ const Index = () => {
             variants={staggerContainer}
           >
             <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...projects[4]} variant="small" />
+              <ProjectCard {...brandingProjects[0]} variant="small" />
             </motion.div>
             <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...projects[5]} variant="small" />
+              <ProjectCard {...brandingProjects[1]} variant="small" />
             </motion.div>
             <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-              <ProjectCard {...projects[6]} variant="small" />
+              <ProjectCard {...brandingProjects[2]} variant="small" />
             </motion.div>
           </motion.article>
         </section>
