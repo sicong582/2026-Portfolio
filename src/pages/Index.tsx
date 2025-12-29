@@ -108,7 +108,7 @@ const Index = () => {
       <MusicPlayer />
       <Header />
       
-      <main className="pt-32">
+      <main className="pt-20 pb-16">
         {/* Hero Section */}
         <section className="hero container-wide py-12 lg:py-20">
           <motion.article 

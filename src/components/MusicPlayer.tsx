@@ -56,8 +56,8 @@ const MusicPlayer = () => {
 
   return (
     <motion.div 
-      className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground"
-      initial={{ y: -100 }}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-primary text-primary-foreground"
+      initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
