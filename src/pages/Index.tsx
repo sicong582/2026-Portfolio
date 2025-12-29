@@ -4,6 +4,7 @@ import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
 import flowerHero from "@/assets/flower-hero.gif";
 import rewording2025Cover from "@/assets/rewording-2025-cover.png";
+import { motion } from "framer-motion";
 
 const projects = [
   {
@@ -57,6 +58,27 @@ const projects = [
   },
 ];
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1 },
+};
+
 const Index = () => {
   return (
     <>
@@ -65,17 +87,30 @@ const Index = () => {
       <main className="pt-20">
         {/* Hero Section */}
         <section className="hero container-wide py-12 lg:py-20">
-          <article className="hero-content flex flex-row items-center gap-8">
-            <header className="hero-text w-1/2">
+          <motion.article 
+            className="hero-content flex flex-row items-center gap-8"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+          >
+            <motion.header 
+              className="hero-text w-1/2"
+              variants={fadeInUp}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
               <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
                 Hi, I'm Sicong
               </h1>
               <p className="font-sans text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 I design tools and workflows that help businesses work smarter and grow faster.
               </p>
-            </header>
+            </motion.header>
 
-            <figure className="hero-illustration w-1/2 flex justify-end">
+            <motion.figure 
+              className="hero-illustration w-1/2 flex justify-end"
+              variants={scaleIn}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            >
               <picture className="w-full max-w-[420px] aspect-[1/1.1] bg-background rounded-lg">
                 <img 
                   src={flowerHero} 
@@ -83,34 +118,66 @@ const Index = () => {
                   className="w-full h-full object-contain mix-blend-darken"
                 />
               </picture>
-            </figure>
-          </article>
+            </motion.figure>
+          </motion.article>
         </section>
 
         {/* Work Section */}
         <section className="work-section container-wide pb-16 lg:pb-24">
           {/* Row 1 */}
-          <article className="projects-row-primary grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <ProjectCard {...projects[0]} variant="large" />
-          <figure>
-            <ProjectCard {...projects[1]} variant="large" />
-          </figure>
-          </article>
+          <motion.article 
+            className="projects-row-primary grid grid-cols-1 md:grid-cols-2 gap-8 mb-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...projects[0]} variant="large" />
+            </motion.div>
+            <motion.figure variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...projects[1]} variant="large" />
+            </motion.figure>
+          </motion.article>
 
           {/* Row 2 */}
-          <article className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <ProjectCard {...projects[2]} variant="large" />
-            <figure className="md:mt-24">
+          <motion.article 
+            className="projects-row-offset grid grid-cols-1 md:grid-cols-2 gap-8 mb-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...projects[2]} variant="large" />
+            </motion.div>
+            <motion.figure 
+              className="md:mt-24"
+              variants={fadeInUp} 
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
               <ProjectCard {...projects[3]} variant="large" />
-            </figure>
-          </article>
+            </motion.figure>
+          </motion.article>
 
           {/* Row 3 */}
-          <article className="projects-row-small grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            <ProjectCard {...projects[4]} variant="small" />
-            <ProjectCard {...projects[5]} variant="small" />
-            <ProjectCard {...projects[6]} variant="small" />
-          </article>
+          <motion.article 
+            className="projects-row-small grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...projects[4]} variant="small" />
+            </motion.div>
+            <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...projects[5]} variant="small" />
+            </motion.div>
+            <motion.div variants={fadeInUp} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+              <ProjectCard {...projects[6]} variant="small" />
+            </motion.div>
+          </motion.article>
         </section>
       </main>
 
