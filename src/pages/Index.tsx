@@ -3,7 +3,13 @@ import Footer from "@/components/Footer";
 import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
 import flowerHero from "@/assets/flower-hero.gif";
-import rewording2025Cover from "@/assets/rewording-2025-cover.png";
+import projectCoverDashboard from "@/assets/project-cover-dashboard.png";
+import projectCoverFulfillment from "@/assets/project-cover-fulfillment.png";
+import projectCoverAudi from "@/assets/project-cover-audi.png";
+import projectCoverPaypal from "@/assets/project-cover-paypal.png";
+import projectCoverAirbnb from "@/assets/project-cover-airbnb.png";
+import projectCoverWeather from "@/assets/project-cover-weather.png";
+import projectCoverAI from "@/assets/project-cover-ai.png";
 import { motion } from "framer-motion";
 
 const projects = [
@@ -12,49 +18,49 @@ const projects = [
     title: "Purchase Order Dashboard",
     type: "UX Design",
     date: "2024",
-    image: rewording2025Cover,
+    image: projectCoverDashboard,
   },
   {
     id: "project-2",
     title: "Fulfillment Operation Tooling",
     type: "UX Design",
     date: "2024",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectCoverFulfillment,
   },
   {
     id: "project-3",
     title: "Audi.com",
     type: "Web Design",
     date: "2023",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectCoverAudi,
   },
   {
     id: "project-4",
     title: "PayPal.com",
     type: "Web Design",
     date: "2023",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectCoverPaypal,
   },
   {
     id: "project-5",
     title: "Airbnb Connect",
     type: "Product Design",
     date: "2022",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectCoverAirbnb,
   },
   {
     id: "project-6",
     title: "IBM Weather Channel",
     type: "Product Design",
     date: "2022",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectCoverWeather,
   },
   {
     id: "project-7",
     title: "AI Exploration",
     type: "AI Design",
     date: "2024",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80",
+    image: projectCoverAI,
   },
 ];
 
