@@ -19,6 +19,7 @@ const projects = [
     type: "UX Design",
     date: "2024",
     image: projectCoverDashboard,
+    description: "Streamlined purchase order management with real-time tracking, analytics, and automated workflows for enterprise teams.",
   },
   {
     id: "project-2",
@@ -26,6 +27,7 @@ const projects = [
     type: "UX Design",
     date: "2024",
     image: projectCoverFulfillment,
+    description: "End-to-end fulfillment operations platform enabling warehouse teams to manage inventory and shipping efficiently.",
   },
   {
     id: "project-3",
@@ -33,6 +35,7 @@ const projects = [
     type: "Web Design",
     date: "2023",
     image: projectCoverAudi,
+    description: "Premium automotive web experience showcasing Audi's luxury vehicles with immersive visuals and seamless configurator.",
   },
   {
     id: "project-4",
@@ -40,6 +43,7 @@ const projects = [
     type: "Web Design",
     date: "2023",
     image: projectCoverPaypal,
+    description: "Redesigned payment platform experience focused on simplicity, security, and trust for millions of users worldwide.",
   },
   {
     id: "project-5",
@@ -47,6 +51,7 @@ const projects = [
     type: "Product Design",
     date: "2022",
     image: projectCoverAirbnb,
+    description: "Host management tools connecting property owners with travelers through intuitive booking and communication features.",
   },
   {
     id: "project-6",
@@ -54,6 +59,7 @@ const projects = [
     type: "Product Design",
     date: "2022",
     image: projectCoverWeather,
+    description: "Weather intelligence platform delivering accurate forecasts and climate data through beautiful, accessible interfaces.",
   },
   {
     id: "project-7",
@@ -61,6 +67,7 @@ const projects = [
     type: "AI Design",
     date: "2024",
     image: projectCoverAI,
+    description: "Experimental AI-generated visuals exploring the creative potential of human-machine collaboration in design.",
   },
 ];
 
