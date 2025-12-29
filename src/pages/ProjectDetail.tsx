@@ -86,7 +86,7 @@ interface ProjectData {
 
 const projectsData: Record<string, ProjectData> = {
   "project-1": {
-    title: "Rewording 2025",
+    title: "Purchase Order Dashboard",
     type: "Graphic Design",
     date: "2025",
     role: "Lead Designer",
@@ -127,7 +127,7 @@ const projectsData: Record<string, ProjectData> = {
     ],
   },
   "project-2": {
-    title: "Project Name",
+    title: "Fulfillment Operation Tooling",
     type: "UX Design",
     date: "2024",
     role: "UX Designer",
@@ -165,7 +165,7 @@ const projectsData: Record<string, ProjectData> = {
     ],
   },
   "project-3": {
-    title: "Project Name",
+    title: "Audi.com",
     type: "Product Design",
     date: "2024",
     role: "Product Designer",
@@ -203,7 +203,7 @@ const projectsData: Record<string, ProjectData> = {
     ],
   },
   "project-4": {
-    title: "Project Name",
+    title: "PayPal.com",
     type: "Type",
     date: "Date",
     role: "Role",
@@ -217,7 +217,7 @@ const projectsData: Record<string, ProjectData> = {
     media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
   },
   "project-5": {
-    title: "Project Name",
+    title: "Airbnb Connect",
     type: "Type",
     date: "Date",
     role: "Role",
@@ -231,7 +231,7 @@ const projectsData: Record<string, ProjectData> = {
     media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
   },
   "project-6": {
-    title: "Project Name",
+    title: "IBM Weather Channel",
     type: "Type",
     date: "Date",
     role: "Role",

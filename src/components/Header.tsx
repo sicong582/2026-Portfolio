@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const projects = [
-  { id: "project-1", title: "Project 1" },
-  { id: "project-2", title: "Project 2" },
-  { id: "project-3", title: "Project 3" },
-  { id: "project-4", title: "Project 4" },
-  { id: "project-5", title: "Project 5" },
-  { id: "project-6", title: "Project 6" },
-  { id: "project-7", title: "Project 7" },
+  { id: "project-1", title: "Purchase Order Dashboard" },
+  { id: "project-2", title: "Fulfillment Operation Tooling" },
+  { id: "project-3", title: "Audi.com" },
+  { id: "project-4", title: "PayPal.com" },
+  { id: "project-5", title: "Airbnb Connect" },
+  { id: "project-6", title: "IBM Weather Channel" },
+  { id: "project-7", title: "AI Exploration" },
 ];
 
 const Header = () => {
