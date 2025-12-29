@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import IllustrationSection from "@/components/IllustrationSection";
 import ProjectCard from "@/components/ProjectCard";
+import MusicPlayer from "@/components/MusicPlayer";
 import flowerHero from "@/assets/flower-hero.gif";
 import projectCoverDashboard from "@/assets/project-cover-dashboard.png";
 import projectCoverFulfillment from "@/assets/project-cover-fulfillment.png";
@@ -104,9 +105,10 @@ const scaleIn = {
 const Index = () => {
   return (
     <>
+      <MusicPlayer />
       <Header />
       
-      <main className="pt-20">
+      <main className="pt-32">
         {/* Hero Section */}
         <section className="hero container-wide py-12 lg:py-20">
           <motion.article 
