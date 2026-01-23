@@ -14,12 +14,20 @@ const Footer = () => {
               Email
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/in/sicongchen"
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground hover:text-muted-foreground transition-colors"
             >
               LinkedIn
+            </a>
+            <a
+              href="https://calendly.com/sicongchen"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-muted-foreground transition-colors"
+            >
+              Schedule a Call
             </a>
           </address>
         </section>
