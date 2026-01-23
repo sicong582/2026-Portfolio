@@ -1,4 +1,11 @@
 import { motion } from "framer-motion";
+import morganStanleyLogo from "@/assets/logos/morgan-stanley.svg";
+import amazonLogo from "@/assets/logos/amazon.png";
+import ibmLogo from "@/assets/logos/ibm.png";
+import vscoLogo from "@/assets/logos/vsco.svg";
+import airbnbLogo from "@/assets/logos/airbnb.svg";
+import paypalLogo from "@/assets/logos/paypal.png";
+import uberLogo from "@/assets/logos/uber.svg";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -17,16 +24,16 @@ const staggerContainer = {
 };
 
 const fullTimeClients = [
-  { name: "Morgan Stanley", type: "Full-time" },
-  { name: "Amazon", type: "Full-time" },
+  { name: "Morgan Stanley", logo: morganStanleyLogo },
+  { name: "Amazon", logo: amazonLogo },
 ];
 
 const agencyClients = [
-  { name: "IBM" },
-  { name: "VSCO" },
-  { name: "Airbnb" },
-  { name: "PayPal" },
-  { name: "Uber" },
+  { name: "IBM", logo: ibmLogo },
+  { name: "VSCO", logo: vscoLogo },
+  { name: "Airbnb", logo: airbnbLogo },
+  { name: "PayPal", logo: paypalLogo },
+  { name: "Uber", logo: uberLogo },
 ];
 
 const ClientsSection = () => {
@@ -49,34 +56,34 @@ const ClientsSection = () => {
         <div className="space-y-12">
           {/* Full-time roles */}
           <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <h3 className="font-sans text-sm uppercase tracking-wider text-muted-foreground mb-6">
+            <h3 className="font-sans text-sm uppercase tracking-wider text-muted-foreground mb-8">
               Full-time Employee
             </h3>
-            <div className="flex flex-wrap gap-8 lg:gap-16">
+            <div className="flex flex-wrap items-center gap-12 lg:gap-20">
               {fullTimeClients.map((client) => (
-                <span 
-                  key={client.name} 
-                  className="font-serif text-2xl lg:text-3xl text-foreground"
-                >
-                  {client.name}
-                </span>
+                <img 
+                  key={client.name}
+                  src={client.logo} 
+                  alt={client.name}
+                  className="h-8 lg:h-10 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                />
               ))}
             </div>
           </motion.div>
 
           {/* Agency clients */}
           <motion.div variants={fadeInUp} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-            <h3 className="font-sans text-sm uppercase tracking-wider text-muted-foreground mb-6">
+            <h3 className="font-sans text-sm uppercase tracking-wider text-muted-foreground mb-8">
               Clients through AKQA
             </h3>
-            <div className="flex flex-wrap gap-8 lg:gap-16">
+            <div className="flex flex-wrap items-center gap-12 lg:gap-20">
               {agencyClients.map((client) => (
-                <span 
-                  key={client.name} 
-                  className="font-serif text-2xl lg:text-3xl text-foreground"
-                >
-                  {client.name}
-                </span>
+                <img 
+                  key={client.name}
+                  src={client.logo} 
+                  alt={client.name}
+                  className="h-8 lg:h-10 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                />
               ))}
             </div>
           </motion.div>
