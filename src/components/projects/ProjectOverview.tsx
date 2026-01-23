@@ -1,0 +1,75 @@
+import { motion } from "framer-motion";
+
+interface ProjectOverviewProps {
+  description: string;
+  details: {
+    client: string;
+    tools: string;
+    role: string;
+  };
+}
+
+const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
+  return (
+    <section className="py-20 md:py-32">
+      <div className="container-wide max-w-[1000px]">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16">
+          {/* Left Column - Description (60%) */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="md:col-span-3"
+          >
+            <h2 className="font-serif text-3xl md:text-4xl mb-6 text-foreground">Overview</h2>
+            <p className="font-sans text-lg md:text-xl leading-relaxed text-foreground relaxed-spacing">
+              {description}
+            </p>
+          </motion.div>
+
+          {/* Right Column - Details (40%) with Glassmorphism */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="md:col-span-2"
+          >
+            <div className="glass rounded-2xl p-8 space-y-6">
+              <motion.div
+                whileHover={{ x: 4 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                  Client
+                </p>
+                <p className="font-sans text-base text-foreground relaxed-spacing">{details.client}</p>
+              </motion.div>
+              <motion.div
+                whileHover={{ x: 4 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                  Tools
+                </p>
+                <p className="font-sans text-base text-foreground relaxed-spacing">{details.tools}</p>
+              </motion.div>
+              <motion.div
+                whileHover={{ x: 4 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                  Role
+                </p>
+                <p className="font-sans text-base text-foreground relaxed-spacing">{details.role}</p>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ProjectOverview;

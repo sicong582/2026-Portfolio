@@ -1,19 +1,25 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import headshot from "@/assets/headshot.webp";
 
 const About = () => {
   return (
     <>
+      <SEO 
+        title="About | Sicong Chen"
+        description="Learn about Sicong Chen's journey as a product designer, from AKQA to Amazon, specializing in B2B platforms and AI-powered experiences."
+      />
       <Header />
       
-      <main className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-24">
         <div className="container-wide">
           <div className="max-w-2xl">
             <img
               src={headshot}
               alt="Sicong Chen"
               className="w-64 h-64 object-cover rounded-lg mb-12"
+              loading="eager"
             />
             
             <h1 className="font-serif text-5xl font-medium mb-8">Hello, I am Sicong</h1>

@@ -33,29 +33,46 @@ const ProjectCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.article 
-        className={`card-container bg-card rounded-2xl p-6 aspect-[4/3] relative overflow-hidden`}
+        className={`card-container bg-card rounded-2xl p-6 ${variant === "large" ? "aspect-[16/9]" : "aspect-[4/3]"} relative overflow-hidden group/card`}
         data-size={cardSize}
         animate={{ 
-          scale: isHovered ? 1.02 : 1,
-          boxShadow: isHovered ? "0 20px 40px -12px rgba(0, 0, 0, 0.15)" : "0 0 0 0 rgba(0, 0, 0, 0)"
+          scale: isHovered ? 1.03 : 1,
+          y: isHovered ? -8 : 0,
         }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          boxShadow: isHovered 
+            ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)" 
+            : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        }}
       >
         <figure className="card-content w-full h-full overflow-hidden rounded-xl relative">
+          {/* Gradient overlay that appears on hover */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-t from-foreground/0 via-foreground/0 to-foreground/20 z-10 rounded-xl"
+            animate={{ 
+              opacity: isHovered ? 1 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+          />
           <motion.img
             src={image}
             alt={title}
-            className="w-full h-full object-cover"
-            animate={{ scale: isHovered ? 1.05 : 1 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-full h-full object-cover relative z-0"
+            loading="lazy"
+            animate={{ 
+              scale: isHovered ? 1.08 : 1,
+              filter: isHovered ? "brightness(0.9)" : "brightness(1)",
+            }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           />
           
           {/* Hover Overlay */}
           <motion.div 
-            className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/50 to-transparent flex flex-col justify-end p-6 rounded-xl"
+            className="absolute inset-0 bg-gradient-to-t from-foreground/95 via-foreground/60 to-transparent flex flex-col justify-end p-6 rounded-xl z-20"
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.h3 
               className="text-background font-serif text-xl lg:text-2xl font-medium mb-2"

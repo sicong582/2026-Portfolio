@@ -3,14 +3,9 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import project1Image1 from "@/assets/project1-image1.png";
-import project1Image2 from "@/assets/project1-image2.png";
-import project1Image3 from "@/assets/project1-image3.png";
-import project1Image4 from "@/assets/project1-image4.png";
-import rewording2025Cover from "@/assets/rewording-2025-cover.png";
-import aiExplorationVideo from "@/assets/ai-exploration-video.mp4";
-import aiExplorationVideo2 from "@/assets/ai-exploration-video-2.mp4";
-import aiExplorationVideo3 from "@/assets/ai-exploration-video-3.mp4";
+import SEO from "@/components/SEO";
+import RewordingProject from "./RewordingProject";
+import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
 
 // Parallax Media Component
 const ParallaxMedia = ({ 
@@ -42,230 +37,24 @@ const ParallaxMedia = ({
     >
       <motion.div style={{ y, scale }} className="w-full h-full">
         {item.type === "video" ? (
-          <video src={item.src} controls className="w-full h-auto" playsInline />
+          <video src={item.src} controls className="w-full h-auto" playsInline preload="metadata" />
         ) : (
-          <img src={item.src} alt={alt} className="w-full h-auto" />
+          <img src={item.src} alt={alt} className="w-full h-auto" loading="lazy" />
         )}
       </motion.div>
     </motion.div>
   );
 };
 
-interface MediaItem {
-  type: "image" | "video";
-  src: string;
-}
-
-interface ProjectData {
-  title: string;
-  type: string;
-  date: string;
-  role: string;
-  duration: string;
-  team: string;
-  overview: string;
-  problem: {
-    title: string;
-    description: string;
-  };
-  process: {
-    title: string;
-    steps: string[];
-  };
-  approach: {
-    title: string;
-    description: string;
-  };
-  results: {
-    title: string;
-    metrics: { label: string; value: string }[];
-    description: string;
-  };
-  media: MediaItem[];
-}
-
-const projectsData: Record<string, ProjectData> = {
-  "project-1": {
-    title: "Purchase Order Dashboard",
-    type: "Graphic Design",
-    date: "2025",
-    role: "Lead Designer",
-    duration: "4 weeks",
-    team: "2 Designers, 1 Developer",
-    overview: "A comprehensive poster design project focused on visual communication and typographic exploration to convey complex messages through minimal design elements.",
-    problem: {
-      title: "The Problem",
-      description: "The client needed a series of posters that could effectively communicate abstract concepts while maintaining visual appeal and brand consistency. The challenge was to balance artistic expression with clear messaging.",
-    },
-    process: {
-      title: "Design Process",
-      steps: [
-        "Research & Discovery: Conducted competitive analysis and gathered visual inspiration",
-        "Concept Development: Created multiple design directions and mood boards",
-        "Iteration: Refined designs based on feedback and testing",
-        "Final Production: Prepared assets for print and digital distribution",
-      ],
-    },
-    approach: {
-      title: "The Approach",
-      description: "We adopted a human-centered design approach, focusing on the emotional impact of visual elements. Through iterative prototyping and user testing, we refined the designs to achieve maximum impact while maintaining clarity of message.",
-    },
-    results: {
-      title: "The Results",
-      metrics: [
-        { label: "Engagement Increase", value: "45%" },
-        { label: "Brand Recognition", value: "60%" },
-        { label: "Client Satisfaction", value: "100%" },
-      ],
-      description: "The final designs exceeded expectations, resulting in increased brand visibility and positive feedback from the target audience.",
-    },
-    media: [
-      { type: "image", src: rewording2025Cover },
-      { type: "image", src: project1Image1 },
-      { type: "image", src: project1Image2 },
-      { type: "image", src: project1Image3 },
-    ],
-  },
-  "project-2": {
-    title: "Fulfillment Operation Tooling",
-    type: "UX Design",
-    date: "2024",
-    role: "UX Designer",
-    duration: "8 weeks",
-    team: "3 Designers",
-    overview: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
-    problem: {
-      title: "The Problem",
-      description: "Description of the design problem and user pain points that needed to be addressed.",
-    },
-    process: {
-      title: "Design Process",
-      steps: [
-        "User Research: Conducted interviews and surveys",
-        "Analysis: Synthesized findings into actionable insights",
-        "Design: Created wireframes and prototypes",
-        "Testing: Validated designs with real users",
-      ],
-    },
-    approach: {
-      title: "The Approach",
-      description: "Description of the methodology and design thinking applied to solve the problem.",
-    },
-    results: {
-      title: "The Results",
-      metrics: [
-        { label: "Metric 1", value: "XX%" },
-        { label: "Metric 2", value: "XX%" },
-      ],
-      description: "Summary of the outcomes and impact of the design solution.",
-    },
-    media: [
-      { type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" },
-      { type: "image", src: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80" },
-    ],
-  },
-  "project-3": {
-    title: "Audi.com",
-    type: "Product Design",
-    date: "2024",
-    role: "Product Designer",
-    duration: "12 weeks",
-    team: "Cross-functional team",
-    overview: "A brief description of the project, the problem it solved, and the approach taken to design the solution.",
-    problem: {
-      title: "The Problem",
-      description: "Description of the design problem and user pain points that needed to be addressed.",
-    },
-    process: {
-      title: "Design Process",
-      steps: [
-        "Discovery: Understanding the problem space",
-        "Definition: Framing the design challenge",
-        "Development: Creating and testing solutions",
-        "Delivery: Implementing the final design",
-      ],
-    },
-    approach: {
-      title: "The Approach",
-      description: "Description of the methodology and design thinking applied to solve the problem.",
-    },
-    results: {
-      title: "The Results",
-      metrics: [
-        { label: "Metric 1", value: "XX%" },
-        { label: "Metric 2", value: "XX%" },
-      ],
-      description: "Summary of the outcomes and impact of the design solution.",
-    },
-    media: [
-      { type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" },
-      { type: "image", src: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200&q=80" },
-    ],
-  },
-  "project-4": {
-    title: "PayPal.com",
-    type: "Type",
-    date: "Date",
-    role: "Role",
-    duration: "Duration",
-    team: "Team",
-    overview: "A brief description of the project.",
-    problem: { title: "The Problem", description: "Problem description." },
-    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
-    approach: { title: "The Approach", description: "Approach description." },
-    results: { title: "The Results", metrics: [], description: "Results description." },
-    media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
-  },
-  "project-5": {
-    title: "Airbnb Connect",
-    type: "Type",
-    date: "Date",
-    role: "Role",
-    duration: "Duration",
-    team: "Team",
-    overview: "A brief description of the project.",
-    problem: { title: "The Problem", description: "Problem description." },
-    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
-    approach: { title: "The Approach", description: "Approach description." },
-    results: { title: "The Results", metrics: [], description: "Results description." },
-    media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
-  },
-  "project-6": {
-    title: "IBM Weather Channel",
-    type: "Type",
-    date: "Date",
-    role: "Role",
-    duration: "Duration",
-    team: "Team",
-    overview: "A brief description of the project.",
-    problem: { title: "The Problem", description: "Problem description." },
-    process: { title: "Design Process", steps: ["Step 1", "Step 2", "Step 3"] },
-    approach: { title: "The Approach", description: "Approach description." },
-    results: { title: "The Results", metrics: [], description: "Results description." },
-    media: [{ type: "image", src: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" }],
-  },
-  "project-7": {
-    title: "AI Exploration",
-    type: "AI Design",
-    date: "2024",
-    role: "AI Designer",
-    duration: "Ongoing",
-    team: "Solo Project",
-    overview: "An experimental exploration of AI-generated visuals and creative workflows, pushing the boundaries of human-AI collaboration in design.",
-    problem: { title: "The Problem", description: "Traditional design workflows can be time-consuming and limited by human imagination alone." },
-    process: { title: "Design Process", steps: ["Prompt Engineering: Crafting effective prompts for AI image generation", "Iteration: Refining outputs through multiple generations", "Curation: Selecting and combining the best results", "Enhancement: Post-processing and final touches"] },
-    approach: { title: "The Approach", description: "Leveraging cutting-edge AI tools to augment creative capabilities, exploring new visual territories that blend human creativity with machine learning." },
-    results: { title: "The Results", metrics: [], description: "A collection of unique AI-generated artworks that showcase the potential of human-AI creative collaboration." },
-    media: [
-      { type: "video", src: aiExplorationVideo },
-      { type: "video", src: aiExplorationVideo2 },
-    ],
-  },
-};
-
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const project = id ? projectsData[id] : null;
+  
+  // Use custom visual showcase page for REWORLDING project
+  if (id === "rewording-poster-design") {
+    return <RewordingProject />;
+  }
+
+  const project = id ? getProjectDetail(id) : null;
   
   // Use new side-by-side layout only for project-7 (AI Exploration)
   const useAlternatingLayout = id === "project-7";
@@ -287,9 +76,14 @@ const ProjectDetail = () => {
 
   return (
     <>
+      <SEO 
+        title={`${project.title} | Sicong Chen`}
+        description={project.overview}
+        type="article"
+      />
       <Header />
       
-      <main className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-24">
         <div className="container-wide">
           {/* Back link */}
           <Link
@@ -501,9 +295,9 @@ const ProjectDetail = () => {
                   {project.media.map((item, index) => (
                     <div key={index} className="bg-card rounded-2xl overflow-hidden">
                       {item.type === "video" ? (
-                        <video src={item.src} controls className="w-full h-auto" playsInline />
+                        <video src={item.src} controls className="w-full h-auto" playsInline preload="metadata" />
                       ) : (
-                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto" />
+                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto" loading="lazy" />
                       )}
                     </div>
                   ))}
@@ -518,17 +312,17 @@ const ProjectDetail = () => {
               More Projects
             </h3>
             <div className="flex flex-wrap justify-center gap-4">
-              {Object.entries(projectsData).map(([projectId, projectData]) => (
+              {getAllProjectSummaries().map((projectSummary) => (
                 <Link
-                  key={projectId}
-                  to={`/project/${projectId}`}
+                  key={projectSummary.id}
+                  to={`/project/${projectSummary.id}`}
                   className={`font-sans text-sm px-4 py-2 rounded-full border transition-colors ${
-                    id === projectId
+                    id === projectSummary.id
                       ? "bg-foreground text-background border-foreground"
                       : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
                   }`}
                 >
-                  {projectData.title}
+                  {projectSummary.title}
                 </Link>
               ))}
             </div>
