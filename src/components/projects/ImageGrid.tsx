@@ -65,7 +65,7 @@ const ImageGrid = ({
               whileHover={{ y: -4 }}
             >
               <motion.div
-                className={`${aspectRatio} rounded-2xl overflow-hidden bg-card shadow-lg parallax-container`}
+                className={`${aspectRatio || ""} rounded-2xl overflow-hidden bg-card shadow-lg parallax-container ${!aspectRatio ? "flex items-center justify-center" : ""}`}
                 whileHover={{ 
                   scale: 1.02,
                   boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.15)",
@@ -75,7 +75,7 @@ const ImageGrid = ({
                 <motion.img
                   src={image}
                   alt={captions[index] || `Image ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className={`w-full ${aspectRatio ? "h-full object-cover" : "h-auto object-contain"}`}
                   loading="lazy"
                   animate={{
                     scale: hoveredIndex === index ? 1.05 : 1,

@@ -6,6 +6,7 @@ interface ProjectOverviewProps {
     client: string;
     tools: string;
     role: string;
+    year?: string;
   };
 }
 
@@ -22,8 +23,8 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="md:col-span-3"
           >
-            <h2 className="font-serif text-3xl md:text-4xl mb-6 text-foreground">Overview</h2>
-            <p className="font-sans text-lg md:text-xl leading-relaxed text-foreground relaxed-spacing">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 text-foreground">Overview</h2>
+            <p className="font-sans text-muted-foreground leading-relaxed relaxed-spacing">
               {description}
             </p>
           </motion.div>
@@ -41,29 +42,42 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
                 whileHover={{ x: 4 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">
-                  Client
+                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                  CLIENT
                 </p>
-                <p className="font-sans text-base text-foreground relaxed-spacing">{details.client}</p>
+                <p className="font-sans text-base text-foreground font-medium">
+                  {details.client}
+                </p>
               </motion.div>
               <motion.div
                 whileHover={{ x: 4 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">
-                  Tools
+                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                  TOOLS
                 </p>
-                <p className="font-sans text-base text-foreground relaxed-spacing">{details.tools}</p>
+                <p className="font-sans text-base text-foreground font-medium">{details.tools}</p>
               </motion.div>
               <motion.div
                 whileHover={{ x: 4 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2">
-                  Role
+                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                  ROLE
                 </p>
-                <p className="font-sans text-base text-foreground relaxed-spacing">{details.role}</p>
+                <p className="font-sans text-base text-foreground font-medium">{details.role}</p>
               </motion.div>
+              {details.year && (
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                    YEAR
+                  </p>
+                  <p className="font-sans text-base text-foreground font-medium">{details.year}</p>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </div>

@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import ProjectCard from "@/components/ProjectCard";
-import { getB2BProjects, type ProjectSummary } from "@/data/projects";
+import { getB2BProjects, getVisualBrandProjects, type ProjectSummary } from "@/data/projects";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
@@ -26,17 +26,19 @@ const staggerContainer = {
   },
 };
 
-// Get first 3 B2B projects
-const b2bProjects = getB2BProjects().slice(0, 3);
+// Get all projects
+const b2bProjects = getB2BProjects();
+const visualBrandProjects = getVisualBrandProjects();
 
 interface ProjectCategoryProps {
   title: string;
   subtitle?: string;
   projects: ProjectSummary[];
+  fullWidth?: boolean;
   showOffset?: boolean;
 }
 
-const ProjectCategory = ({ title, subtitle, projects, showOffset = false }: ProjectCategoryProps) => {
+const ProjectCategory = ({ title, subtitle, projects, fullWidth = false, showOffset = false }: ProjectCategoryProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -87,7 +89,7 @@ const ProjectCategory = ({ title, subtitle, projects, showOffset = false }: Proj
         )}
       </motion.div>
 
-      <div className="w-full grid grid-cols-1 gap-8 px-6 lg:px-12">
+      <div className={`w-full grid gap-8 px-6 lg:px-12 ${fullWidth ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
         {projects.map((project, index) => (
           <motion.div
             key={project.id}
@@ -99,9 +101,13 @@ const ProjectCategory = ({ title, subtitle, projects, showOffset = false }: Proj
             }}
             whileHover={{ y: -8 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-full"
+            className={`w-full ${showOffset && !fullWidth && index % 2 === 1 ? "md:mt-24" : ""}`}
           >
-            <ProjectCard {...project} variant="large" />
+            <ProjectCard 
+              {...project} 
+              variant="large" 
+              aspectRatio={fullWidth ? "16/9" : "4/3"}
+            />
           </motion.div>
         ))}
       </div>
@@ -116,6 +122,15 @@ const ProjectsSection = () => {
         title="B2B Products" 
         subtitle="Deep Dive Case Studies"
         projects={b2bProjects}
+        fullWidth={true}
+      />
+      
+      <ProjectCategory 
+        title="Visual + Brand Design" 
+        subtitle="Visual Showcase"
+        projects={visualBrandProjects}
+        fullWidth={false}
+        showOffset={true}
       />
     </section>
   );

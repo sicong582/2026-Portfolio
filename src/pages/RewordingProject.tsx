@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/Header";
@@ -6,70 +7,49 @@ import SEO from "@/components/SEO";
 import ProjectOverview from "@/components/projects/ProjectOverview";
 import ImageGrid from "@/components/projects/ImageGrid";
 import ProjectFooter from "@/components/projects/ProjectFooter";
-import rewordingCover from "@/assets/rewording-2025-cover.png";
+import { getProjectDetail, getAllProjectSummaries } from "@/data/projects";
 
-// Import project assets
-// Primary poster (hero image) - Add primary-poster.png to src/assets/projects/rewording-poster-design/
-// For now using cover as fallback - replace with actual import when image is added:
-// import primaryPoster from "@/assets/projects/rewording-poster-design/primary-poster.png";
-const primaryPoster = rewordingCover; // TODO: Replace with actual primary poster import
+// Import all project assets from rewording-poster-design folder
+import primaryPoster from "@/assets/projects/rewording-poster-design/rewording-primary-poster.png";
+import poster1 from "@/assets/projects/rewording-poster-design/rewording-poster-01.png";
+import poster2 from "@/assets/projects/rewording-poster-design/rewording-poster-02.png";
+import poster3 from "@/assets/projects/rewording-poster-design/rewording-poster-03.png";
+import poster4 from "@/assets/projects/rewording-poster-design/rewording-poster-04.png";
+import poster5 from "@/assets/projects/rewording-poster-design/rewording-poster-05.png";
+import poster6 from "@/assets/projects/rewording-poster-design/rewording-poster-06.png";
+import poster7 from "@/assets/projects/rewording-poster-design/rewording-poster-07.png";
+import poster8 from "@/assets/projects/rewording-poster-design/rewording-poster-08.png";
+import poster9 from "@/assets/projects/rewording-poster-design/rewording-poster-09.png";
+import poster10 from "@/assets/projects/rewording-poster-design/rewording-poster-10.png";
+import poster11 from "@/assets/projects/rewording-poster-design/rewording-poster-11.png";
+import poster12 from "@/assets/projects/rewording-poster-design/rewording-poster-12.png";
+import poster13 from "@/assets/projects/rewording-poster-design/rewording-poster-013.png";
+import poster14 from "@/assets/projects/rewording-poster-design/rewording-poster-14.png";
 
-// Poster variations (6 images) - Uncomment when images are added
-// import poster1 from "@/assets/projects/rewording-poster-design/poster-1.jpg";
-// import poster2 from "@/assets/projects/rewording-poster-design/poster-2.jpg";
-// import poster3 from "@/assets/projects/rewording-poster-design/poster-3.jpg";
-// import poster4 from "@/assets/projects/rewording-poster-design/poster-4.jpg";
-// import poster5 from "@/assets/projects/rewording-poster-design/poster-5.jpg";
-// import poster6 from "@/assets/projects/rewording-poster-design/poster-6.jpg";
-
-// Detail shots (4 images) - Uncomment when images are added
-// import detail1 from "@/assets/projects/rewording-poster-design/detail-1.jpg";
-// import detail2 from "@/assets/projects/rewording-poster-design/detail-2.jpg";
-// import detail3 from "@/assets/projects/rewording-poster-design/detail-3.jpg";
-// import detail4 from "@/assets/projects/rewording-poster-design/detail-4.jpg";
-
-// Applications (6 images) - Uncomment when images are added
-// import application1 from "@/assets/projects/rewording-poster-design/application-1.jpg";
-// import application2 from "@/assets/projects/rewording-poster-design/application-2.jpg";
-// import application3 from "@/assets/projects/rewording-poster-design/application-3.jpg";
-// import application4 from "@/assets/projects/rewording-poster-design/application-4.jpg";
-// import application5 from "@/assets/projects/rewording-poster-design/application-5.jpg";
-// import application6 from "@/assets/projects/rewording-poster-design/application-6.jpg";
-
-// Primary poster image - currently using cover as placeholder
-// Replace with: const mainPoster = primaryPoster; when image is added
+// Primary poster image
 const mainPoster = primaryPoster;
 
-// Poster variations - uncomment and use when images are added
-const posterVariations = [
-  rewordingCover, // Replace with: poster1,
-  rewordingCover, // Replace with: poster2,
-  rewordingCover, // Replace with: poster3,
-  rewordingCover, // Replace with: poster4,
-  rewordingCover, // Replace with: poster5,
-  rewordingCover, // Replace with: poster6,
-];
-
-// Detail shots - uncomment and use when images are added
-const detailShots = [
-  rewordingCover, // Replace with: detail1,
-  rewordingCover, // Replace with: detail2,
-  rewordingCover, // Replace with: detail3,
-  rewordingCover, // Replace with: detail4,
-];
-
-// Applications - uncomment and use when images are added
-const applications = [
-  rewordingCover, // Replace with: application1,
-  rewordingCover, // Replace with: application2,
-  rewordingCover, // Replace with: application3,
-  rewordingCover, // Replace with: application4,
-  rewordingCover, // Replace with: application5,
-  rewordingCover, // Replace with: application6,
+// All poster variations (excluding primary poster which is displayed separately)
+const allPosters = [
+  poster1,
+  poster2,
+  poster3,
+  poster4,
+  poster5,
+  poster6,
+  poster7,
+  poster8,
+  poster9,
+  poster10,
+  poster11,
+  poster12,
+  poster13,
+  poster14,
 ];
 
 const RewordingProject = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const project = getProjectDetail("rewording-poster-design");
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -80,83 +60,158 @@ const RewordingProject = () => {
   const posterGridY = useTransform(scrollYProgress, [0.4, 0.7], [0, -30]);
   const detailGridY = useTransform(scrollYProgress, [0.6, 0.9], [0, -40]);
 
+  if (!project) return null;
+
+  // Extract project info for ProjectOverview
+  const extractProjectInfo = () => {
+    const clientMetric = project.results.metrics.find(m => m.label === "Client");
+    const toolsMetric = project.results.metrics.find(m => m.label === "Tools");
+    let client = clientMetric?.value || "Tohoku University";
+    
+    // Remove "FUSE Lab" from client string, keep only "Tohoku University"
+    if (client.includes("FUSE Lab")) {
+      client = client.replace(/FUSE Lab,?\s*/gi, "").trim();
+    }
+    
+    return {
+      client,
+      tools: toolsMetric?.value || "Midjourney, Figma, Banana Nano",
+      role: project.role || "Visual Designer",
+      year: "2025",
+    };
+  };
+
   return (
     <div ref={containerRef} className="relative">
       <SEO
         title="REWORLDING | Sicong Chen"
-        description="A Visual Identity for Global Futures Design - A poster series exploring themes of technology, humanity, and the future through bold typography and AI-generated imagery."
+        description={project.overview}
         type="article"
       />
       <Header />
 
-      {/* Overview Section */}
-      <ProjectOverview
-        description="A poster series exploring themes of technology, humanity, and the future through bold typography and AI-generated imagery. Created for FUSE Lab at Tohoku University's inaugural conference on democratizing futures thinking.\n\nThe visual system bridges Eastern and Western design sensibilities, representing the global dialogue while highlighting Asia-focused perspectives. Using AI tools, I created abstract visual metaphors for complex concepts like 'productive misalignments,' 'futures literacy,' and 'world modulation.'"
-        details={{
-          client: "Tohoku University",
-          tools: "Midjourney, Figma, Banana Nano",
-          role: "Visual Designer",
-        }}
-      />
+      <main id="main-content" className="pt-32 pb-24">
+        <div className="container-wide">
+          {/* Back link */}
+          <Link
+            to="/"
+            className="inline-block mb-8 font-sans text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back
+          </Link>
 
-      {/* Main Poster - Full Width with Parallax */}
-      <section className="py-20 md:py-32 overflow-hidden">
-        <div className="container-wide max-w-[1400px]">
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            style={{ y: mainPosterY }}
-            className="w-full aspect-[3/4] rounded-2xl overflow-hidden bg-card shadow-2xl parallax-container"
-          >
-            <motion.img
-              src={mainPoster}
-              alt="Primary conference poster"
-              className="w-full h-full object-cover"
-              loading="lazy"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            />
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="font-sans text-sm text-muted-foreground mt-6 text-center"
-          >
-            Primary conference poster
-          </motion.p>
+          {/* Project header */}
+          <div className="mb-8">
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-4">
+              {project.title}
+            </h1>
+            <p className="font-sans text-muted-foreground text-base">
+              {project.type} | {project.date}
+            </p>
+          </div>
+
+          {/* Overview Section */}
+          <ProjectOverview
+            description={project.overview}
+            details={extractProjectInfo()}
+          />
+
+          {/* Two-column layout: Text sections + Primary Poster */}
+          <section className="py-20 md:py-32">
+            <div className="container-wide max-w-[1000px]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+                {/* Left column: Text sections - 50% width */}
+                <div className="space-y-16">
+                  {/* Process Section */}
+                  <motion.section
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.process.title}</h2>
+                    {project.process.description ? (
+                      <p className="font-sans text-muted-foreground leading-relaxed">
+                        {project.process.description}
+                      </p>
+                    ) : (
+                      <ul className="space-y-3">
+                        {project.process.steps?.map((step, index) => (
+                          <li key={index} className="font-sans text-muted-foreground leading-relaxed">
+                            {step}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </motion.section>
+                </div>
+
+                {/* Right column: Primary Poster - 50% width */}
+                <motion.section
+                  className="lg:sticky lg:top-32"
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <motion.div
+                    style={{ y: mainPosterY }}
+                    className="w-full aspect-[3/4] rounded-2xl overflow-hidden bg-card shadow-2xl parallax-container flex items-center justify-center"
+                  >
+                    <motion.img
+                      src={mainPoster}
+                      alt="Primary conference poster"
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  </motion.div>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 }}
+                    className="font-sans text-sm text-muted-foreground mt-6 text-center"
+                  >
+                    Primary conference poster
+                  </motion.p>
+                </motion.section>
+              </div>
+            </div>
+          </section>
+
+          {/* Poster Collection Grid - All posters */}
+          <ImageGrid
+            images={allPosters}
+            columns={3}
+            title="Design Direction Exploration"
+            aspectRatio="aspect-[3/4]"
+          />
+
+          {/* Project navigation */}
+          <nav className="mt-20 border-t border-border pt-12">
+            <h3 className="font-sans text-sm text-muted-foreground mb-6 text-center">
+              More Projects
+            </h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              {getAllProjectSummaries().map((projectSummary) => (
+                <Link
+                  key={projectSummary.id}
+                  to={`/project/${projectSummary.id}`}
+                  className={`font-sans text-sm px-4 py-2 rounded-full border transition-colors ${
+                    "rewording-poster-design" === projectSummary.id
+                      ? "bg-foreground text-background border-foreground"
+                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
+                  }`}
+                >
+                  {projectSummary.title}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
-      </section>
-
-      {/* Poster Variations Grid */}
-      <ImageGrid
-        images={posterVariations}
-        columns={3}
-        title="Poster Series"
-        aspectRatio="aspect-[4/3]"
-      />
-
-      {/* Detail Shots Grid */}
-      <ImageGrid
-        images={detailShots}
-        columns={2}
-        title="Design Details"
-        aspectRatio="aspect-[4/3]"
-      />
-
-      {/* Applications Grid */}
-      <ImageGrid
-        images={applications}
-        columns={3}
-        title="Applications"
-        aspectRatio="aspect-[4/3]"
-      />
-
-      {/* Footer */}
-      <ProjectFooter />
+      </main>
 
       <Footer />
     </div>

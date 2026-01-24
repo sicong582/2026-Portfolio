@@ -17,7 +17,7 @@ const Work = () => {
       
       <main id="main-content" className="pt-32 pb-24">
         <div className="container-wide">
-          <h1 className="font-serif text-5xl font-medium mb-12">Work</h1>
+          <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-12">Work</h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (

@@ -10,6 +10,7 @@ interface ProjectCardProps {
   image: string;
   description?: string;
   variant?: "large" | "small";
+  aspectRatio?: "16/9" | "4/3";
 }
 
 const ProjectCard = ({
@@ -20,10 +21,18 @@ const ProjectCard = ({
   image,
   description,
   variant = "large",
+  aspectRatio,
 }: ProjectCardProps) => {
   const isLarge = variant === "large";
   const cardSize = isLarge ? "large" : "small";
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Determine aspect ratio: use prop if provided, otherwise use variant default
+  const finalAspectRatio = aspectRatio 
+    ? (aspectRatio === "16/9" ? "aspect-[16/9]" : "aspect-[4/3]")
+    : variant === "large" 
+      ? "aspect-[16/9]" 
+      : "aspect-[4/3]";
 
   return (
     <Link 
@@ -33,7 +42,7 @@ const ProjectCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.article 
-        className={`card-container bg-card rounded-2xl p-6 ${variant === "large" ? "aspect-[16/9]" : "aspect-[4/3]"} relative overflow-hidden group/card`}
+        className={`card-container bg-card rounded-2xl p-6 ${finalAspectRatio} relative overflow-hidden group/card`}
         data-size={cardSize}
         animate={{ 
           scale: isHovered ? 1.03 : 1,

@@ -4,9 +4,8 @@ import projectCoverDashboard from "@/assets/project-cover-dashboard.png";
 import projectCoverFulfillment from "@/assets/project-cover-fulfillment.png";
 import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.png";
-import projectCoverAirbnb from "@/assets/project-cover-airbnb.png";
 import projectCoverAI from "@/assets/project-cover-ai.png";
-import rewordingCover from "@/assets/rewording-2025-cover.png";
+import rewordingCover from "@/assets/projects/rewording-poster-design/rewording-primary-poster.png";
 
 // Types
 export interface MediaItem {
@@ -38,7 +37,8 @@ export interface ProjectDetail {
   };
   process: {
     title: string;
-    steps: string[];
+    steps?: string[];
+    description?: string;
   };
   approach: {
     title: string;
@@ -288,6 +288,8 @@ export const projects: Project[] = [
       results: {
         title: "The Results",
         metrics: [
+          { label: "Client", value: "Audi" },
+          { label: "Tools", value: "Figma, Sketch, Adobe Creative Suite" },
           { label: "Engagement Increase", value: "65%" },
           { label: "Configurator Usage", value: "80%" },
           { label: "Brand Perception", value: "+40%" },
@@ -295,87 +297,39 @@ export const projects: Project[] = [
         description: "The redesigned website and app significantly improved user engagement and brand perception, with high usage of the vehicle configurator feature.",
       },
       media: [
-        // Images will be added to: src/assets/projects/audi/
-        { type: "image", src: "/src/assets/projects/audi/cover.jpg" },
-      ],
-    },
-  },
-  {
-    id: "airbnb-connect",
-    title: "Airbnb Connect",
-    type: "Visual + Brand Design",
-    date: "2022",
-    image: projectCoverAirbnb,
-    description: "Host management tools connecting property owners with travelers.",
-    category: "visual-brand",
-    detail: {
-      title: "Airbnb Connect",
-      type: "Visual + Brand Design",
-      date: "2022",
-      role: "Product Designer",
-      duration: "10 weeks",
-      team: "3 Designers, 4 Developers",
-      overview: "A comprehensive host management platform that connects property owners with travelers through intuitive booking and communication features, streamlining the entire hosting experience.",
-      problem: {
-        title: "The Problem",
-        description: "Hosts struggled to manage multiple properties, bookings, and communications across different platforms. The existing tools were fragmented and didn't provide a unified experience.",
-      },
-      process: {
-        title: "Design Process",
-        steps: [
-          "User Research: Interviewed hosts to understand their workflows",
-          "Analysis: Identified key pain points and opportunities",
-          "Design: Created wireframes and prototypes",
-          "Testing: Validated with hosts and iterated based on feedback",
-        ],
-      },
-      approach: {
-        title: "The Approach",
-        description: "We designed a unified platform that consolidates all host management needs into a single, intuitive interface. The design emphasizes quick actions, clear information hierarchy, and seamless communication tools.",
-      },
-      results: {
-        title: "The Results",
-        metrics: [
-          { label: "Time Saved", value: "40%" },
-          { label: "Host Satisfaction", value: "90%" },
-          { label: "Booking Efficiency", value: "+35%" },
-        ],
-        description: "The platform significantly improved host efficiency and satisfaction, with measurable improvements in booking management.",
-      },
-      media: [
-        // Images will be added to: src/assets/projects/airbnb-connect/
-        { type: "image", src: "/src/assets/projects/airbnb-connect/cover.jpg" },
+        { type: "image", src: "/src/assets/projects/audi/audi-01.png" },
+        { type: "image", src: "/src/assets/projects/audi/audi-02.jpg" },
+        { type: "image", src: "/src/assets/projects/audi/audi-03.jpg" },
+        { type: "image", src: "/src/assets/projects/audi/audi-04.jpg" },
+        { type: "image", src: "/src/assets/projects/audi/audi-05.jpg" },
+        { type: "image", src: "/src/assets/projects/audi/audi-06.jpg" },
+        { type: "image", src: "/src/assets/projects/audi/audi-07.jpg" },
       ],
     },
   },
   {
     id: "rewording-poster-design",
     title: "REWORLDING",
-    type: "Visual + Brand Design",
+    type: "Poster Design",
     date: "2025",
     image: rewordingCover, // Placeholder - replace with actual image
-    description: "A Visual Identity for Global Futures Design - A poster series exploring themes of technology, humanity, and the future through bold typography and AI-generated imagery.",
+    description: "A visual identity for Tohoku University's REWORLDING event—a global dialogue on futures design bringing together practitioners and educators to democratize futures thinking, with a focus on Asia.",
     category: "visual-brand",
     detail: {
       title: "REWORLDING",
-      type: "Visual + Brand Design",
+      type: "Poster Design",
       date: "2025",
       role: "Visual Designer",
       duration: "Project-based",
       team: "Client: FUSE Lab, Tohoku University",
-      overview: "A poster series exploring themes of technology, humanity, and the future through bold typography and AI-generated imagery. Created for FUSE Lab at Tohoku University's inaugural conference on democratizing futures thinking.\n\nThe visual system bridges Eastern and Western design sensibilities, representing the global dialogue while highlighting Asia-focused perspectives. Using AI tools, I created abstract visual metaphors for complex concepts like 'productive misalignments,' 'futures literacy,' and 'world modulation.'",
+      overview: "REWORLDING is an academic conference bringing together practitioners and educators worldwide to exchange insights on future design and speculative design.\n\nThis poster series for Tohoku University's inaugural conference explores technology, humanity, and the future through AI-generated imagery. The visual system bridges Eastern and Western design sensibilities, creating abstract metaphors for concepts like 'future thinking,' 'universal,' and 'world modulation.'",
       problem: {
         title: "Scope & Direction",
         description: "Defined the timeline and clarified the scope including web banners and posters. Defined key requirements such as essential information to include in the poster.",
       },
       process: {
         title: "Design Process",
-        steps: [
-          "Defined the timeline and clarified the scope including web banners and posters",
-          "Defined key requirements such as essential information to include in the poster",
-          "Used moodboards to gauge client preference and direction",
-          "Used AI-assisted Midjourney to explore visual directions and Banana Nano and Figma to finalize designs",
-        ],
+        description: "I collaborated with Tohoku University to define the project timeline, scope, and information hierarchy for web banners and posters. I developed moodboards to explore visual directions and align on design preferences.",
       },
       approach: {
         title: "The Approach",

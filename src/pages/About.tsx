@@ -22,7 +22,7 @@ const About = () => {
               loading="eager"
             />
             
-            <h1 className="font-serif text-5xl font-medium mb-8">Hello, I am Sicong</h1>
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-8">Hello, I am Sicong</h1>
             
             <div className="space-y-12 font-sans text-lg text-muted-foreground leading-relaxed">
               

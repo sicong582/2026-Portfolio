@@ -3,7 +3,6 @@ import morganStanleyLogo from "@/assets/logos/morgan-stanley.svg";
 import amazonLogo from "@/assets/logos/amazon.png";
 import ibmLogo from "@/assets/logos/ibm.png";
 import vscoLogo from "@/assets/logos/vsco.svg";
-import airbnbLogo from "@/assets/logos/airbnb.svg";
 import paypalLogo from "@/assets/logos/paypal.png";
 import uberLogo from "@/assets/logos/uber.svg";
 
@@ -31,7 +30,6 @@ const fullTimeClients = [
 const agencyClients = [
   { name: "IBM", logo: ibmLogo },
   { name: "VSCO", logo: vscoLogo },
-  { name: "Airbnb", logo: airbnbLogo },
   { name: "PayPal", logo: paypalLogo },
   { name: "Uber", logo: uberLogo },
 ];

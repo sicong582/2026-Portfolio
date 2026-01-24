@@ -12,7 +12,6 @@ This directory contains image and video assets organized by project.
 ### Visual + Brand Design Projects
 - `paypal/` - PayPal.com complete brand redesign
 - `audi/` - Audi.com iOS app and website redesign
-- `airbnb-connect/` - Airbnb Connect host management tools
 - `rewording-poster-design/` - REWORLDING: A Visual Identity for Global Futures Design
 
 ## Adding Assets

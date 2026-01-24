@@ -4,8 +4,70 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import ProjectOverview from "@/components/projects/ProjectOverview";
 import RewordingProject from "./RewordingProject";
+import AudiProject from "./AudiProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
+
+// Helper function to extract client, tools, and role from project data
+const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
+  if (!project) return { client: "", tools: "", role: "" };
+
+  // Extract client from team field or results.metrics
+  let client = "";
+  if (project.team && project.team.includes("Client:")) {
+    client = project.team.replace("Client:", "").trim();
+  } else {
+    const clientMetric = project.results.metrics.find(m => 
+      m.label.toLowerCase() === "client" || m.label.toLowerCase().includes("client")
+    );
+    if (clientMetric) {
+      client = clientMetric.value;
+    } else {
+      // For B2B projects, use team info or set as internal
+      // For visual brand projects, try to extract from team or use project context
+      if (project.team && !project.team.includes("Designers") && !project.team.includes("Developers")) {
+        client = project.team;
+      } else {
+        client = "Internal Project";
+      }
+    }
+  }
+
+  // Remove "FUSE Lab" from client string, keep only "Tohoku University"
+  if (client.includes("FUSE Lab")) {
+    client = client.replace(/FUSE Lab,?\s*/gi, "").trim();
+  }
+
+  // Extract tools from results.metrics
+  let tools = "";
+  const toolsMetric = project.results.metrics.find(m => 
+    m.label.toLowerCase() === "tools" || m.label.toLowerCase().includes("tool")
+  );
+  if (toolsMetric) {
+    tools = toolsMetric.value;
+  } else {
+    // Try to infer from approach description or use common defaults
+    const approachText = project.approach.description.toLowerCase();
+    const overviewText = project.overview.toLowerCase();
+    const combinedText = approachText + " " + overviewText;
+    
+    if (combinedText.includes("midjourney") || combinedText.includes("banana nano")) {
+      tools = "Midjourney, Figma, Banana Nano";
+    } else if (combinedText.includes("react") && combinedText.includes("component")) {
+      tools = "Figma, React, TypeScript";
+    } else if (combinedText.includes("figma")) {
+      tools = "Figma, Design Tools";
+    } else {
+      tools = "Figma, Design Tools";
+    }
+  }
+
+  // Role is directly available
+  const role = project.role || "Designer";
+
+  return { client, tools, role };
+};
 
 // Parallax Media Component
 const ParallaxMedia = ({ 
@@ -54,6 +116,11 @@ const ProjectDetail = () => {
     return <RewordingProject />;
   }
 
+  // Use custom visual showcase page for Audi project
+  if (id === "audi") {
+    return <AudiProject />;
+  }
+
   const project = id ? getProjectDetail(id) : null;
   
   // Use new side-by-side layout only for project-7 (AI Exploration)
@@ -94,28 +161,20 @@ const ProjectDetail = () => {
           </Link>
 
           {/* Project header */}
-          <div className="mb-16">
-            <h1 className="font-serif text-4xl lg:text-5xl font-medium mb-4">
+          <div className="mb-8">
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-4">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground mb-6">
+            <p className="font-sans text-muted-foreground text-base">
               {project.type} | {project.date}
             </p>
-            <div className="flex gap-8">
-              <div>
-                <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Role</p>
-                <p className="font-sans text-sm">{project.role}</p>
-              </div>
-              <div>
-                <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Duration</p>
-                <p className="font-sans text-sm">{project.duration}</p>
-              </div>
-              <div>
-                <p className="font-sans text-xs text-muted-foreground uppercase tracking-wider mb-1">Team</p>
-                <p className="font-sans text-sm">{project.team}</p>
-              </div>
-            </div>
           </div>
+
+          {/* Project Overview Section */}
+          <ProjectOverview
+            description={project.overview}
+            details={extractProjectInfo(project)}
+          />
 
           {useAlternatingLayout ? (
             /* Side-by-side layout for AI Exploration: text left, media right */
@@ -171,54 +230,6 @@ const ProjectDetail = () => {
                 )}
               </motion.div>
 
-              {/* Approach with third media */}
-              <motion.div 
-                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
-                <div>
-                  <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
-                  <p className="font-sans text-muted-foreground leading-relaxed">
-                    {project.approach.description}
-                  </p>
-                </div>
-                {project.media[2] && (
-                  <ParallaxMedia item={project.media[2]} alt={`${project.title} - 3`} />
-                )}
-              </motion.div>
-
-              {/* Results with fourth media */}
-              <motion.div 
-                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              >
-                <div>
-                  <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
-                  {project.results.metrics.length > 0 && (
-                    <div className="flex gap-6 mb-4">
-                      {project.results.metrics.map((metric, index) => (
-                        <div key={index}>
-                          <p className="font-serif text-2xl font-medium">{metric.value}</p>
-                          <p className="font-sans text-xs text-muted-foreground">{metric.label}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <p className="font-sans text-muted-foreground leading-relaxed">
-                    {project.results.description}
-                  </p>
-                </div>
-                {project.media[3] && (
-                  <ParallaxMedia item={project.media[3]} alt={`${project.title} - 4`} />
-                )}
-              </motion.div>
-
               {/* Additional media items */}
               {project.media.length > 4 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -235,14 +246,6 @@ const ProjectDetail = () => {
           ) : (
             /* Original stacked layout for other projects */
             <div className="space-y-16">
-              {/* Overview */}
-              <section>
-                <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
-                  {project.overview}
-                </p>
-              </section>
-
               {/* Problem */}
               <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
@@ -261,32 +264,6 @@ const ProjectDetail = () => {
                     </li>
                   ))}
                 </ul>
-              </section>
-
-              {/* Approach */}
-              <section>
-                <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
-                  {project.approach.description}
-                </p>
-              </section>
-
-              {/* Results */}
-              <section>
-                <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
-                {project.results.metrics.length > 0 && (
-                  <div className="flex gap-8 mb-6">
-                    {project.results.metrics.map((metric, index) => (
-                      <div key={index}>
-                        <p className="font-serif text-3xl font-medium">{metric.value}</p>
-                        <p className="font-sans text-sm text-muted-foreground">{metric.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
-                  {project.results.description}
-                </p>
               </section>
 
               {/* Media Gallery */}
