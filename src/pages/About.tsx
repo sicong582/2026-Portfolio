@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import headshot from "@/assets/headshot.webp";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const About = () => {
+  const { t } = useLanguage();
+  
   return (
     <>
       <SEO 
@@ -22,47 +25,47 @@ const About = () => {
               loading="eager"
             />
             
-            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-8">Hello, I am Sicong</h1>
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-8">{t("about.title")}</h1>
             
             <div className="space-y-12 font-sans text-lg text-muted-foreground leading-relaxed">
               
               {/* Now Section */}
               <div className="space-y-4">
-                <h2 className="font-serif text-2xl text-foreground">Now</h2>
+                <h2 className="font-serif text-2xl text-foreground">{t("about.now.title")}</h2>
                 <p>
-                  I'm currently learning vibe coding and recently finished the Meta Front-End Developer Specialization (9 courses). I've been listening to a lot of Lenny's Podcast, thinking like a PM about how to acquire users and build great products. I'm more interested in growing as a builder.
+                  {t("about.now.p1")}
                 </p>
                 <p>
-                  Most recently, I've been using AI tools for generated content in branding and advertising. I believe in the AI age, the future designer skillset shifts to product strategy, creative direction, distribution, and AI prototyping.
+                  {t("about.now.p2")}
                 </p>
               </div>
 
               {/* Amazon Section */}
               <div className="space-y-4">
-                <h2 className="font-serif text-2xl text-foreground">Most recently — Amazon</h2>
+                <h2 className="font-serif text-2xl text-foreground">{t("about.amazon.title")}</h2>
                 <p>
-                  I've been working with the Amazon Fresh B2B team, leading innovative design initiatives for warehouse inventory management and vendor product ordering.
+                  {t("about.amazon.p1")}
                 </p>
                 <p>
-                  I'm driven by the opportunity to tackle new challenges daily, diving deep into complex contexts and addressing user pain points to create impactful solutions.
+                  {t("about.amazon.p2")}
                 </p>
               </div>
 
               {/* Morgan Stanley Section */}
               <div className="space-y-4">
-                <h2 className="font-serif text-2xl text-foreground">Before that — Morgan Stanley</h2>
+                <h2 className="font-serif text-2xl text-foreground">{t("about.morgan.title")}</h2>
                 <p>
-                  I spent three years as a Senior Product Designer at Morgan Stanley, specializing in the Lending and Retirement teams. I led initiatives to streamline mortgage applications with autofill features and developed tools to help users schedule calls with financial advisors.
+                  {t("about.morgan.p1")}
                 </p>
                 <p>
-                  In addition, I dedicated about 30% of my time to enhancing the design system and advocating for a structured research process. This involved close collaboration with leadership, stakeholders, and engineers to deliver impactful and effective solutions.
+                  {t("about.morgan.p2")}
                 </p>
               </div>
 
               {/* AKQA Section */}
               <div className="space-y-4">
                 <h2 className="font-serif text-2xl text-foreground">
-                  Where career began —{" "}
+                  {t("about.akqa.title")}{" "}
                   <a 
                     href="https://www.akqa.com/" 
                     target="_blank" 
@@ -73,48 +76,79 @@ const About = () => {
                   </a>
                 </h2>
                 <p>
-                  I've always been eager to learn and explore as much as possible. Right after graduating college, I joined the renowned design agency AKQA, believing that working with diverse clients early in my career would help me develop a wide range of skills and gain insights into various industries.
+                  {t("about.akqa.p1")}
                 </p>
                 <p>
-                  During my two years at AKQA, I dedicated a year to supporting the redesign of Audi's iOS app and{" "}
-                  <a 
-                    href="https://www.audi.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:text-foreground transition-colors"
-                  >
-                    Audi.com
-                  </a>{" "}
-                  website. In 2019, I also collaborated with the team to completely rebrand and redesign{" "}
-                  <a 
-                    href="https://www.paypal.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:text-foreground transition-colors"
-                  >
-                    PayPal.com
-                  </a>
-                  , delivering a fresh and cohesive digital experience.
+                  {(() => {
+                    const text = t("about.akqa.p2").toString();
+                    const parts = text.split(/{audiWebsite}|{paypalWebsite}/);
+                    const matches = text.match(/{audiWebsite}|{paypalWebsite}/g) || [];
+                    const result = [];
+                    let partIndex = 0;
+                    
+                    for (let i = 0; i < parts.length; i++) {
+                      if (parts[i]) {
+                        result.push(parts[i]);
+                      }
+                      if (matches[partIndex] === "{audiWebsite}") {
+                        result.push(
+                          <a 
+                            key="audi"
+                            href="https://www.audi.com" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-4 hover:text-foreground transition-colors"
+                          >
+                            {t("about.akqa.audiWebsite")}
+                          </a>
+                        );
+                        partIndex++;
+                      } else if (matches[partIndex] === "{paypalWebsite}") {
+                        result.push(
+                          <a 
+                            key="paypal"
+                            href="https://www.paypal.com" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-4 hover:text-foreground transition-colors"
+                          >
+                            {t("about.akqa.paypalWebsite")}
+                          </a>
+                        );
+                        partIndex++;
+                      }
+                    }
+                    return result;
+                  })()}
                 </p>
               </div>
 
               {/* Outside of work Section */}
               <div className="space-y-4">
-                <h2 className="font-serif text-2xl text-foreground">Outside of my work</h2>
+                <h2 className="font-serif text-2xl text-foreground">{t("about.outside.title")}</h2>
                 <p>
-                  In my spare time, I like reading around 40 books per year. I am also a big fan of watercolor and digital drawing through Procreate.
+                  {t("about.outside.p1")}
                 </p>
                 <p>
-                  Currently, I serve as a design mentor through{" "}
-                  <a 
-                    href="https://adplist.org/mentors/sicong-chen" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:text-foreground transition-colors"
-                  >
-                    ADPList
-                  </a>
-                  , driven by my passion for human connection and meaningful relationships. I enjoy engaging with people, learning from their unique experiences and stories. Having benefited greatly from the support I received as a junior designer, I'm committed to giving back to the community and helping the next generation of designers thrive.
+                  {(() => {
+                    const text = t("about.outside.p2").toString();
+                    const parts = text.split(/{adplist}/);
+                    if (parts.length === 1) return text;
+                    return (
+                      <>
+                        {parts[0]}
+                        <a 
+                          href="https://adplist.org/mentors/sicong-chen" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="underline underline-offset-4 hover:text-foreground transition-colors"
+                        >
+                          {t("about.outside.adplist")}
+                        </a>
+                        {parts[1]}
+                      </>
+                    );
+                  })()}
                 </p>
               </div>
             </div>
@@ -124,7 +158,7 @@ const About = () => {
                 href="mailto:hello@sicongchen.com"
                 className="text-foreground hover:text-muted-foreground transition-colors"
               >
-                Email
+                {t("common.email")}
               </a>
               <a
                 href="https://linkedin.com/in/sicongchen"
@@ -132,7 +166,7 @@ const About = () => {
                 rel="noopener noreferrer"
                 className="text-foreground hover:text-muted-foreground transition-colors"
               >
-                LinkedIn
+                {t("common.linkedin")}
               </a>
               <a
                 href="https://calendly.com/sicongchen"
@@ -140,7 +174,7 @@ const About = () => {
                 rel="noopener noreferrer"
                 className="text-foreground hover:text-muted-foreground transition-colors"
               >
-                Schedule a Call
+                {t("common.scheduleCall")}
               </a>
             </div>
           </div>

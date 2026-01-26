@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -6,6 +7,8 @@ const fadeInUp = {
 };
 
 const PhilosophySection = () => {
+  const { t } = useLanguage();
+  
   return (
     <section className="philosophy-section container-wide py-16 lg:py-24">
       <motion.article
@@ -17,10 +20,10 @@ const PhilosophySection = () => {
         className="max-w-3xl"
       >
         <h2 className="font-serif text-3xl lg:text-4xl font-medium mb-6">
-          My Approach
+          {t("philosophy.title")}
         </h2>
         <p className="font-sans text-xl lg:text-2xl text-muted-foreground leading-relaxed">
-          Using innovation and emotion, I translate complex problems and processes into experiences that are accessible and inclusive to everyone.
+          {t("philosophy.description")}
         </p>
       </motion.article>
     </section>

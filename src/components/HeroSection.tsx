@@ -3,9 +3,18 @@ import { useRef } from "react";
 import flowerHero from "@/assets/flower-hero.gif";
 import GifWithThreeDeform from "@/components/GifWithThreeDeform";
 
+// COLLINS-style smooth animations
 const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 50, scale: 0.98 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.9,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
 };
 
 const staggerContainer = {
@@ -13,15 +22,22 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
+      staggerChildren: 0.2,
+      delayChildren: 0.2,
     },
   },
 };
 
 const scaleIn = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1 },
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: {
+      duration: 1,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
 };
 
 const HeroSection = () => {
@@ -92,34 +108,16 @@ const HeroSection = () => {
         <motion.header 
           className="hero-text w-full lg:w-1/2"
           variants={fadeInUp}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <motion.h1 
-            className="font-serif text-4xl lg:text-5xl font-medium mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent"
-            animate={{
-              backgroundPosition: ["0%", "100%", "0%"],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            INFJ Designer
-          </motion.h1>
-          <motion.p 
-            className="font-sans text-lg lg:text-xl text-foreground leading-relaxed mb-6"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            I design tools and workflows that help businesses work smarter and grow faster.
-          </motion.p>
           <motion.div 
             className="font-sans text-base text-muted-foreground leading-relaxed space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 1, 
+              delay: 0.6,
+              ease: [0.25, 0.46, 0.45, 0.94],
+            }}
           >
             <p>
               I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions. My work focuses on driving efficiency, user adoption, and business impact—from improving internal operations to supporting customer growth.
@@ -135,8 +133,8 @@ const HeroSection = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 writing
-              </motion.a>{" "}
-              and{" "}
+              </motion.a>
+              {" "}and{" "}
               <motion.a 
                 href="https://adplist.org/mentors/sicong-chen" 
                 target="_blank" 
@@ -155,7 +153,6 @@ const HeroSection = () => {
         <motion.figure 
           className="hero-illustration w-full lg:w-1/2 flex justify-center lg:justify-end relative"
           variants={scaleIn}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
           {/* Glow effect behind image */}
           <motion.div

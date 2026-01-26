@@ -42,80 +42,57 @@ const ProjectCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.article 
-        className={`card-container bg-card rounded-2xl p-6 ${finalAspectRatio} relative overflow-hidden group/card`}
+        className={`card-container bg-card rounded-lg overflow-hidden ${finalAspectRatio} relative`}
         data-size={cardSize}
         animate={{ 
-          scale: isHovered ? 1.03 : 1,
-          y: isHovered ? -8 : 0,
+          scale: isHovered ? 1.02 : 1,
+          y: isHovered ? -6 : 0,
         }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ 
+          duration: 0.5, 
+          ease: [0.25, 0.46, 0.45, 0.94] // COLLINS-style smooth easing
+        }}
         style={{
           boxShadow: isHovered 
-            ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)" 
-            : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+            ? "0 20px 40px -10px rgba(0, 0, 0, 0.2)" 
+            : "0 4px 12px rgba(0, 0, 0, 0.08)",
         }}
       >
-        <figure className="card-content w-full h-full overflow-hidden rounded-xl relative">
-          {/* Gradient overlay that appears on hover */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-foreground/0 via-foreground/0 to-foreground/20 z-10 rounded-xl"
-            animate={{ 
-              opacity: isHovered ? 1 : 0,
-            }}
-            transition={{ duration: 0.3 }}
-          />
+        <figure className="card-content w-full h-full relative overflow-hidden">
           <motion.img
             src={image}
             alt={title}
-            className="w-full h-full object-cover relative z-0"
+            className="w-full h-full object-cover"
             loading="lazy"
             animate={{ 
               scale: isHovered ? 1.08 : 1,
-              filter: isHovered ? "brightness(0.9)" : "brightness(1)",
             }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ 
+              duration: 0.6, 
+              ease: [0.25, 0.46, 0.45, 0.94] // Smooth, elegant zoom
+            }}
           />
-          
-          {/* Hover Overlay */}
-          <motion.div 
-            className="absolute inset-0 bg-gradient-to-t from-foreground/95 via-foreground/60 to-transparent flex flex-col justify-end p-6 rounded-xl z-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <motion.h3 
-              className="text-background font-serif text-xl lg:text-2xl font-medium mb-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
-              transition={{ duration: 0.3, delay: isHovered ? 0.1 : 0 }}
-            >
-              {title}
-            </motion.h3>
-            {description && (
-              <motion.p 
-                className="text-background/80 font-sans text-sm lg:text-base leading-relaxed line-clamp-3"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
-                transition={{ duration: 0.3, delay: isHovered ? 0.15 : 0 }}
-              >
-                {description}
-              </motion.p>
-            )}
-            <motion.span 
-              className="text-background/60 font-sans text-xs mt-3"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
-              transition={{ duration: 0.3, delay: isHovered ? 0.2 : 0 }}
-            >
-              {type} · {date}
-            </motion.span>
-          </motion.div>
+          {/* Subtle overlay on hover */}
+          <motion.div
+            className="absolute inset-0 bg-foreground/0"
+            animate={{
+              backgroundColor: isHovered ? "rgba(0, 0, 0, 0.05)" : "rgba(0, 0, 0, 0)",
+            }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          />
         </figure>
       </motion.article>
       
-      <figcaption className="card-meta mt-3 font-sans text-sm text-foreground group-hover:text-foreground/80 transition-colors duration-300">
-        {title} <span className="card-details text-muted-foreground">| {type} | {date}</span>
-      </figcaption>
+      {/* Project title at bottom - minimal, clean with smooth fade */}
+      <motion.figcaption 
+        className="card-meta mt-4 font-sans text-sm text-foreground text-center"
+        animate={{
+          opacity: isHovered ? 0.7 : 1,
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        {title}
+      </motion.figcaption>
     </Link>
   );
 };

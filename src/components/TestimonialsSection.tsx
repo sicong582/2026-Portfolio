@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -42,6 +43,8 @@ const testimonials = [
 ];
 
 const TestimonialsSection = () => {
+  const { t } = useLanguage();
+  
   return (
     <section className="testimonials-section container-wide py-16 lg:py-24 border-t border-border">
       <motion.article
@@ -55,7 +58,7 @@ const TestimonialsSection = () => {
           variants={fadeInUp}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          What People Say
+          {t("testimonials.title")}
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

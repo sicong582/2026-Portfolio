@@ -1,138 +1,104 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import ProjectCard from "@/components/ProjectCard";
-import { getB2BProjects, getVisualBrandProjects, type ProjectSummary } from "@/data/projects";
+import { getAllProjectSummaries } from "@/data/projects";
 
+// COLLINS-style smooth fade-in animation
 const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
+  hidden: { 
+    opacity: 0, 
+    y: 60,
+    scale: 0.95,
+  },
   visible: { 
     opacity: 1, 
     y: 0,
+    scale: 1,
     transition: {
       duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.25, 0.46, 0.45, 0.94], // Smooth ease-out curve similar to COLLINS
     },
   },
 };
 
+// Staggered container with smooth reveal
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1,
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
     },
   },
 };
 
 // Get all projects
-const b2bProjects = getB2BProjects();
-const visualBrandProjects = getVisualBrandProjects();
-
-interface ProjectCategoryProps {
-  title: string;
-  subtitle?: string;
-  projects: ProjectSummary[];
-  fullWidth?: boolean;
-  showOffset?: boolean;
-}
-
-const ProjectCategory = ({ title, subtitle, projects, fullWidth = false, showOffset = false }: ProjectCategoryProps) => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const yTransform = useTransform(scrollYProgress, [0, 1], [50, -50]);
-  const opacityTransform = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-
-  return (
-    <motion.div
-      ref={sectionRef}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-150px" }}
-      variants={staggerContainer}
-      className="mb-16 lg:mb-24 relative w-full"
-      style={{ y: yTransform, opacity: opacityTransform }}
-    >
-      <motion.div 
-        className="mb-8 relative container-wide"
-        variants={fadeInUp}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <motion.h3 
-          className="font-serif text-2xl lg:text-3xl font-medium mb-2 relative inline-block"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
-        >
-          {title}
-          <motion.span
-            className="absolute -bottom-1 left-0 w-0 h-0.5 bg-foreground"
-            whileInView={{ width: "100%" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          />
-        </motion.h3>
-        {subtitle && (
-          <motion.p 
-            className="font-sans text-sm text-muted-foreground uppercase tracking-wider mt-2"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            {subtitle}
-          </motion.p>
-        )}
-      </motion.div>
-
-      <div className={`w-full grid gap-8 px-6 lg:px-12 ${fullWidth ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}>
-        {projects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            variants={fadeInUp}
-            transition={{ 
-              duration: 0.6, 
-              ease: [0.22, 1, 0.36, 1],
-              delay: index * 0.1,
-            }}
-            whileHover={{ y: -8 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className={`w-full ${showOffset && !fullWidth && index % 2 === 1 ? "md:mt-24" : ""}`}
-          >
-            <ProjectCard 
-              {...project} 
-              variant="large" 
-              aspectRatio={fullWidth ? "16/9" : "4/3"}
-            />
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  );
-};
+const allProjects = getAllProjectSummaries();
 
 const ProjectsSection = () => {
+  // Random positions for floating cards (like reference image)
+  const getRandomPosition = (index: number) => {
+    const positions = [
+      { x: 0, y: 0, rotation: -2 },
+      { x: 40, y: -20, rotation: 3 },
+      { x: -30, y: 100, rotation: -1 },
+      { x: 60, y: 80, rotation: 2 },
+      { x: 20, y: 200, rotation: -2 },
+      { x: -20, y: 250, rotation: 1 },
+    ];
+    return positions[index % positions.length] || { x: 0, y: 0, rotation: 0 };
+  };
+
+  // Calculate total height needed for all projects
+  // Account for max y offset (250px) and card height (~300px) plus extra padding
+  const maxYOffset = 250;
+  const cardHeight = 350;
+  const totalHeight = (allProjects.length * 120) + maxYOffset + cardHeight + 600; // Extra padding for bottom nav
+
   return (
-    <section className="work-section w-full pb-16 lg:pb-24">
-      <ProjectCategory 
-        title="B2B Products" 
-        subtitle="Deep Dive Case Studies"
-        projects={b2bProjects}
-        fullWidth={true}
-      />
-      
-      <ProjectCategory 
-        title="Visual + Brand Design" 
-        subtitle="Visual Showcase"
-        projects={visualBrandProjects}
-        fullWidth={false}
-        showOffset={true}
-      />
-    </section>
+    <div className="relative w-full" style={{ minHeight: `${totalHeight}px`, paddingBottom: "400px" }}>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+        className="relative w-full"
+      >
+        {allProjects.map((project, index) => {
+          const position = getRandomPosition(index);
+          return (
+            <motion.div
+              key={project.id}
+              className="absolute"
+              style={{
+                left: `${20 + position.x}%`,
+                top: `${index * 120 + position.y}px`,
+                width: "45%",
+                maxWidth: "400px",
+              }}
+              variants={fadeInUp}
+              transition={{
+                duration: 0.8,
+                delay: index * 0.15,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+              whileHover={{ 
+                scale: 1.05, 
+                zIndex: 10,
+                rotate: 0,
+              }}
+              initial={{ rotate: position.rotation }}
+            >
+              <ProjectCard 
+                {...project} 
+                variant="small" 
+                aspectRatio="4/3"
+              />
+            </motion.div>
+          );
+        })}
+      </motion.div>
+    </div>
   );
 };
 

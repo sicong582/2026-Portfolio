@@ -1,17 +1,21 @@
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const Footer = () => {
+  const { t } = useLanguage();
+  
   return (
     <footer className="footer py-8">
       <nav className="footer-container container-wide">
         <section className="footer-nav flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-8 border-t border-border">
           <p className="footer-cta font-sans text-sm text-foreground">
-            Let's connect and work together
+            {t("footer.connect")}
           </p>
           <address className="footer-social flex gap-6 font-sans text-sm uppercase tracking-wider not-italic">
             <a
               href="mailto:hello@sicongchen.com"
               className="text-foreground hover:text-muted-foreground transition-colors"
             >
-              Email
+              {t("common.email")}
             </a>
             <a
               href="https://linkedin.com/in/sicongchen"
@@ -19,7 +23,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-foreground hover:text-muted-foreground transition-colors"
             >
-              LinkedIn
+              {t("common.linkedin")}
             </a>
             <a
               href="https://calendly.com/sicongchen"
@@ -27,7 +31,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="text-foreground hover:text-muted-foreground transition-colors"
             >
-              Schedule a Call
+              {t("common.scheduleCall")}
             </a>
           </address>
         </section>

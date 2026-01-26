@@ -35,7 +35,7 @@ const ImageGrid = ({
 
   return (
     <section ref={sectionRef} className="py-20 md:py-32 overflow-hidden">
-      <div className="container-wide max-w-[1400px]">
+      <div className="w-full px-4 md:px-8 lg:px-12">
         {title && (
           <motion.h2
             initial={{ opacity: 0, y: 40 }}
@@ -65,17 +65,17 @@ const ImageGrid = ({
               whileHover={{ y: -4 }}
             >
               <motion.div
-                className={`${aspectRatio || ""} rounded-2xl overflow-hidden bg-card shadow-lg parallax-container ${!aspectRatio ? "flex items-center justify-center" : ""}`}
+                className={`${aspectRatio || ""} ${aspectRatio ? "rounded-2xl shadow-lg" : ""} overflow-hidden ${!aspectRatio ? "flex items-center justify-center" : "flex items-center justify-center"}`}
                 whileHover={{ 
                   scale: 1.02,
-                  boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.15)",
+                  boxShadow: aspectRatio ? "0 20px 40px -12px rgba(0, 0, 0, 0.15)" : "none",
                 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
                 <motion.img
                   src={image}
                   alt={captions[index] || `Image ${index + 1}`}
-                  className={`w-full ${aspectRatio ? "h-full object-cover" : "h-auto object-contain"}`}
+                  className={`${aspectRatio ? "w-full h-full" : "max-w-full h-auto"} object-contain`}
                   loading="lazy"
                   animate={{
                     scale: hoveredIndex === index ? 1.05 : 1,

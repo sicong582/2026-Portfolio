@@ -23,7 +23,7 @@ import poster9 from "@/assets/projects/rewording-poster-design/rewording-poster-
 import poster10 from "@/assets/projects/rewording-poster-design/rewording-poster-10.png";
 import poster11 from "@/assets/projects/rewording-poster-design/rewording-poster-11.png";
 import poster12 from "@/assets/projects/rewording-poster-design/rewording-poster-12.png";
-import poster13 from "@/assets/projects/rewording-poster-design/rewording-poster-013.png";
+import poster13 from "@/assets/projects/rewording-poster-design/rewording-poster-13.png";
 import poster14 from "@/assets/projects/rewording-poster-design/rewording-poster-14.png";
 
 // Primary poster image
@@ -77,6 +77,7 @@ const RewordingProject = () => {
       client,
       tools: toolsMetric?.value || "Midjourney, Figma, Banana Nano",
       role: project.role || "Visual Designer",
+      type: project.type || "Poster Design",
       year: "2025",
     };
   };
@@ -84,14 +85,14 @@ const RewordingProject = () => {
   return (
     <div ref={containerRef} className="relative">
       <SEO
-        title="REWORLDING | Sicong Chen"
+        title="Futurist Conference Poster Design | Sicong Chen"
         description={project.overview}
         type="article"
       />
       <Header />
 
       <main id="main-content" className="pt-32 pb-24">
-        <div className="container-wide">
+        <div className="w-full px-4 md:px-8 lg:px-12">
           {/* Back link */}
           <Link
             to="/"
@@ -102,12 +103,9 @@ const RewordingProject = () => {
 
           {/* Project header */}
           <div className="mb-8">
-            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-4">
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground text-base">
-              {project.type} | {project.date}
-            </p>
           </div>
 
           {/* Overview Section */}
@@ -118,7 +116,7 @@ const RewordingProject = () => {
 
           {/* Two-column layout: Text sections + Primary Poster */}
           <section className="py-20 md:py-32">
-            <div className="container-wide max-w-[1000px]">
+            <div className="w-full px-4 md:px-8 lg:px-12">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
                 {/* Left column: Text sections - 50% width */}
                 <div className="space-y-16">
@@ -156,7 +154,7 @@ const RewordingProject = () => {
                 >
                   <motion.div
                     style={{ y: mainPosterY }}
-                    className="w-full aspect-[3/4] rounded-2xl overflow-hidden bg-card shadow-2xl parallax-container flex items-center justify-center"
+                    className="w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl parallax-container flex items-center justify-center"
                   >
                     <motion.img
                       src={mainPoster}
@@ -186,7 +184,6 @@ const RewordingProject = () => {
             images={allPosters}
             columns={3}
             title="Design Direction Exploration"
-            aspectRatio="aspect-[3/4]"
           />
 
           {/* Project navigation */}

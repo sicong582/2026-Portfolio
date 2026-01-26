@@ -7,15 +7,26 @@ import ProjectsSection from "@/components/ProjectsSection";
 import PhilosophySection from "@/components/PhilosophySection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import IllustrationSection from "@/components/IllustrationSection";
+import DynamicBackground from "@/components/DynamicBackground";
+import StarFieldBackground from "@/components/StarFieldBackground";
+import TimeLocationDisplay from "@/components/TimeLocationDisplay";
+import BottomNavigation from "@/components/BottomNavigation";
+import LanguageToggle from "@/components/LanguageToggle";
 
+// COLLINS-style smooth section animations
 const sectionVariants = {
-  hidden: { opacity: 0, y: 60 },
+  hidden: { 
+    opacity: 0, 
+    y: 80,
+    scale: 0.98,
+  },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 1,
+      ease: [0.25, 0.46, 0.45, 0.94], // Smooth COLLINS-style easing
     },
   },
 };
@@ -29,45 +40,35 @@ const Index = () => {
       />
       <Header />
       
-      <main id="main-content" className="pt-20 pb-16 relative">
-        {/* Background gradient overlay for depth */}
-        <div className="fixed inset-0 -z-10 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background/95" />
-          <div className="absolute top-1/4 left-0 w-96 h-96 bg-foreground/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-foreground/5 rounded-full blur-3xl" />
+      {/* Language Toggle */}
+      <LanguageToggle />
+      
+      {/* Time and Location Display */}
+      <TimeLocationDisplay />
+      
+      {/* Starfield background (Three.js) */}
+      <StarFieldBackground />
+      
+      {/* Dynamic background */}
+      <DynamicBackground />
+      
+      <main id="main-content" className="min-h-screen relative pt-32 pb-64">
+        <div className="w-full h-full px-4 md:px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            {/* Left side - Hero text */}
+            <div className="lg:sticky lg:top-32">
+              <HeroSection />
+            </div>
+
+            {/* Right side - Floating project cards */}
+            <div className="relative overflow-visible">
+              <ProjectsSection />
+            </div>
+          </div>
         </div>
-
-        <HeroSection />
-        
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={sectionVariants}
-        >
-          <ProjectsSection />
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={sectionVariants}
-        >
-          <PhilosophySection />
-        </motion.div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={sectionVariants}
-        >
-          <TestimonialsSection />
-        </motion.div>
       </main>
 
-      <IllustrationSection />
+      <BottomNavigation />
       <Footer />
     </>
   );

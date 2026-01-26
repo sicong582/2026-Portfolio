@@ -9,10 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getAllProjectSummaries } from "@/data/projects";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const projects = getAllProjectSummaries();
 
 const Header = () => {
+  const { t } = useLanguage();
   const location = useLocation();
   const isWorkActive = location.pathname.startsWith("/project") || location.pathname === "/work";
   const { scrollY } = useScroll();
@@ -31,7 +33,7 @@ const Header = () => {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-foreground focus:text-background focus:rounded-md">
-        Skip to main content
+        {t("nav.skipToContent")}
       </a>
       <nav className="site-nav container-wide flex items-center justify-between h-20" aria-label="Main navigation">
         <motion.div
@@ -61,7 +63,7 @@ const Header = () => {
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  Work
+                  {t("nav.work")}
                   <motion.div
                     animate={{ rotate: isWorkActive ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -104,7 +106,7 @@ const Header = () => {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                About
+                {t("nav.about")}
               </Link>
             </motion.div>
           </li>

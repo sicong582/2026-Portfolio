@@ -7,13 +7,26 @@ interface ProjectOverviewProps {
     tools: string;
     role: string;
     year?: string;
+    type?: string;
+    team?: string;
   };
 }
+
+// Helper function to parse markdown bold text (**text**)
+const parseMarkdown = (text: string) => {
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
 
 const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
   return (
     <section className="py-20 md:py-32">
-      <div className="container-wide max-w-[1000px]">
+      <div className="w-full px-4 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16">
           {/* Left Column - Description (60%) */}
           <motion.div
@@ -25,7 +38,7 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
           >
             <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 text-foreground">Overview</h2>
             <p className="font-sans text-muted-foreground leading-relaxed relaxed-spacing">
-              {description}
+              {parseMarkdown(description)}
             </p>
           </motion.div>
 
@@ -54,7 +67,7 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
-                  TOOLS
+                  {t("project.tools")}
                 </p>
                 <p className="font-sans text-base text-foreground font-medium">{details.tools}</p>
               </motion.div>
@@ -67,15 +80,37 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
                 </p>
                 <p className="font-sans text-base text-foreground font-medium">{details.role}</p>
               </motion.div>
+              {details.type && (
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                    TYPE
+                  </p>
+                  <p className="font-sans text-base text-foreground font-medium">{details.type}</p>
+                </motion.div>
+              )}
               {details.year && (
                 <motion.div
                   whileHover={{ x: 4 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
-                    YEAR
+                    {t("project.year")}
                   </p>
                   <p className="font-sans text-base text-foreground font-medium">{details.year}</p>
+                </motion.div>
+              )}
+              {details.team && (
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                    TEAM
+                  </p>
+                  <p className="font-sans text-base text-foreground font-medium">{details.team}</p>
                 </motion.div>
               )}
             </div>

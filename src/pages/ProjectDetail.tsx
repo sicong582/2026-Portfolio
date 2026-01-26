@@ -7,7 +7,21 @@ import SEO from "@/components/SEO";
 import ProjectOverview from "@/components/projects/ProjectOverview";
 import RewordingProject from "./RewordingProject";
 import AudiProject from "./AudiProject";
+import PayPalProject from "./PayPalProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslatedProjectDetail } from "@/lib/projectTranslations";
+
+// Helper function to parse markdown bold text (**text**)
+const parseMarkdown = (text: string) => {
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
 
 // Helper function to extract client, tools, and role from project data
 const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
@@ -63,10 +77,41 @@ const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
     }
   }
 
-  // Role is directly available
-  const role = project.role || "Designer";
+  // Extract role from metrics or use project.role
+  let role = "";
+  const roleMetric = project.results.metrics.find(m => 
+    m.label.toLowerCase() === "role" || m.label.toLowerCase().includes("role")
+  );
+  if (roleMetric) {
+    role = roleMetric.value;
+  } else {
+    role = project.role || "Designer";
+  }
 
-  return { client, tools, role };
+  // Extract year from metrics
+  let year = "";
+  const yearMetric = project.results.metrics.find(m => 
+    m.label.toLowerCase() === "year" || m.label.toLowerCase().includes("year")
+  );
+  if (yearMetric) {
+    year = yearMetric.value;
+  }
+
+  // Extract team from metrics or use project.team
+  let team = "";
+  const teamMetric = project.results.metrics.find(m => 
+    m.label.toLowerCase() === "team" || m.label.toLowerCase().includes("team")
+  );
+  if (teamMetric) {
+    team = teamMetric.value;
+  } else if (project.team) {
+    team = project.team;
+  }
+
+  // Extract type from project
+  const type = project.type || "";
+
+  return { client, tools, role, year, team, type };
 };
 
 // Parallax Media Component
@@ -121,6 +166,10 @@ const ProjectDetail = () => {
     return <AudiProject />;
   }
 
+  if (id === "paypal") {
+    return <PayPalProject />;
+  }
+
   const project = id ? getProjectDetail(id) : null;
   
   // Use new side-by-side layout only for project-7 (AI Exploration)
@@ -130,11 +179,13 @@ const ProjectDetail = () => {
     return (
       <>
         <Header />
-        <main className="pt-32 pb-24 container-wide">
-          <h1 className="font-serif text-4xl mb-4">Project not found</h1>
-          <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            ← Back to Home
-          </Link>
+        <main className="pt-32 pb-24">
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            <h1 className="font-serif text-4xl mb-4">{t("project.notFound")}</h1>
+            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+              ← {t("common.back")} {t("nav.home")}
+            </Link>
+          </div>
         </main>
         <Footer />
       </>
@@ -151,7 +202,7 @@ const ProjectDetail = () => {
       <Header />
       
       <main id="main-content" className="pt-32 pb-24">
-        <div className="container-wide">
+        <div className="w-full px-4 md:px-8 lg:px-12">
           {/* Back link */}
           <Link
             to="/"
@@ -181,7 +232,7 @@ const ProjectDetail = () => {
             <div className="space-y-24">
               {/* High-level introduction */}
               <motion.div 
-                className="max-w-3xl"
+                className="w-full"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -203,7 +254,7 @@ const ProjectDetail = () => {
                 <div>
                   <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed">
-                    {project.overview}
+                    {parseMarkdown(project.overview)}
                   </p>
                 </div>
                 {project.media[0] && (
@@ -222,7 +273,7 @@ const ProjectDetail = () => {
                 <div>
                   <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed">
-                    {project.problem.description}
+                    {parseMarkdown(project.problem.description)}
                   </p>
                 </div>
                 {project.media[1] && (
@@ -249,32 +300,74 @@ const ProjectDetail = () => {
               {/* Problem */}
               <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed max-w-3xl">
-                  {project.problem.description}
+                  <p className="font-sans text-muted-foreground leading-relaxed w-full">
+                  {parseMarkdown(project.problem.description)}
                 </p>
               </section>
 
               {/* Process */}
               <section>
                 <h2 className="font-serif text-2xl font-medium mb-4">{project.process.title}</h2>
-                <ul className="space-y-3 max-w-3xl">
-                  {project.process.steps.map((step, index) => (
-                    <li key={index} className="font-sans text-muted-foreground leading-relaxed">
-                      {step}
-                    </li>
-                  ))}
-                </ul>
+                {project.process.description ? (
+                  <p className="font-sans text-muted-foreground leading-relaxed w-full">
+                    {parseMarkdown(project.process.description)}
+                  </p>
+                ) : (
+                  <ul className="space-y-3 w-full">
+                    {project.process.steps?.map((step, index) => (
+                      <li key={index} className="font-sans text-muted-foreground leading-relaxed">
+                        {step}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </section>
+
+              {/* Approach */}
+              {project.approach && (
+                <section>
+                  <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
+                  <p className="font-sans text-muted-foreground leading-relaxed w-full">
+                    {parseMarkdown(project.approach.description)}
+                  </p>
+                </section>
+              )}
+
+              {/* Results */}
+              {project.results && (
+                <section>
+                  <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
+                  {project.results.metrics && project.results.metrics.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                      {project.results.metrics.map((metric, index) => (
+                        <div key={index} className="glass rounded-2xl p-6">
+                          <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
+                            {metric.label}
+                          </p>
+                          <p className="font-sans text-lg text-foreground font-medium">
+                            {metric.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {project.results.description && (
+                    <p className="font-sans text-muted-foreground leading-relaxed w-full">
+                      {parseMarkdown(project.results.description)}
+                    </p>
+                  )}
+                </section>
+              )}
 
               {/* Media Gallery */}
               <section>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {project.media.map((item, index) => (
-                    <div key={index} className="bg-card rounded-2xl overflow-hidden">
+                    <div key={index} className="rounded-2xl overflow-hidden shadow-lg flex items-center justify-center">
                       {item.type === "video" ? (
                         <video src={item.src} controls className="w-full h-auto" playsInline preload="metadata" />
                       ) : (
-                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto" loading="lazy" />
+                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto object-contain" loading="lazy" />
                       )}
                     </div>
                   ))}
