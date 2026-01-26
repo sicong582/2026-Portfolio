@@ -52,8 +52,8 @@ const Index = () => {
       {/* Dynamic background */}
       <DynamicBackground />
       
-      <main id="main-content" className="min-h-screen relative pt-32 pb-64">
-        <div className="w-full h-full px-4 md:px-8 lg:px-12">
+      <main id="main-content" className="min-h-screen relative pt-40 pb-64">
+        <div className="w-full h-full px-4 md:px-8 lg:px-12 pl-20 md:pl-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left side - Hero text */}
             <div className="lg:sticky lg:top-32">
@@ -61,7 +61,7 @@ const Index = () => {
             </div>
 
             {/* Right side - Floating project cards */}
-            <div className="relative overflow-visible">
+            <div className="relative overflow-x-hidden overflow-y-visible">
               <ProjectsSection />
             </div>
           </div>

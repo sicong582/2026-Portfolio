@@ -110,7 +110,7 @@ const HeroSection = () => {
           variants={fadeInUp}
         >
           <motion.div 
-            className="font-sans text-base text-muted-foreground leading-relaxed space-y-4"
+            className="font-sans text-base text-muted-foreground leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ 
@@ -120,10 +120,7 @@ const HeroSection = () => {
             }}
           >
             <p>
-              I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions. My work focuses on driving efficiency, user adoption, and business impact—from improving internal operations to supporting customer growth.
-            </p>
-            <p>
-              Outside of work, I enjoy{" "}
+              My work focuses on driving efficiency, user adoption, and business impact—from improving internal operations to supporting customer growth. Outside of work, I enjoy{" "}
               <motion.a 
                 href="https://medium.com/@sicongchen-582" 
                 target="_blank" 

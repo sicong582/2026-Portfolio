@@ -11,9 +11,6 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  static contextType = LanguageContext;
-  declare context: React.ContextType<typeof LanguageContext>;
-
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false, error: null };

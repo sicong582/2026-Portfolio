@@ -56,22 +56,21 @@ const BottomNavigation = () => {
 
   return (
     <motion.nav
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
-      initial={{ y: 100, opacity: 0 }}
+      className="fixed top-24 left-4 z-50"
+      initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
       style={{ position: "fixed" }}
     >
-      <div className="flex items-center gap-1 bg-background/60 backdrop-blur-xl rounded-full px-3 py-2 border border-foreground/10 shadow-lg">
+      <div className="flex flex-col items-center gap-1 bg-background/60 backdrop-blur-xl rounded-2xl py-3 px-2 border border-foreground/10 shadow-lg">
         {navItems.map((item, index) => {
           const Icon = item.icon;
-          const isFirst = index === 0;
           const showSeparator = index === 2; // After mail icon
 
           return (
-            <div key={item.id} className="flex items-center">
+            <div key={item.id} className="flex flex-col items-center w-full">
               {showSeparator && (
-                <div className="w-px h-6 bg-foreground/20 mx-1" />
+                <div className="h-px w-6 bg-foreground/20 my-1" />
               )}
               
               {item.to ? (
@@ -124,7 +123,8 @@ const BottomNavigation = () => {
                   <Icon className="h-5 w-5 relative z-10" />
                 </motion.button>
               )}
-            </div>
+              </div>
+            </>
           );
         })}
       </div>

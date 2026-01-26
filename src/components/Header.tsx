@@ -35,18 +35,26 @@ const Header = () => {
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-foreground focus:text-background focus:rounded-md">
         {t("nav.skipToContent")}
       </a>
-      <nav className="site-nav container-wide flex items-center justify-between h-20" aria-label="Main navigation">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Link to="/" className="logo" aria-label="Sicong Chen - Home">
-            <img src={logoImage} alt="Sicong Chen" className="h-12 w-auto" loading="eager" />
-          </Link>
-        </motion.div>
+      <nav className="site-nav container-wide flex items-start justify-between py-4" aria-label="Main navigation">
+        <div className="flex items-start gap-4 flex-1">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="flex-shrink-0"
+          >
+            <Link to="/" className="logo" aria-label="Sicong Chen - Home">
+              <img src={logoImage} alt="Sicong Chen" className="h-12 w-auto" loading="eager" />
+            </Link>
+          </motion.div>
+          <div className="hidden md:block max-w-md pt-2">
+            <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+              I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions.
+            </p>
+          </div>
+        </div>
 
-        <ul className="nav-links flex items-center gap-8" role="list">
+        <ul className="nav-links flex items-start gap-8 pt-2" role="list">
           <li className="nav-item">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -9,8 +9,6 @@ import RewordingProject from "./RewordingProject";
 import AudiProject from "./AudiProject";
 import PayPalProject from "./PayPalProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { getTranslatedProjectDetail } from "@/lib/projectTranslations";
 
 // Helper function to parse markdown bold text (**text**)
 const parseMarkdown = (text: string) => {
