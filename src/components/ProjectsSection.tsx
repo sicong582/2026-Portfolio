@@ -37,24 +37,26 @@ const staggerContainer = {
 const allProjects = getAllProjectSummaries();
 
 const ProjectsSection = () => {
-  // Random positions for floating cards (like reference image)
-  const getRandomPosition = (index: number) => {
-    const positions = [
-      { x: 0, y: 0, rotation: -2 },
-      { x: 40, y: -20, rotation: 3 },
-      { x: -30, y: 100, rotation: -1 },
-      { x: 60, y: 80, rotation: 2 },
-      { x: 20, y: 200, rotation: -2 },
-      { x: -20, y: 250, rotation: 1 },
-    ];
-    return positions[index % positions.length] || { x: 0, y: 0, rotation: 0 };
+  // Calculate positions to prevent overlapping
+  const calculatePosition = (index: number) => {
+    const cardWidthPercent = 45;
+    const cardHeight = 350; // Approximate card height in pixels
+    const verticalSpacing = 320; // Minimum vertical spacing between cards (increased from 240)
+    const horizontalSpacing = 10; // Horizontal spacing percentage
+
+    // Alternate between left and right sides
+    const isEven = index % 2 === 0;
+    const leftPosition = isEven ? 5 : 50; // Left side: 5%, Right side: 50%
+    const topPosition = index * verticalSpacing;
+    const rotation = isEven ? -1.5 : 1.5;
+    
+    return { left: leftPosition, top: topPosition, rotation: rotation };
   };
 
   // Calculate total height needed for all projects
-  // Account for max y offset (250px) and card height (~300px) plus extra padding
-  const maxYOffset = 250;
   const cardHeight = 350;
-  const totalHeight = (allProjects.length * 120) + maxYOffset + cardHeight + 600; // Extra padding for bottom nav
+  const verticalSpacing = 320; // Increased from 240
+  const totalHeight = (allProjects.length * verticalSpacing) + cardHeight + 400; // Extra padding for bottom nav
 
   return (
     <div className="relative w-full" style={{ minHeight: `${totalHeight}px`, paddingBottom: "400px" }}>
@@ -65,14 +67,14 @@ const ProjectsSection = () => {
         className="relative w-full"
       >
         {allProjects.map((project, index) => {
-          const position = getRandomPosition(index);
+          const position = calculatePosition(index);
           return (
             <motion.div
               key={project.id}
               className="absolute"
               style={{
-                left: `${20 + position.x}%`,
-                top: `${index * 120 + position.y}px`,
+                left: `${position.left}%`,
+                top: `${position.top}px`,
                 width: "45%",
                 maxWidth: "400px",
               }}

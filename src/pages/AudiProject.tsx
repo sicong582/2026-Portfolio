@@ -89,12 +89,9 @@ const AudiProject = () => {
 
           {/* Project header */}
           <div className="mb-8">
-            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-4">
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground text-base">
-              {project.type} | {project.date}
-            </p>
           </div>
 
           {/* Overview Section */}

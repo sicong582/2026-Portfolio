@@ -177,7 +177,7 @@ const ProjectDetail = () => {
     return (
       <>
         <Header />
-        <main className="pt-32 pb-24">
+        <main className="pt-32 pb-32 md:pb-40">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <h1 className="font-serif text-4xl mb-4">{t("project.notFound")}</h1>
             <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -211,12 +211,9 @@ const ProjectDetail = () => {
 
           {/* Project header */}
           <div className="mb-8">
-            <h1 className="font-serif text-5xl lg:text-6xl font-medium mb-4">
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground text-base">
-              {project.type} | {project.date}
-            </p>
           </div>
 
           {/* Project Overview Section */}

@@ -9,7 +9,6 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import IllustrationSection from "@/components/IllustrationSection";
 import DynamicBackground from "@/components/DynamicBackground";
 import StarFieldBackground from "@/components/StarFieldBackground";
-import TimeLocationDisplay from "@/components/TimeLocationDisplay";
 import BottomNavigation from "@/components/BottomNavigation";
 import LanguageToggle from "@/components/LanguageToggle";
 
@@ -42,9 +41,6 @@ const Index = () => {
       
       {/* Language Toggle */}
       <LanguageToggle />
-      
-      {/* Time and Location Display */}
-      <TimeLocationDisplay />
       
       {/* Starfield background (Three.js) */}
       <StarFieldBackground />

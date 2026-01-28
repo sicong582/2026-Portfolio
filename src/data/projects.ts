@@ -5,7 +5,7 @@ import projectCoverFulfillment from "@/assets/project-cover-fulfillment.png";
 import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.png";
 import projectCoverAI from "@/assets/project-cover-ai.png";
-import rewordingCover from "@/assets/projects/rewording-poster-design/rewording-primary-poster.png";
+import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
 
 // Types
 export interface MediaItem {

@@ -78,9 +78,6 @@ const PayPalProject = () => {
             <h1 className="font-serif text-5xl lg:text-6xl font-medium">
               {project.title}
             </h1>
-            <p className="font-sans text-muted-foreground text-base mt-4">
-              {project.type} | {project.date}
-            </p>
           </div>
 
           {/* Overview Section */}

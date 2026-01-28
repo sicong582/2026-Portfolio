@@ -42,7 +42,7 @@ const ProjectCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.article 
-        className={`card-container bg-card rounded-lg overflow-hidden ${finalAspectRatio} relative`}
+        className="card-container bg-card rounded-lg overflow-hidden relative inline-block"
         data-size={cardSize}
         animate={{ 
           scale: isHovered ? 1.02 : 1,
@@ -58,11 +58,11 @@ const ProjectCard = ({
             : "0 4px 12px rgba(0, 0, 0, 0.08)",
         }}
       >
-        <figure className="card-content w-full h-full relative overflow-hidden">
+        <figure className="card-content relative inline-block">
           <motion.img
             src={image}
             alt={title}
-            className="w-full h-full object-cover"
+            className="w-auto h-auto max-w-full max-h-[600px] block object-contain"
             loading="lazy"
             animate={{ 
               scale: isHovered ? 1.08 : 1,

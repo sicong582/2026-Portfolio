@@ -8,7 +8,6 @@ import ProjectOverview from "@/components/projects/ProjectOverview";
 import ImageGrid from "@/components/projects/ImageGrid";
 import ProjectFooter from "@/components/projects/ProjectFooter";
 import { getProjectDetail, getAllProjectSummaries } from "@/data/projects";
-import flowerHero from "@/assets/flower-hero.gif";
 
 // Import all project assets from rewording-poster-design folder
 import primaryPoster from "@/assets/projects/rewording-poster-design/rewording-primary-poster.png";
@@ -102,22 +101,6 @@ const RewordingProject = () => {
 
       <main id="main-content" className="pt-32 pb-32 md:pb-40">
         <div className="w-full px-4 md:px-8 lg:px-12">
-          {/* Gift/Flower Image - Below Header Introduction */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex justify-center mb-12"
-          >
-            <div className="max-w-md w-full">
-              <img
-                src={flowerHero}
-                alt="Gift"
-                className="w-full h-auto rounded-lg"
-              />
-            </div>
-          </motion.div>
-
           {/* Back link */}
           <Link
             to="/"
