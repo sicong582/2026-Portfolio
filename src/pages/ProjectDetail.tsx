@@ -134,7 +134,7 @@ const ParallaxMedia = ({
   return (
     <motion.div 
       ref={ref}
-      className={`bg-card rounded-2xl overflow-hidden ${className}`}
+      className={`inline-block ${className}`}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -142,9 +142,9 @@ const ParallaxMedia = ({
     >
       <motion.div style={{ y, scale }} className="w-full h-full">
         {item.type === "video" ? (
-          <video src={item.src} controls className="w-full h-auto" playsInline preload="metadata" />
+          <video src={item.src} controls className="w-auto h-auto max-w-full block" playsInline preload="metadata" />
         ) : (
-          <img src={item.src} alt={alt} className="w-full h-auto" loading="lazy" />
+          <img src={item.src} alt={alt} className="w-auto h-auto max-w-full block object-contain" loading="lazy" />
         )}
       </motion.div>
     </motion.div>
@@ -199,7 +199,7 @@ const ProjectDetail = () => {
       />
       <Header />
       
-      <main id="main-content" className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-32 md:pb-40">
         <div className="w-full px-4 md:px-8 lg:px-12">
           {/* Back link */}
           <Link
@@ -281,7 +281,7 @@ const ProjectDetail = () => {
 
               {/* Additional media items */}
               {project.media.length > 4 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                   {project.media.slice(4).map((item, index) => (
                     <ParallaxMedia 
                       key={index} 
@@ -359,13 +359,13 @@ const ProjectDetail = () => {
 
               {/* Media Gallery */}
               <section>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                   {project.media.map((item, index) => (
-                    <div key={index} className="rounded-2xl overflow-hidden shadow-lg flex items-center justify-center">
+                    <div key={index} className="inline-block">
                       {item.type === "video" ? (
-                        <video src={item.src} controls className="w-full h-auto" playsInline preload="metadata" />
+                        <video src={item.src} controls className="w-auto h-auto max-w-full block" playsInline preload="metadata" />
                       ) : (
-                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto object-contain" loading="lazy" />
+                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-auto h-auto max-w-full block object-contain" loading="lazy" />
                       )}
                     </div>
                   ))}

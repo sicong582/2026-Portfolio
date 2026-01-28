@@ -77,7 +77,7 @@ const AudiProject = () => {
       />
       <Header />
 
-      <main id="main-content" className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-32 md:pb-40">
         <div className="w-full px-4 md:px-8 lg:px-12">
           {/* Back link */}
           <Link
@@ -104,7 +104,7 @@ const AudiProject = () => {
           />
 
           {/* Row 1: Enrollment - Make it feel familiar */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -139,7 +139,7 @@ const AudiProject = () => {
           </section>
 
           {/* Row 2: First charge - Remove all doubt */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -174,7 +174,7 @@ const AudiProject = () => {
           </section>
 
           {/* Row 3: Staying in control - Track your free miles */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -209,7 +209,7 @@ const AudiProject = () => {
           </section>
 
           {/* Designing for every moment Section */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -240,7 +240,7 @@ const AudiProject = () => {
           </section>
 
           {/* Videos Section */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -284,7 +284,7 @@ const AudiProject = () => {
           </section>
 
           {/* Design Exploration Section */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -294,11 +294,11 @@ const AudiProject = () => {
                 className="w-full"
               >
                 {/* First two images side by side */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mb-4">
                   {firstTwoImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
+                      className="inline-block"
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-100px" }}
@@ -308,7 +308,7 @@ const AudiProject = () => {
                       <motion.img
                         src={image}
                         alt={`Design exploration ${index + 1}`}
-                        className="max-w-full h-auto object-contain"
+                        className="w-auto h-auto max-w-full block object-contain"
                         loading="lazy"
                       />
                     </motion.div>
@@ -316,11 +316,11 @@ const AudiProject = () => {
                 </div>
 
                 {/* Remaining images full width */}
-                <div className="space-y-6 md:space-y-8">
+                <div className="space-y-2 md:space-y-3">
                   {remainingImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
+                      className="inline-block w-full"
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-100px" }}
@@ -330,7 +330,7 @@ const AudiProject = () => {
                       <motion.img
                         src={image}
                         alt={`Design exploration ${index + 3}`}
-                        className="max-w-full h-auto object-contain"
+                        className="w-auto h-auto max-w-full block object-contain"
                         loading="lazy"
                       />
                     </motion.div>
@@ -341,7 +341,7 @@ const AudiProject = () => {
           </section>
 
           {/* What I Learned Section */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <div className="w-full">
                 <motion.div

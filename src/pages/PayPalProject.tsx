@@ -8,10 +8,10 @@ import ProjectOverview from "@/components/projects/ProjectOverview";
 import { getProjectDetail, getAllProjectSummaries } from "@/data/projects";
 
 // Import PayPal project images
-import paypal1 from "@/assets/projects/paypal/Paypal-1.jpeg";
-import paypal2 from "@/assets/projects/paypal/PayPal-2.jpeg";
-import paypal3 from "@/assets/projects/paypal/PayPal-3.jpeg";
-import paypal4 from "@/assets/projects/paypal/PayPal-4.jpeg";
+import paypal1 from "@/assets/projects/paypal/Paypal-1.jpg";
+import paypal2 from "@/assets/projects/paypal/Paypal-2.png";
+import paypal3 from "@/assets/projects/paypal/Paypal-3.jpg";
+import paypal4 from "@/assets/projects/paypal/Paypal-4.jpeg";
 
 const paypalImages = [paypal1, paypal2, paypal3, paypal4];
 
@@ -63,7 +63,7 @@ const PayPalProject = () => {
       />
       <Header />
 
-      <main id="main-content" className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-32 md:pb-40">
         <div className="w-full px-4 md:px-8 lg:px-12">
           {/* Back link */}
           <Link
@@ -90,7 +90,7 @@ const PayPalProject = () => {
           />
 
           {/* The Challenge Section */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -108,7 +108,7 @@ const PayPalProject = () => {
           </section>
 
           {/* The Approach Section */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -127,7 +127,7 @@ const PayPalProject = () => {
 
           {/* The Solution Section */}
           {project.approach && (
-            <section className="py-20 md:py-32">
+            <section className="py-20 md:py-24">
               <div className="w-full px-4 md:px-8 lg:px-12">
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
@@ -147,9 +147,9 @@ const PayPalProject = () => {
 
           {/* Media Gallery */}
           {paypalImages && paypalImages.length > 0 && (
-            <section className="py-20 md:py-32">
+            <section className="py-20 md:py-24">
               <div className="w-full px-4 md:px-8 lg:px-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                   {paypalImages.map((image, index) => (
                     <motion.div
                       key={index}
@@ -157,13 +157,13 @@ const PayPalProject = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-100px" }}
                       transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-                      className="rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
+                      className="inline-block"
                       whileHover={{ scale: 1.02, y: -4 }}
                     >
                       <motion.img
                         src={image}
                         alt={`${project.title} - ${index + 1}`}
-                        className="max-w-full h-auto object-contain"
+                        className="w-auto h-auto max-w-full block object-contain"
                         loading="lazy"
                       />
                     </motion.div>
@@ -175,7 +175,7 @@ const PayPalProject = () => {
 
           {/* Results Section */}
           {project.results && (
-            <section className="py-20 md:py-32">
+            <section className="py-20 md:py-24">
               <div className="w-full px-4 md:px-8 lg:px-12">
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}

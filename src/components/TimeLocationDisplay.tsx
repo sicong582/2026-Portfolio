@@ -28,7 +28,7 @@ const TimeLocationDisplay = () => {
 
   return (
     <motion.div
-      className="fixed top-8 right-32 z-50 pointer-events-none"
+      className="fixed top-24 right-32 z-40 pointer-events-none"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}

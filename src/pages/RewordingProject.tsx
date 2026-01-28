@@ -8,6 +8,7 @@ import ProjectOverview from "@/components/projects/ProjectOverview";
 import ImageGrid from "@/components/projects/ImageGrid";
 import ProjectFooter from "@/components/projects/ProjectFooter";
 import { getProjectDetail, getAllProjectSummaries } from "@/data/projects";
+import flowerHero from "@/assets/flower-hero.gif";
 
 // Import all project assets from rewording-poster-design folder
 import primaryPoster from "@/assets/projects/rewording-poster-design/rewording-primary-poster.png";
@@ -29,12 +30,20 @@ import poster14 from "@/assets/projects/rewording-poster-design/rewording-poster
 // Primary poster image
 const mainPoster = primaryPoster;
 
-// All poster variations (excluding primary poster which is displayed separately)
-const allPosters = [
+// Moodboard images (first 3 posters)
+const moodboardImages = [
   poster1,
   poster2,
   poster3,
+];
+
+// Minimalist style posters
+const minimalistPosters = [
   poster4,
+];
+
+// Futurist style posters (all images in this section)
+const futuristPosters = [
   poster5,
   poster6,
   poster7,
@@ -91,8 +100,24 @@ const RewordingProject = () => {
       />
       <Header />
 
-      <main id="main-content" className="pt-32 pb-24">
+      <main id="main-content" className="pt-32 pb-32 md:pb-40">
         <div className="w-full px-4 md:px-8 lg:px-12">
+          {/* Gift/Flower Image - Below Header Introduction */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex justify-center mb-12"
+          >
+            <div className="max-w-md w-full">
+              <img
+                src={flowerHero}
+                alt="Gift"
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          </motion.div>
+
           {/* Back link */}
           <Link
             to="/"
@@ -109,15 +134,17 @@ const RewordingProject = () => {
           </div>
 
           {/* Overview Section */}
-          <ProjectOverview
-            description={project.overview}
-            details={extractProjectInfo()}
-          />
+          <section className="py-20 md:py-24">
+            <ProjectOverview
+              description={project.overview}
+              details={extractProjectInfo()}
+            />
+          </section>
 
           {/* Two-column layout: Text sections + Primary Poster */}
-          <section className="py-20 md:py-32">
+          <section className="py-20 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                 {/* Left column: Text sections - 50% width */}
                 <div className="space-y-16">
                   {/* Process Section */}
@@ -127,7 +154,7 @@ const RewordingProject = () => {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                   >
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.process.title}</h2>
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">Design Process</h2>
                     {project.process.description ? (
                       <p className="font-sans text-muted-foreground leading-relaxed">
                         {project.process.description}
@@ -154,12 +181,12 @@ const RewordingProject = () => {
                 >
                   <motion.div
                     style={{ y: mainPosterY }}
-                    className="w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl parallax-container flex items-center justify-center"
+                    className="inline-block parallax-container"
                   >
                     <motion.img
                       src={mainPoster}
                       alt="Primary conference poster"
-                      className="w-full h-full object-contain"
+                      className="w-auto h-auto max-w-full block object-contain"
                       loading="lazy"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -179,12 +206,110 @@ const RewordingProject = () => {
             </div>
           </section>
 
-          {/* Poster Collection Grid - All posters */}
-          <ImageGrid
-            images={allPosters}
-            columns={3}
-            title="Design Direction Exploration"
-          />
+          {/* Moodboard Section - Full Width */}
+          <section className="py-20 md:py-24 w-full">
+            <div className="w-full px-0">
+              <motion.h2
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="font-serif text-3xl md:text-4xl font-bold mb-12 text-center px-4 md:px-8 lg:px-12"
+              >
+                Moodboard
+              </motion.h2>
+              <div className="flex flex-row justify-center items-center gap-2 md:gap-3 w-full">
+                {moodboardImages.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex-1 flex justify-center items-center"
+                    whileHover={{ scale: 1.02, y: -4 }}
+                  >
+                    <motion.img
+                      src={image}
+                      alt={`Moodboard image ${index + 1}`}
+                      className="w-auto h-auto max-w-full block object-contain"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Explore Minimalist Style Section */}
+          <section className="py-20 md:py-24">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <motion.h2
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="font-serif text-3xl md:text-4xl font-bold mb-12 text-center"
+              >
+                Explore Minimalist Style
+              </motion.h2>
+              <div className="flex flex-wrap justify-center gap-2 md:gap-3 w-full">
+                {minimalistPosters.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="inline-block"
+                    whileHover={{ scale: 1.02, y: -4 }}
+                  >
+                    <motion.img
+                      src={image}
+                      alt={`Minimalist style poster ${index + 1}`}
+                      className="w-auto h-auto max-w-full block object-contain"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Explore Futurist Style Section */}
+          <section className="py-20 md:py-24">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <motion.h2
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="font-serif text-3xl md:text-4xl font-bold mb-12 text-center"
+              >
+                Explore Futurist Style
+              </motion.h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 w-full">
+                {futuristPosters.map((image, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="inline-block"
+                    whileHover={{ scale: 1.02, y: -4 }}
+                  >
+                    <motion.img
+                      src={image}
+                      alt={`Futurist style poster ${index + 1}`}
+                      className="w-auto h-auto max-w-full block object-contain"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
 
           {/* Project navigation */}
           <nav className="mt-20 border-t border-border pt-12">

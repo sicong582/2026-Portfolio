@@ -65,30 +65,21 @@ const ImageGrid = ({
               whileHover={{ y: -4 }}
             >
               <motion.div
-                className={`${aspectRatio || ""} ${aspectRatio ? "rounded-2xl shadow-lg" : ""} overflow-hidden ${!aspectRatio ? "flex items-center justify-center" : "flex items-center justify-center"}`}
+                className="inline-block"
                 whileHover={{ 
                   scale: 1.02,
-                  boxShadow: aspectRatio ? "0 20px 40px -12px rgba(0, 0, 0, 0.15)" : "none",
                 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
                 <motion.img
                   src={image}
                   alt={captions[index] || `Image ${index + 1}`}
-                  className={`${aspectRatio ? "w-full h-full" : "max-w-full h-auto"} object-contain`}
+                  className="w-auto h-auto max-w-full block object-contain"
                   loading="lazy"
                   animate={{
                     scale: hoveredIndex === index ? 1.05 : 1,
                   }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                />
-                {/* Glass overlay on hover */}
-                <motion.div
-                  className="absolute inset-0 glass opacity-0 pointer-events-none"
-                  animate={{
-                    opacity: hoveredIndex === index ? 0.1 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
                 />
               </motion.div>
               {captions[index] && (

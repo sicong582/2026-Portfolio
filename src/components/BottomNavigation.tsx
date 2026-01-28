@@ -124,7 +124,6 @@ const BottomNavigation = () => {
                 </motion.button>
               )}
               </div>
-            </>
           );
         })}
       </div>
