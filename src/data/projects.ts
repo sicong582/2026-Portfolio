@@ -3,7 +3,7 @@
 import projectCoverDashboard from "@/assets/project-cover-dashboard.png";
 import projectCoverFulfillment from "@/assets/project-cover-fulfillment.png";
 import projectCoverAudi from "@/assets/project-cover-audi.png";
-import projectCoverPaypal from "@/assets/project-cover-paypal.png";
+import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import projectCoverAI from "@/assets/project-cover-ai.png";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
 
@@ -157,45 +157,40 @@ export const projects: Project[] = [
   },
   {
     id: "security-tooling",
-    title: "Security Tooling",
+    title: "Adobe Firewall Rule Management",
     type: "UX Design",
-    date: "2024",
+    date: "2017",
     image: projectCoverDashboard, // Placeholder - replace with actual image
-    description: "Enterprise security dashboard for monitoring and managing security operations.",
+    description: "Turning an Engineer-Built Security Tool into a Clear, Trustworthy Experience",
     category: "b2b",
     detail: {
-      title: "Security Tooling",
+      title: "Adobe Firewall Rule Management",
       type: "UX Design",
-      date: "2024",
-      role: "Product Designer",
-      duration: "10 weeks",
-      team: "2 Designers, 3 Developers",
-      overview: "An enterprise security dashboard designed to provide comprehensive visibility and control over security operations, enabling teams to monitor threats and manage security policies effectively.",
+      date: "2017",
+      role: "Experience Designer + Front-End Developer",
+      duration: "3 weeks",
+      team: "Security Engineers, Product Managers",
+      overview: "When I joined Adobe's headquarters in San Jose as the first designer on the team, I quickly realized the Firewall Rule Management (FRM) tool—critical for resolving customer security issues—had been built entirely by engineers. It worked, but it wasn't intuitive. Searching for firewall rules was cumbersome, ticket management was tedious, and engineers had little visibility into teammates' contributions across the workflow. My goal was clear: transform a highly technical, engineer-built tool into a streamlined, user-centered experience.",
       problem: {
-        title: "The Problem",
-        description: "Security teams needed better tools to monitor threats, manage policies, and respond to incidents. The existing tools were fragmented and didn't provide a unified view of security operations.",
+        title: "The Challenge: Where am I, and where should I start?",
+        description: "Security engineers are primarily focused on maintaining internet security, making firewall rule searches and updates secondary priorities. The existing tool reflected this—it was functional but frustrating. **Unlabeled icons** made navigation time-consuming. The **outdated interface** lacked visual clarity. The **search process was complex** and felt burdensome. Most critically, ticket progress disappeared once work moved across teams. Engineers relied on Slack and email to track what was happening next, creating manual coordination overhead that slowed down critical security work.",
       },
       process: {
-        title: "Design Process",
-        steps: [
-          "Research: Understanding security team workflows and requirements",
-          "Analysis: Mapping security operations and threat monitoring needs",
-          "Design: Creating intuitive dashboards and visualization tools",
-          "Testing: Validating with security teams and iterating",
-        ],
+        title: "The Approach: Learning, Designing, Building",
+        description: "**Learning the System**\n\nBefore I could redesign anything, I needed to understand a world I'd never worked in—firewalls, rules, and security operations. I embedded myself within the team: having informal conversations in the dining room with coworker Ben and engineers from the China team, taking detailed notes. I conducted online research to deepen my understanding of firewall rule logic and performed a UX heuristic evaluation to map usability gaps.\n\n**The Redesign**\n\nOver three weeks, I partnered closely with security engineers and PMs to redesign FRM around speed, visibility, and confidence—without oversimplifying security logic. I streamlined rule search, introduced a dashboard that surfaced what mattered in the moment, and made downstream testing and deployment status visible inside the product.\n\n**Building It**\n\nThere were no front-end engineers available. So I took Codecademy courses, spent a week learning HTML, CSS, and JavaScript, then designed the UI and built all front-end code myself. I partnered with the back-end engineer to integrate the UI and server logic.",
       },
       approach: {
-        title: "The Approach",
-        description: "We designed a comprehensive dashboard that consolidates security monitoring, policy management, and incident response into a single, intuitive interface. The design emphasizes clarity, real-time updates, and actionable insights.",
+        title: "The Solution: Three Key Improvements",
+        description: "**01 Dashboard**\n\nThe redesigned dashboard aligns with Adobe's mission and creative branding. It streamlines the process of searching and configuring firewall rules, highlighting and summarizing firewall change and access requests. Engineers now have a clearer view of request performance at a glance.\n\n**02 Firewall Rule Search**\n\nEngineers can efficiently search firewall rules by hostname or IP address, with **color highlights** indicating which devices are ready for approval. The search process is no longer rigid and unforgiving—it's fast and intuitive.\n\n**03 Configuration Tracking**\n\nAfter engineers approve tickets, the process moves to configuration. They can now track the status and monitor the activities of testing engineers—all visible inside the product, eliminating the need for Slack and email coordination.",
       },
       results: {
-        title: "The Results",
+        title: "Impact",
         metrics: [
-          { label: "Response Time", value: "-40%" },
-          { label: "Threat Detection", value: "+60%" },
-          { label: "Team Efficiency", value: "+45%" },
+          { label: "Streamlined Workflows", value: "Faster search & approval" },
+          { label: "Reduced Coordination", value: "Less manual communication" },
+          { label: "Clearer Visibility", value: "System status & ownership" },
         ],
-        description: "The dashboard significantly improved security team efficiency and threat detection capabilities.",
+        description: "Despite limited resources, I delivered the entire project on time—both the design and the front-end implementation. The experience strengthened the team's operations and improved engineers' daily workflows.\n\n**A more intuitive, efficient FRM tool** adopted by engineers\n\n**Streamlined ticket search and dashboard experience** that saves time\n\n**Reduced manual communication**, speeding up rule updates\n\n**More time for core security responsibilities** instead of tool navigation\n\nAs the team's first designer, I also established the design culture, design process, and user research practice—laying the foundation for future design work at Adobe.",
       },
       media: [
         // Images will be added to: src/assets/projects/security-tooling/
@@ -219,10 +214,10 @@ export const projects: Project[] = [
       role: "UX/UI Designer",
       duration: "1 year",
       team: "4 UX Designers, 1 Design Director, 2 Researchers, 1 PM, 2 Engineers",
-      overview: "In 2020, AKQA partnered with PayPal to redesign the **PayPal.com** marketing website. The experience had grown fragmented over time, making it difficult for **small business merchants**—PayPal's largest user group—to understand products or take action. Over the course of a year, I worked with designers, researchers, engineers, and PMs to rethink PayPal's **information architecture** and build a **modern, scalable design system**. The goal was simple: reduce complexity, increase trust, and help users move forward with confidence.",
+      overview: "In 2020, AKQA collaborated with PayPal to overhaul its marketing website. The goal was not just a visual improvement, but to create a seamless, intuitive user experience for both small business merchants and PayPal consumers. I spent one year working with designers, researchers, engineers, and product managers to rethink PayPal's information architecture and build a modern, scalable design system.",
       problem: {
-        title: "The Challenge",
-        description: "The existing PayPal website had grown fragmented over time, making it difficult for small business merchants—PayPal's largest user group—to understand products or take action. More than **200 hidden pages**, unclear navigation, and no clear sense of hierarchy made it challenging even for experienced users to understand where they were or what PayPal offered.",
+        title: "The Challenge: Uncovering Hidden Problems",
+        description: "Despite PayPal's global reach, its website had become a labyrinth. With over **200 hidden pages** and **fragmented navigation**, consumers struggled to manage their finances, and merchants found it difficult to grow their businesses. The experience was frustrating—even for me, the designer working on the project. If I was getting lost, how must it have felt for users?\n\nWe knew we had to rethink everything. Merchants faced overwhelming challenges: setting up payments, managing cash flow, creating invoices, and establishing an online presence. They needed tools that were easy to understand and simple to use. Meanwhile, consumers struggled to send and receive money through PayPal.",
       },
       process: {
         title: "The Approach: Finding Structure Inside the Chaos",
@@ -230,19 +225,21 @@ export const projects: Project[] = [
       },
       approach: {
         title: "The Solution: Design System + Navigation",
-        description: "Navigation alone wasn't enough. We needed a system that could scale. I partnered with the visual design team to create a **cohesive design system** that brought consistency across PayPal's touchpoints while still allowing flexibility. We focused on clear hierarchy, modular components, and layouts that supported focus—not distraction. Personalization was a key principle. The experience allowed merchants to surface the tools they used most, making the product feel tailored and efficient rather than overwhelming.",
+        description: "Navigation alone wasn't enough. We needed a system that could scale. I partnered with the visual design team to create a **cohesive design system** that brought consistency across PayPal's touchpoints while still allowing flexibility. We focused on clear hierarchy, modular components, and layouts that supported focus—not distraction. Personalization was a key principle. The experience allowed merchants to surface the tools they used most, making the product feel tailored and efficient rather than overwhelming.\n\n### **Apply engaging storytelling and product demonstration techniques through new design system**\n\nThe logged-out experience needs to be radically simplified with a flatter information architecture, clearer content structure, and modernized page design using updated components. The goal is to guide customers directly toward sign-up, minimizing distractions from unnecessary navigation or cross-sell promotions.",
       },
       results: {
-        title: "Impact",
+        title: "Increase growth through delightful design",
         metrics: [
           { label: "Client", value: "PayPal through AKQA" },
           { label: "Tools", value: "Figma, UserTesting, InVision, Keynote" },
           { label: "Role", value: "UX/UI Designer" },
           { label: "Year", value: "2020" },
           { label: "Team", value: "4 UX Designers, 1 Design Director, 2 Researchers, 1 PM, 2 Engineers" },
-          { label: "User Conversion Increase", value: "32% (2020–2021)" },
+          { label: "New Active Accounts (2021)", value: "14.5 million" },
+          { label: "Total Active Accounts", value: "403 million" },
+          { label: "Year-over-Year Increase", value: "21%" },
         ],
-        description: "After launch, PayPal adopted the new **navigation** and **design system**, contributing to a **32% increase in user conversion (2020–2021)**. More importantly, the site became easier to understand, easier to navigate, and better aligned with how merchants actually work. This project reinforced a simple truth: **clarity builds trust**. Research and user feedback helped us strip away complexity and design with empathy. The best outcomes came not from adding more features—but from removing friction.",
+        description: "We delivered the redesigned experience to PayPal in 2020. The client was very pleased with the intuitive navigation and refreshed brand style. PayPal's design team built on this work and launched the new site in 2021.\n\nAfter launch, PayPal saw strong business growth:\n\n- 14.5 million new active accounts added in 2021\n- 403 million total active accounts, a 21% year-over-year increase\n\nI'm proud to have played a key role in helping improve user engagement, service discoverability, and brand perception.",
       },
       media: [
         { type: "image", src: "/src/assets/projects/paypal/Paypal-1.jpeg" },
