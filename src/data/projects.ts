@@ -6,6 +6,7 @@ import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import projectCoverAI from "@/assets/project-cover-ai.png";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
+import projectCoverAdobeSecurity from "@/assets/projects/security-tooling/Adobe-1.PNG";
 
 // Types
 export interface MediaItem {
@@ -159,42 +160,49 @@ export const projects: Project[] = [
     id: "security-tooling",
     title: "Adobe Firewall Rule Management",
     type: "UX Design",
-    date: "2017",
-    image: projectCoverDashboard, // Placeholder - replace with actual image
+    date: "2018",
+    image: projectCoverAdobeSecurity,
     description: "Turning an Engineer-Built Security Tool into a Clear, Trustworthy Experience",
     category: "b2b",
     detail: {
       title: "Adobe Firewall Rule Management",
       type: "UX Design",
-      date: "2017",
+      date: "2018",
       role: "Experience Designer + Front-End Developer",
-      duration: "3 weeks",
+      duration: "1 month",
       team: "Security Engineers, Product Managers",
-      overview: "When I joined Adobe's headquarters in San Jose as the first designer on the team, I quickly realized the Firewall Rule Management (FRM) tool—critical for resolving customer security issues—had been built entirely by engineers. It worked, but it wasn't intuitive. Searching for firewall rules was cumbersome, ticket management was tedious, and engineers had little visibility into teammates' contributions across the workflow. My goal was clear: transform a highly technical, engineer-built tool into a streamlined, user-centered experience.",
+      overview: "This project started with a seemingly clear request — *\"build a dashboard.\"* In reality, the team was facing an undefined decision problem, unclear ownership, and strong technical constraints. My responsibility was to step beyond execution, reframe the problem, and use design to help the team align on what decisions the product actually needed to support.",
+      context: {
+        title: "Context",
+        description: "This was a 0→1 internal security tooling project. The initial brief sounded clear: *\"We need a dashboard.\"* But very quickly it became obvious that this was a **solution framed as a requirement**, not a clearly defined problem.\n\nThere was no existing benchmark, the PM was still exploring direction, timelines were tight, and technical constraints were already baked into the definition. My role was not just to design screens, but to **reframe the problem and anchor the team around a shared decision goal**.",
+      },
       problem: {
-        title: "The Challenge: Where am I, and where should I start?",
-        description: "Security engineers are primarily focused on maintaining internet security, making firewall rule searches and updates secondary priorities. The existing tool reflected this—it was functional but frustrating. **Unlabeled icons** made navigation time-consuming. The **outdated interface** lacked visual clarity. The **search process was complex** and felt burdensome. Most critically, ticket progress disappeared once work moved across teams. Engineers relied on Slack and email to track what was happening next, creating manual coordination overhead that slowed down critical security work.",
+        title: "The Real Challenge",
+        description: "The team wasn't lacking data — they were drowning in it.\n\nEngineers were jumping between multiple systems to answer simple but critical questions:\n- *Do I need to take action right now?*\n- *Is this issue blocking something important?*\n- *Who owns the next step?*\n\nThe proposed \"dashboard\" risked becoming just another data container. If we shipped that, we'd be adding surface area without reducing cognitive load.",
       },
       process: {
-        title: "The Approach: Learning, Designing, Building",
-        description: "**Learning the System**\n\nBefore I could redesign anything, I needed to understand a world I'd never worked in—firewalls, rules, and security operations. I embedded myself within the team: having informal conversations in the dining room with coworker Ben and engineers from the China team, taking detailed notes. I conducted online research to deepen my understanding of firewall rule logic and performed a UX heuristic evaluation to map usability gaps.\n\n**The Redesign**\n\nOver three weeks, I partnered closely with security engineers and PMs to redesign FRM around speed, visibility, and confidence—without oversimplifying security logic. I streamlined rule search, introduced a dashboard that surfaced what mattered in the moment, and made downstream testing and deployment status visible inside the product.\n\n**Building It**\n\nThere were no front-end engineers available. So I took Codecademy courses, spent a week learning HTML, CSS, and JavaScript, then designed the UI and built all front-end code myself. I partnered with the back-end engineer to integrate the UI and server logic.",
+        title: "Reframing the Problem",
+        description: "Instead of asking *\"What should this dashboard show?\"* I reframed the conversation around **decision moments**.\n\nWith the PM and senior engineers, I mapped:\n- the key moments where decisions were made\n- what information was actually needed *at that moment*\n- what data could be deferred or removed entirely\n\nThis lightweight alignment exercise replaced weeks of traditional research we didn't have time for — and immediately clarified what mattered.",
       },
       approach: {
-        title: "The Solution: Three Key Improvements",
-        description: "**01 Dashboard**\n\nThe redesigned dashboard aligns with Adobe's mission and creative branding. It streamlines the process of searching and configuring firewall rules, highlighting and summarizing firewall change and access requests. Engineers now have a clearer view of request performance at a glance.\n\n**02 Firewall Rule Search**\n\nEngineers can efficiently search firewall rules by hostname or IP address, with **color highlights** indicating which devices are ready for approval. The search process is no longer rigid and unforgiving—it's fast and intuitive.\n\n**03 Configuration Tracking**\n\nAfter engineers approve tickets, the process moves to configuration. They can now track the status and monitor the activities of testing engineers—all visible inside the product, eliminating the need for Slack and email coordination.",
+        title: "Design Decisions Under Constraints",
+        description: "Given the lack of historical examples and limited time, I made a deliberate call:\n\n> This product's job is not to display everything — it's to **reduce decision time**.\n\nThat led to several intentional choices:\n- prioritizing signals over raw metrics\n- structuring the interface around *\"Do I act or not?\"*\n- treating technical constraints as boundaries, not excuses\n\nSome stakeholders initially pushed to include more data \"just in case.\" I pushed back by grounding every discussion in the same question: *does this help someone make a faster, more confident decision?*",
       },
       results: {
-        title: "Impact",
+        title: "Outcome",
         metrics: [
-          { label: "Streamlined Workflows", value: "Faster search & approval" },
-          { label: "Reduced Coordination", value: "Less manual communication" },
-          { label: "Clearer Visibility", value: "System status & ownership" },
+          { label: "COMPANY", value: "Adobe" },
+          { label: "TOOLS", value: "Sketch, HTML, CSS and Javascript" },
+          { label: "ROLE", value: "Experience Designer + Front-End Developer" },
+          { label: "TIMELINE", value: "1 month" },
+          { label: "YEAR", value: "2018" },
+          { label: "TEAM", value: "Security Engineers, Product Managers" },
         ],
-        description: "Despite limited resources, I delivered the entire project on time—both the design and the front-end implementation. The experience strengthened the team's operations and improved engineers' daily workflows.\n\n**A more intuitive, efficient FRM tool** adopted by engineers\n\n**Streamlined ticket search and dashboard experience** that saves time\n\n**Reduced manual communication**, speeding up rule updates\n\n**More time for core security responsibilities** instead of tool navigation\n\nAs the team's first designer, I also established the design culture, design process, and user research practice—laying the foundation for future design work at Adobe.",
+        description: "The final MVP aligned the team around a single purpose: **decision clarity**.\n\nInstead of a generic dashboard, we delivered a focused tool that:\n- surfaced what required attention *now*\n- reduced time spent hunting across systems\n- gave the PM and engineers a shared mental model for future iterations\n\nMore importantly, the design became the anchor for product direction in an otherwise ambiguous 0→1 space.",
       },
       media: [
-        // Images will be added to: src/assets/projects/security-tooling/
-        { type: "image", src: "/src/assets/projects/security-tooling/cover.jpg" },
+        // Images are handled in AdobeSecurityProject.tsx custom page
+        { type: "image", src: "/src/assets/projects/security-tooling/Adobe-1.PNG" },
       ],
     },
   },

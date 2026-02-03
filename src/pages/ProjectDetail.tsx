@@ -8,6 +8,7 @@ import ProjectOverview from "@/components/projects/ProjectOverview";
 import RewordingProject from "./RewordingProject";
 import AudiProject from "./AudiProject";
 import PayPalProject from "./PayPalProject";
+import AdobeSecurityProject from "./AdobeSecurityProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
 
 // Helper function to parse markdown bold text (**text**)
@@ -31,7 +32,10 @@ const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
     client = project.team.replace("Client:", "").trim();
   } else {
     const clientMetric = project.results.metrics.find(m => 
-      m.label.toLowerCase() === "client" || m.label.toLowerCase().includes("client")
+      m.label.toLowerCase() === "client" || 
+      m.label.toLowerCase() === "company" ||
+      m.label.toLowerCase().includes("client") ||
+      m.label.toLowerCase().includes("company")
     );
     if (clientMetric) {
       client = clientMetric.value;
@@ -168,6 +172,10 @@ const ProjectDetail = () => {
     return <PayPalProject />;
   }
 
+  if (id === "security-tooling") {
+    return <AdobeSecurityProject />;
+  }
+
   const project = id ? getProjectDetail(id) : null;
   
   // Use new side-by-side layout only for project-7 (AI Exploration)
@@ -200,7 +208,7 @@ const ProjectDetail = () => {
       <Header />
       
       <main id="main-content" className="pt-32 pb-32 md:pb-40">
-        <div className="w-full px-4 md:px-8 lg:px-12">
+        <div className="w-full px-8 md:px-16 lg:px-24 py-8 md:py-12">
           {/* Back link */}
           <Link
             to="/"
@@ -217,10 +225,14 @@ const ProjectDetail = () => {
           </div>
 
           {/* Project Overview Section */}
-          <ProjectOverview
-            description={project.overview}
-            details={extractProjectInfo(project)}
-          />
+          <section className="pt-8 pb-20 md:pt-12 md:pb-24">
+            <div className="w-full">
+              <ProjectOverview
+                description={project.overview}
+                details={extractProjectInfo(project)}
+              />
+            </div>
+          </section>
 
           {useAlternatingLayout ? (
             /* Side-by-side layout for AI Exploration: text left, media right */
@@ -247,7 +259,7 @@ const ProjectDetail = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <div>
-                  <h2 className="font-serif text-2xl font-medium mb-4">Overview</h2>
+                  <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">Overview</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed">
                     {parseMarkdown(project.overview)}
                   </p>
@@ -266,7 +278,7 @@ const ProjectDetail = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <div>
-                  <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
+                  <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.problem.title}</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed">
                     {parseMarkdown(project.problem.description)}
                   </p>
@@ -294,7 +306,7 @@ const ProjectDetail = () => {
             <div className="space-y-16">
               {/* Problem */}
               <section>
-                <h2 className="font-serif text-2xl font-medium mb-4">{project.problem.title}</h2>
+                <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.problem.title}</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed w-full">
                   {parseMarkdown(project.problem.description)}
                 </p>
@@ -302,7 +314,7 @@ const ProjectDetail = () => {
 
               {/* Process */}
               <section>
-                <h2 className="font-serif text-2xl font-medium mb-4">{project.process.title}</h2>
+                <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.process.title}</h2>
                 {project.process.description ? (
                   <p className="font-sans text-muted-foreground leading-relaxed w-full">
                     {parseMarkdown(project.process.description)}
@@ -321,7 +333,7 @@ const ProjectDetail = () => {
               {/* Approach */}
               {project.approach && (
                 <section>
-                  <h2 className="font-serif text-2xl font-medium mb-4">{project.approach.title}</h2>
+                  <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.approach.title}</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed w-full">
                     {parseMarkdown(project.approach.description)}
                   </p>
@@ -331,7 +343,7 @@ const ProjectDetail = () => {
               {/* Results */}
               {project.results && (
                 <section>
-                  <h2 className="font-serif text-2xl font-medium mb-4">{project.results.title}</h2>
+                  <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.results.title}</h2>
                   {project.results.metrics && project.results.metrics.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                       {project.results.metrics.map((metric, index) => (
