@@ -6,7 +6,6 @@ import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import projectCoverAI from "@/assets/project-cover-ai.png";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
-import projectCoverAdobeSecurity from "@/assets/projects/security-tooling/Adobe-1.PNG";
 
 // Types
 export interface MediaItem {
@@ -32,6 +31,10 @@ export interface ProjectDetail {
   duration: string;
   team: string;
   overview: string;
+  context?: {
+    title: string;
+    description: string;
+  };
   problem: {
     title: string;
     description: string;
@@ -41,7 +44,11 @@ export interface ProjectDetail {
     steps?: string[];
     description?: string;
   };
-  approach: {
+  approach?: {
+    title: string;
+    description: string;
+  };
+  comfortZone?: {
     title: string;
     description: string;
   };
@@ -103,8 +110,7 @@ export const projects: Project[] = [
         description: "The system significantly improved vendor workflow efficiency while establishing a reusable component library for future projects.",
       },
       media: [
-        // Images will be added to: src/assets/projects/purchase-order-group/
-        { type: "image", src: "/src/assets/projects/purchase-order-group/cover.jpg" },
+        // Images will be added when available
       ],
     },
   },
@@ -151,8 +157,7 @@ export const projects: Project[] = [
         description: "The platform significantly improved operational efficiency and reduced errors, with high adoption rates among warehouse teams.",
       },
       media: [
-        // Images will be added to: src/assets/projects/fulfillment-operation-tooling/
-        { type: "image", src: "/src/assets/projects/fulfillment-operation-tooling/cover.jpg" },
+        // Images will be added when available
       ],
     },
   },
@@ -161,7 +166,7 @@ export const projects: Project[] = [
     title: "Adobe Firewall Rule Management",
     type: "UX Design",
     date: "2018",
-    image: projectCoverAdobeSecurity,
+    image: projectCoverDashboard,
     description: "Turning an Engineer-Built Security Tool into a Clear, Trustworthy Experience",
     category: "b2b",
     detail: {
@@ -171,25 +176,25 @@ export const projects: Project[] = [
       role: "Experience Designer + Front-End Developer",
       duration: "1 month",
       team: "Security Engineers, Product Managers",
-      overview: "This project started with a seemingly clear request — *\"build a dashboard.\"* In reality, the team was facing an undefined decision problem, unclear ownership, and strong technical constraints. My responsibility was to step beyond execution, reframe the problem, and use design to help the team align on what decisions the product actually needed to support.",
+      overview: "**Firewall Rule Management (FRM)** is an internal Adobe enterprise security tool used by security engineers to investigate threats, manage firewall rules, and approve or block network traffic across Adobe's platforms. The product supports **high-stakes, time-sensitive decisions**, where delays can block business operations and mistakes can introduce security risk.\n\nWhen I joined Adobe's security engineering team as the **first designer**, my responsibility went beyond execution. I needed to help the team align on **what decisions the product should support**, not just what UI to build.",
       context: {
-        title: "Context",
-        description: "This was a 0→1 internal security tooling project. The initial brief sounded clear: *\"We need a dashboard.\"* But very quickly it became obvious that this was a **solution framed as a requirement**, not a clearly defined problem.\n\nThere was no existing benchmark, the PM was still exploring direction, timelines were tight, and technical constraints were already baked into the definition. My role was not just to design screens, but to **reframe the problem and anchor the team around a shared decision goal**.",
-      },
-      problem: {
-        title: "The Real Challenge",
-        description: "The team wasn't lacking data — they were drowning in it.\n\nEngineers were jumping between multiple systems to answer simple but critical questions:\n- *Do I need to take action right now?*\n- *Is this issue blocking something important?*\n- *Who owns the next step?*\n\nThe proposed \"dashboard\" risked becoming just another data container. If we shipped that, we'd be adding surface area without reducing cognitive load.",
+        title: "Starting with Ambiguity",
+        description: "This was a **0→1 internal security tooling project**.\n\nThe initial brief sounded clear:\n\n> *\"We need to design a new dashboard.\"*\n\nBut very quickly, it became clear this was a **solution framed as a requirement**, not a clearly defined problem.\n\nThere was no existing benchmark, the PM was still exploring direction, timelines were tight, and technical constraints were already baked in. My role was not just to design screens, but to **reframe the problem and anchor the team around a shared decision goal**.",
       },
       process: {
-        title: "Reframing the Problem",
-        description: "Instead of asking *\"What should this dashboard show?\"* I reframed the conversation around **decision moments**.\n\nWith the PM and senior engineers, I mapped:\n- the key moments where decisions were made\n- what information was actually needed *at that moment*\n- what data could be deferred or removed entirely\n\nThis lightweight alignment exercise replaced weeks of traditional research we didn't have time for — and immediately clarified what mattered.",
+        title: "Reframing the Problem Around Decisions",
+        description: "Instead of asking:\n\n> *\"What should this dashboard show?\"*\n\nI reframed the conversation around **decision moments**.\n\nWorking closely with the PM and senior engineers, I mapped:\n\n- where decisions actually happen\n- what information is required *in that moment*\n- what data could be deferred or removed entirely\n\nThis alignment clarified the product's real job:\n\n> **Help engineers quickly answer: \"Do I need to act right now?\"**",
+      },
+      problem: {
+        title: "The Reality of Users' Work",
+        description: "### Managing firewall rule tickets is a secondary priority\n\nThe primary users of FRM are security engineers. After speaking with several engineers, a key pattern emerged:\n\n- Their main responsibility is maintaining internet security — not managing tickets\n- Firewall rule searches and updates are **interruptive, secondary tasks**\n- Configuration testing is handled by other team members\n- Engineers rely heavily on Slack and email to track status and coordinate next steps\n\nFRM wasn't broken — it simply demanded **more attention than engineers could afford**.",
       },
       approach: {
-        title: "Design Decisions Under Constraints",
-        description: "Given the lack of historical examples and limited time, I made a deliberate call:\n\n> This product's job is not to display everything — it's to **reduce decision time**.\n\nThat led to several intentional choices:\n- prioritizing signals over raw metrics\n- structuring the interface around *\"Do I act or not?\"*\n- treating technical constraints as boundaries, not excuses\n\nSome stakeholders initially pushed to include more data \"just in case.\" I pushed back by grounding every discussion in the same question: *does this help someone make a faster, more confident decision?*",
+        title: "Key Design Decisions",
+        description: "### 01. Decision-Focused Dashboard\n\nThe dashboard surfaces what needs attention now, highlights firewall change and access requests, and gives engineers a clear snapshot of system status at a glance.\n\n### 02. Flexible Firewall Rule Search\n\nEngineers can search by hostname or IP address, with **color-coded visual signals** indicating approval readiness. The experience supports exploration instead of exact recall.\n\n### 03. Configuration Tracking\n\nAfter approval, engineers can track testing and deployment status directly inside the product, eliminating the need for Slack and email follow-ups.",
       },
       results: {
-        title: "Outcome",
+        title: "Impact",
         metrics: [
           { label: "COMPANY", value: "Adobe" },
           { label: "TOOLS", value: "Sketch, HTML, CSS and Javascript" },
@@ -198,7 +203,11 @@ export const projects: Project[] = [
           { label: "YEAR", value: "2018" },
           { label: "TEAM", value: "Security Engineers, Product Managers" },
         ],
-        description: "The final MVP aligned the team around a single purpose: **decision clarity**.\n\nInstead of a generic dashboard, we delivered a focused tool that:\n- surfaced what required attention *now*\n- reduced time spent hunting across systems\n- gave the PM and engineers a shared mental model for future iterations\n\nMore importantly, the design became the anchor for product direction in an otherwise ambiguous 0→1 space.",
+        description: "Despite limited resources, I delivered the project end-to-end — both design and front-end implementation — reducing front-end development overhead and streamlining the firewall rule management process.\n\nThe redesigned FRM tool:\n\n- improved decision clarity and daily workflows\n- streamlined ticket search and dashboard usage\n- reduced manual coordination via Slack and email\n- gave engineers more time to focus on core security responsibilities\n\nAs the team's first designer, I also established foundational **design culture, process, and lightweight research practices**, laying the groundwork for future design work at Adobe.",
+      },
+      comfortZone: {
+        title: "Pushing Beyond My Comfort Zone",
+        description: "After completing the design, I implemented the UI in production using HTML, CSS, and JavaScript, then handed off the front-end code to the back-end engineer for integration. This constraint forced every design decision to be technically feasible and maintainable.",
       },
       media: [
         // Images are handled in AdobeSecurityProject.tsx custom page

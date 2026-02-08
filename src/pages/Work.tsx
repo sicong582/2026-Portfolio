@@ -2,11 +2,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import ProjectCard from "@/components/ProjectCard";
-import { getAllProjectSummaries } from "@/data/projects";
-
-const projects = getAllProjectSummaries();
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslatedProjectSummaries } from "@/utils/projectTranslations";
 
 const Work = () => {
+  const { language } = useLanguage();
+  const projects = getTranslatedProjectSummaries(language);
+
   return (
     <>
       <SEO 

@@ -1,7 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import ProjectCard from "@/components/ProjectCard";
-import { getAllProjectSummaries } from "@/data/projects";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslatedProjectSummaries } from "@/utils/projectTranslations";
 
 // COLLINS-style smooth fade-in animation
 const fadeInUp = {
@@ -33,10 +34,9 @@ const staggerContainer = {
   },
 };
 
-// Get all projects
-const allProjects = getAllProjectSummaries();
-
 const ProjectsSection = () => {
+  const { language } = useLanguage();
+  const allProjects = getTranslatedProjectSummaries(language);
   // Calculate positions to prevent overlapping
   const calculatePosition = (index: number) => {
     const cardWidthPercent = 45;

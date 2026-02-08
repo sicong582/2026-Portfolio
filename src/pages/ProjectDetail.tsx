@@ -10,6 +10,8 @@ import AudiProject from "./AudiProject";
 import PayPalProject from "./PayPalProject";
 import AdobeSecurityProject from "./AdobeSecurityProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslatedProjectDetail, getTranslatedProjectSummaries } from "@/utils/projectTranslations";
 
 // Helper function to parse markdown bold text (**text**)
 const parseMarkdown = (text: string) => {
@@ -157,6 +159,7 @@ const ParallaxMedia = ({
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { language, t } = useLanguage();
   
   // Use custom visual showcase page for REWORLDING project
   if (id === "rewording-poster-design") {
@@ -176,7 +179,7 @@ const ProjectDetail = () => {
     return <AdobeSecurityProject />;
   }
 
-  const project = id ? getProjectDetail(id) : null;
+  const project = id ? getTranslatedProjectDetail(id, language) : null;
   
   // Use new side-by-side layout only for project-7 (AI Exploration)
   const useAlternatingLayout = id === "project-7";
@@ -367,19 +370,21 @@ const ProjectDetail = () => {
               )}
 
               {/* Media Gallery */}
-              <section>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                  {project.media.map((item, index) => (
-                    <div key={index} className="inline-block">
-                      {item.type === "video" ? (
-                        <video src={item.src} controls className="w-auto h-auto max-w-full block" playsInline preload="metadata" />
-                      ) : (
-                        <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-auto h-auto max-w-full block object-contain" loading="lazy" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {project.media && project.media.length > 0 && (
+                <section>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                    {project.media.map((item, index) => (
+                      <div key={index} className="inline-block">
+                        {item.type === "video" ? (
+                          <video src={item.src} controls className="w-auto h-auto max-w-full block" playsInline preload="metadata" />
+                        ) : (
+                          <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-auto h-auto max-w-full block object-contain" loading="lazy" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
           )}
 
@@ -389,7 +394,7 @@ const ProjectDetail = () => {
               More Projects
             </h3>
             <div className="flex flex-wrap justify-center gap-4">
-              {getAllProjectSummaries().map((projectSummary) => (
+              {getTranslatedProjectSummaries(language).map((projectSummary) => (
                 <Link
                   key={projectSummary.id}
                   to={`/project/${projectSummary.id}`}

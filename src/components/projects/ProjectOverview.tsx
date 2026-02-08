@@ -25,8 +25,8 @@ const parseMarkdown = (text: string) => {
 
 const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
   return (
-    <section className="py-20 md:py-32">
-      <div className="w-full px-4 md:px-8 lg:px-12">
+    <section className="pt-0 pb-20 md:pb-32">
+      <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-16">
           {/* Left Column - Description (60%) */}
           <motion.div
@@ -36,8 +36,8 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="md:col-span-3"
           >
-            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 text-foreground">Overview</h2>
-            <p className="font-sans text-muted-foreground leading-relaxed relaxed-spacing">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 text-foreground pl-0 ml-0">Overview</h2>
+            <p className="font-sans text-muted-foreground leading-relaxed relaxed-spacing pl-0 ml-0">
               {parseMarkdown(description)}
             </p>
           </motion.div>

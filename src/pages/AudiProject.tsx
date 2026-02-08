@@ -78,7 +78,7 @@ const AudiProject = () => {
       <Header />
 
       <main id="main-content" className="pt-32 pb-32 md:pb-40">
-        <div className="w-full px-4 md:px-8 lg:px-12">
+        <div className="w-full px-8 md:px-16 lg:px-24 py-8 md:py-12">
           {/* Back link */}
           <Link
             to="/"
@@ -88,20 +88,24 @@ const AudiProject = () => {
           </Link>
 
           {/* Project header */}
-          <div className="mb-8">
-            <h1 className="font-serif text-5xl lg:text-6xl font-medium">
+          <div className="mb-8 px-4 md:px-8 lg:px-12">
+            <h1 className="font-serif text-5xl lg:text-6xl font-medium pl-0 ml-0">
               {project.title}
             </h1>
           </div>
 
           {/* Overview Section */}
-          <ProjectOverview
-            description={project.overview}
-            details={extractProjectInfo()}
-          />
+          <section className="pt-8 pb-12 md:pt-12 md:pb-16">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <ProjectOverview
+                description={project.overview}
+                details={extractProjectInfo()}
+              />
+            </div>
+          </section>
 
           {/* Row 1: Enrollment - Make it feel familiar */}
-          <section className="py-20 md:py-24">
+          <section className="pt-12 pb-24 md:pt-16 md:pb-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -110,15 +114,15 @@ const AudiProject = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full"
               >
-                <h3 className="font-serif text-2xl md:text-3xl font-bold mb-8">Enrollment: Make it feel familiar</h3>
-                <p className="font-sans text-muted-foreground leading-relaxed mb-12">
+                <h3 className="font-serif text-3xl md:text-4xl font-bold mb-12 pl-0">Enrollment: Make it feel familiar</h3>
+                <p className="font-sans text-muted-foreground leading-relaxed mb-12 pl-0">
                   Most people enrolled at the dealership during pickup. But for those who forgot or declined? I designed a self-service flow that felt more like signing up for Spotify than activating a charging network. Simple, welcoming, one clear action.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                   {enrollmentImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
+                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center p-8 md:p-12"
                       whileHover={{ scale: 1.02, y: -4 }}
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -136,7 +140,7 @@ const AudiProject = () => {
           </section>
 
           {/* Row 2: First charge - Remove all doubt */}
-          <section className="py-20 md:py-24">
+          <section className="py-24 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -145,15 +149,15 @@ const AudiProject = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full"
               >
-                <h3 className="font-serif text-2xl md:text-3xl font-bold mb-8">2. First charge: Remove all doubt</h3>
-                <p className="font-sans text-muted-foreground leading-relaxed mb-12">
+                <h3 className="font-serif text-3xl md:text-4xl font-bold mb-12 pl-0">First charge: Remove all doubt</h3>
+                <p className="font-sans text-muted-foreground leading-relaxed mb-12 pl-0">
                   This was make-or-break. I created the experience right in the app: The credit gauge: Instead of showing raw numbers, I designed a circular gauge that felt familiar—like a fuel gauge. The green arc animated as credits depleted, with large legible numbers and friendly context: "800 kWh—enough for about 1,600 miles."
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                   {firstChargeImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
+                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center p-8 md:p-12"
                       whileHover={{ scale: 1.02, y: -4 }}
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -171,7 +175,7 @@ const AudiProject = () => {
           </section>
 
           {/* Row 3: Staying in control - Track your free miles */}
-          <section className="py-20 md:py-24">
+          <section className="py-24 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -180,15 +184,15 @@ const AudiProject = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full"
               >
-                <h3 className="font-serif text-2xl md:text-3xl font-bold mb-8">3. Staying in control: Track your free miles</h3>
-                <p className="font-sans text-muted-foreground leading-relaxed mb-12">
+                <h3 className="font-serif text-3xl md:text-4xl font-bold mb-12 pl-0">Staying in control: Track your free miles</h3>
+                <p className="font-sans text-muted-foreground leading-relaxed mb-12 pl-0">
                   I designed the charging history to feel less like a transaction log, more like a travel diary. Each session showed location, energy delivered, and range added. Clean data tables with smart whitespace, alternating rows for scannability, and details that appeared on hover. The credit gauge became a satisfying way to see their "free miles" tick down.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                   {stayingInControlImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center"
+                      className="w-full rounded-2xl overflow-hidden shadow-lg flex items-center justify-center p-8 md:p-12"
                       whileHover={{ scale: 1.02, y: -4 }}
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -206,7 +210,7 @@ const AudiProject = () => {
           </section>
 
           {/* Designing for every moment Section */}
-          <section className="py-20 md:py-24">
+          <section className="py-24 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -215,8 +219,8 @@ const AudiProject = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full"
               >
-                <h2 className="font-serif text-3xl md:text-4xl font-bold mb-8">Designing for every moment</h2>
-                <div className="font-sans text-muted-foreground leading-relaxed space-y-6 mb-12">
+                <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 pl-0">Designing for every moment</h2>
+                <div className="font-sans text-muted-foreground leading-relaxed space-y-6 mb-12 pl-0">
                   <p>
                     This wasn't just a mobile app—owners would check credits at home on their laptop, monitor charging on their iPad, and start sessions from their phone.
                   </p>
@@ -237,14 +241,14 @@ const AudiProject = () => {
           </section>
 
           {/* Videos Section */}
-          <section className="py-20 md:py-24">
+          <section className="pt-12 pb-24 md:pt-16 md:pb-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full space-y-12 md:space-y-16"
+                className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12"
               >
                 <motion.div
                   className="w-full rounded-2xl overflow-hidden shadow-lg"
@@ -281,7 +285,7 @@ const AudiProject = () => {
           </section>
 
           {/* Design Exploration Section */}
-          <section className="py-20 md:py-24">
+          <section className="py-24 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -291,11 +295,11 @@ const AudiProject = () => {
                 className="w-full"
               >
                 {/* First two images side by side */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-4">
                   {firstTwoImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="inline-block"
+                      className="inline-block p-8 md:p-12"
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-100px" }}
@@ -313,11 +317,11 @@ const AudiProject = () => {
                 </div>
 
                 {/* Remaining images full width */}
-                <div className="space-y-2 md:space-y-3">
+                <div className="space-y-6 md:space-y-8">
                   {remainingImages.map((image, index) => (
                     <motion.div
                       key={index}
-                      className="inline-block w-full"
+                      className="inline-block w-full p-8 md:p-12"
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-100px" }}
@@ -338,7 +342,7 @@ const AudiProject = () => {
           </section>
 
           {/* What I Learned Section */}
-          <section className="py-20 md:py-24">
+          <section className="py-24 md:py-24">
             <div className="w-full px-4 md:px-8 lg:px-12">
               <div className="w-full">
                 <motion.div
@@ -347,8 +351,8 @@ const AudiProject = () => {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                 >
-                  <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">What I learned</h2>
-                  <div className="font-sans text-muted-foreground leading-relaxed space-y-6">
+                  <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12 pl-0">What I learned</h2>
+                  <div className="font-sans text-muted-foreground leading-relaxed space-y-6 pl-0">
                     <p>
                       The best design isn't the one with the most features—it's the one that makes people feel capable. We weren't just designing a charging app for Audi's first EV. We were designing a bridge from <em>"I've never done this"</em> to <em>"I do this all the time."</em>
                     </p>

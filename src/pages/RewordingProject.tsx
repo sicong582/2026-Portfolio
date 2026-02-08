@@ -100,7 +100,7 @@ const RewordingProject = () => {
       <Header />
 
       <main id="main-content" className="pt-32 pb-32 md:pb-40">
-        <div className="w-full px-4 md:px-8 lg:px-12">
+        <div className="w-full px-8 md:px-16 lg:px-24 py-8 md:py-12">
           {/* Back link */}
           <Link
             to="/"
@@ -117,11 +117,13 @@ const RewordingProject = () => {
           </div>
 
           {/* Overview Section */}
-          <section className="py-20 md:py-24">
-            <ProjectOverview
-              description={project.overview}
-              details={extractProjectInfo()}
-            />
+          <section className="pt-8 pb-20 md:pt-12 md:pb-24">
+            <div className="w-full">
+              <ProjectOverview
+                description={project.overview}
+                details={extractProjectInfo()}
+              />
+            </div>
           </section>
 
           {/* Two-column layout: Text sections + Primary Poster */}
