@@ -22,8 +22,6 @@ import audi12 from "@/assets/projects/audi/audi-12.jpg";
 import audi13 from "@/assets/projects/audi/audi-13.jpg";
 import audi14 from "@/assets/projects/audi/audi-14.jpg";
 import audi15 from "@/assets/projects/audi/audi-15.jpg";
-import audi10Video from "@/assets/projects/audi/audi-10.mov";
-import audi11Video from "@/assets/projects/audi/audi-11.mov";
 
 // Row 1: Enrollment - Make it feel familiar
 const enrollmentImages = [audi1, audi2, audi3];
@@ -236,50 +234,6 @@ const AudiProject = () => {
                     Each breakpoint felt intentional, adapted to how people actually used their devices.
                   </p>
                 </div>
-              </motion.div>
-            </div>
-          </section>
-
-          {/* Videos Section */}
-          <section className="pt-12 pb-24 md:pt-16 md:pb-24">
-            <div className="w-full px-4 md:px-8 lg:px-12">
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12"
-              >
-                <motion.div
-                  className="w-full rounded-2xl overflow-hidden shadow-lg"
-                  whileHover={{ scale: 1.01, y: -4 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <video
-                    src={audi10Video}
-                    controls
-                    className="w-full h-auto"
-                    playsInline
-                    preload="metadata"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                </motion.div>
-                <motion.div
-                  className="w-full rounded-2xl overflow-hidden shadow-lg"
-                  whileHover={{ scale: 1.01, y: -4 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <video
-                    src={audi11Video}
-                    controls
-                    className="w-full h-auto"
-                    playsInline
-                    preload="metadata"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                </motion.div>
               </motion.div>
             </div>
           </section>
