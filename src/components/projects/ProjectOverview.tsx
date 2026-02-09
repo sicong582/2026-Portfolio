@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 interface ProjectOverviewProps {
   description: string;
   details: {
-    client: string;
     tools: string;
     role: string;
     year?: string;
@@ -51,17 +50,6 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
             className="md:col-span-2"
           >
             <div className="glass rounded-2xl p-8 space-y-6">
-              <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
-                  CLIENT
-                </p>
-                <p className="font-sans text-base text-foreground font-medium">
-                  {details.client}
-                </p>
-              </motion.div>
               <motion.div
                 whileHover={{ x: 4 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}

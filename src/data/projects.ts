@@ -7,6 +7,16 @@ import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
 
+// Purchase Order Group project images
+import purchaseOrder1 from "@/assets/projects/purchase-order-group/purchase-order-1.png";
+import purchaseOrder2 from "@/assets/projects/purchase-order-group/purchase-order-2.png";
+import purchaseOrder3 from "@/assets/projects/purchase-order-group/purchase-order-3.png";
+import purchaseOrder4 from "@/assets/projects/purchase-order-group/purchase-order-4.png";
+import purchaseOrder5 from "@/assets/projects/purchase-order-group/purchase-order-5.png";
+import purchaseOrder6 from "@/assets/projects/purchase-order-group/purchase-order-6.png";
+import purchaseOrder7 from "@/assets/projects/purchase-order-group/purchase-order-7.gif";
+import purchaseOrder8 from "@/assets/projects/purchase-order-group/purchase-order-8.gif";
+
 // Types
 export interface MediaItem {
   type: "image" | "video";
@@ -70,22 +80,22 @@ export const projects: Project[] = [
   {
     id: "purchase-order-group",
     title: "Purchase Order Group",
-    type: "UX Design",
-    date: "2024",
+    type: "Web Application",
+    date: "2025",
     image: projectCoverPurchaseOrderGroup,
     description: "Vendor workflow system with React components and design system.",
     category: "b2b",
     detail: {
       title: "Purchase Order Group",
-      type: "UX Design",
-      date: "2024",
-      role: "Lead Designer",
+      type: "Web Application",
+      date: "2025",
+      role: "Product Designer & User Researcher",
       duration: "12 weeks",
-      team: "Cross-functional team",
+      team: "Staff Product Designer, Product Managers, Software Engineers",
       overview: "A comprehensive vendor workflow system designed to streamline purchase order management. Built with React components and a robust design system to ensure consistency and scalability.",
       problem: {
-        title: "The Problem",
-        description: "Vendors struggled with complex purchase order workflows across multiple systems. The challenge was to create an intuitive system that handles vendor operations efficiently while maintaining design consistency.",
+        title: "Defining the Problem — When In-Stock Managers Couldn't See the Full Picture",
+        description: "### The Users\n\nIn-Stock Managers (ISMs) are responsible for ensuring the right products are available in the right quantity, at the right time. They coordinate purchasing, forecasting, and vendor communication across hundreds of SKUs and multiple partners.\n\nTheir work directly affects revenue, customer experience, and operational efficiency.\n\n---\n\n### The Reality They Faced\n\nWhen I joined the team, ISMs had to manage their work across nine disconnected internal systems. Each tool showed only a partial view of inventory, demand, and purchase orders.\n\nTo make a single update, users were forced to:\n\n- Cross-check multiple dashboards\n- Export and reconcile data in spreadsheets\n- Validate information through email and calls\n- Manually track status and errors\n\nThere was no unified source of truth.\n\nISMs became responsible for stitching systems together through manual effort.",
       },
       process: {
         title: "Design Process",
@@ -110,7 +120,14 @@ export const projects: Project[] = [
         description: "The system significantly improved vendor workflow efficiency while establishing a reusable component library for future projects.",
       },
       media: [
-        // Images will be added when available
+        { type: "image", src: purchaseOrder1 },
+        { type: "image", src: purchaseOrder2 },
+        { type: "image", src: purchaseOrder3 },
+        { type: "image", src: purchaseOrder4 },
+        { type: "image", src: purchaseOrder5 },
+        { type: "image", src: purchaseOrder6 },
+        { type: "image", src: purchaseOrder7 },
+        { type: "image", src: purchaseOrder8 },
       ],
     },
   },

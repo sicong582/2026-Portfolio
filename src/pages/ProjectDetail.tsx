@@ -27,38 +27,9 @@ const parseMarkdown = (text: string) => {
   });
 };
 
-// Helper function to extract client, tools, and role from project data
+// Helper function to extract tools, role, and other details from project data
 const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
-  if (!project) return { client: "", tools: "", role: "" };
-
-  // Extract client from team field or results.metrics
-  let client = "";
-  if (project.team && project.team.includes("Client:")) {
-    client = project.team.replace("Client:", "").trim();
-  } else {
-    const clientMetric = project.results.metrics.find(m => 
-      m.label.toLowerCase() === "client" || 
-      m.label.toLowerCase() === "company" ||
-      m.label.toLowerCase().includes("client") ||
-      m.label.toLowerCase().includes("company")
-    );
-    if (clientMetric) {
-      client = clientMetric.value;
-    } else {
-      // For B2B projects, use team info or set as internal
-      // For visual brand projects, try to extract from team or use project context
-      if (project.team && !project.team.includes("Designers") && !project.team.includes("Developers")) {
-        client = project.team;
-      } else {
-        client = "Internal Project";
-      }
-    }
-  }
-
-  // Remove "FUSE Lab" from client string, keep only "Tohoku University"
-  if (client.includes("FUSE Lab")) {
-    client = client.replace(/FUSE Lab,?\s*/gi, "").trim();
-  }
+  if (!project) return { tools: "", role: "" };
 
   // Extract tools from results.metrics
   let tools = "";
@@ -118,7 +89,7 @@ const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
   // Extract type from project
   const type = project.type || "";
 
-  return { client, tools, role, year, team, type };
+  return { tools, role, year, team, type };
 };
 
 // Parallax Media Component
@@ -382,13 +353,13 @@ const ProjectDetail = () => {
               {/* Media Gallery */}
               {project.media && project.media.length > 0 && (
                 <section>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                  <div className="space-y-4">
                     {project.media.map((item, index) => (
-                      <div key={index} className="inline-block">
+                      <div key={index} className="w-full">
                         {item.type === "video" ? (
-                          <video src={item.src} controls className="w-auto h-auto max-w-full block" playsInline preload="metadata" />
+                          <video src={item.src} controls className="w-full h-auto block" playsInline preload="metadata" />
                         ) : (
-                          <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-auto h-auto max-w-full block object-contain" loading="lazy" />
+                          <img src={item.src} alt={`${project.title} - ${index + 1}`} className="w-full h-auto block object-contain" loading="lazy" />
                         )}
                       </div>
                     ))}
