@@ -15,9 +15,166 @@ import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedProjectDetail, getTranslatedProjectSummaries } from "@/utils/projectTranslations";
 import { PROTECTED_PROJECTS } from "@/components/PasswordProtection";
+// Import images for inline use in markdown
+import purchaseOrder2 from "@/assets/projects/Inventory Ordering Platform/purchase-order-2.png";
+import purchaseOrder4 from "@/assets/projects/Inventory Ordering Platform/purchase-order-4.png";
+import purchaseOrder5 from "@/assets/projects/Inventory Ordering Platform/purchase-order-5.png";
+import purchaseOrder6 from "@/assets/projects/Inventory Ordering Platform/purchase-order-6.png";
+import purchaseOrder7 from "@/assets/projects/Inventory Ordering Platform/purchase-order-7.gif";
+import purchaseOrder8 from "@/assets/projects/Inventory Ordering Platform/purchase-order-8.gif";
 
-// Helper function to parse markdown bold text (**text**)
-const parseMarkdown = (text: string) => {
+// Helper function to parse markdown (bold **text**, h2/h3 headings, bullet lists, images)
+const parseMarkdown = (text: string, projectId?: string) => {
+  // Split by double newlines to handle paragraphs
+  const paragraphs = text.split(/\n\n/);
+  
+  return (
+    <>
+      {paragraphs.map((paragraph, pIndex) => {
+        const trimmed = paragraph.trim();
+        
+        // Skip horizontal rules (---)
+        if (trimmed === '---' || trimmed.match(/^-{3,}$/)) {
+          return null;
+        }
+        
+        // Check if it's a row of images [IMAGES_ROW:image1,image2]
+        if (trimmed.startsWith('[IMAGES_ROW:') && trimmed.endsWith(']')) {
+          const imageNames = trimmed.substring(12, trimmed.length - 1).split(',');
+          const imageSources: Array<{ src: string; name: string }> = [];
+          
+          if (projectId === "purchase-order-group") {
+            imageNames.forEach(imageName => {
+              const trimmedName = imageName.trim();
+              let imageSrc: string | null = null;
+              
+              if (trimmedName === "purchase-order-2") {
+                imageSrc = purchaseOrder2;
+              } else if (trimmedName === "purchase-order-4") {
+                imageSrc = purchaseOrder4;
+              } else if (trimmedName === "purchase-order-5") {
+                imageSrc = purchaseOrder5;
+              } else if (trimmedName === "purchase-order-6") {
+                imageSrc = purchaseOrder6;
+              } else if (trimmedName === "purchase-order-7") {
+                imageSrc = purchaseOrder7;
+              } else if (trimmedName === "purchase-order-8") {
+                imageSrc = purchaseOrder8;
+              }
+              
+              if (imageSrc) {
+                imageSources.push({ src: imageSrc, name: trimmedName });
+              }
+            });
+          }
+          
+          if (imageSources.length > 0) {
+            return (
+              <div key={pIndex} className="my-8 w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                {imageSources.map((item, idx) => (
+                  <img 
+                    key={idx}
+                    src={item.src} 
+                    alt={`${projectId || "Project"} - ${item.name}`}
+                    className="w-full h-auto block object-contain"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            );
+          }
+          return null;
+        }
+        
+        // Check if it's an image placeholder [IMAGE:filename]
+        if (trimmed.startsWith('[IMAGE:') && trimmed.endsWith(']')) {
+          const imageName = trimmed.substring(7, trimmed.length - 1);
+          let imageSrc: string | null = null;
+          
+          if (projectId === "purchase-order-group") {
+            if (imageName === "purchase-order-2") {
+              imageSrc = purchaseOrder2;
+            } else if (imageName === "purchase-order-4") {
+              imageSrc = purchaseOrder4;
+            } else if (imageName === "purchase-order-5") {
+              imageSrc = purchaseOrder5;
+            } else if (imageName === "purchase-order-6") {
+              imageSrc = purchaseOrder6;
+            } else if (imageName === "purchase-order-7") {
+              imageSrc = purchaseOrder7;
+            } else if (imageName === "purchase-order-8") {
+              imageSrc = purchaseOrder8;
+            }
+          }
+          
+          if (imageSrc) {
+            return (
+              <div key={pIndex} className="my-8 w-full">
+                <img 
+                  src={imageSrc} 
+                  alt={`${projectId || "Project"} - ${imageName}`}
+                  className="w-full h-auto block object-contain"
+                  loading="lazy"
+                />
+              </div>
+            );
+          }
+          return null;
+        }
+        
+        // Check if it's an h2 heading
+        if (trimmed.startsWith('##') && !trimmed.startsWith('###')) {
+          const headingText = trimmed.substring(2).trim();
+          return (
+            <h2 key={pIndex} className="font-serif text-2xl md:text-3xl font-semibold mt-12 mb-6">
+              {parseInlineMarkdown(headingText)}
+            </h2>
+          );
+        }
+        
+        // Check if it's an h3 heading
+        if (trimmed.startsWith('###')) {
+          const headingText = trimmed.substring(3).trim();
+          return (
+            <h3 key={pIndex} className="font-serif text-xl md:text-2xl font-semibold mt-10 mb-4">
+              {parseInlineMarkdown(headingText)}
+            </h3>
+          );
+        }
+        
+        // Check if it's a bullet list (starts with - or contains \n-)
+        if (trimmed.startsWith('-') || trimmed.includes('\n-')) {
+          const lines = trimmed.split('\n');
+          const items = lines
+            .filter(line => line.trim().startsWith('-'))
+            .map(line => line.trim().substring(1).trim());
+          
+          if (items.length > 0) {
+            return (
+              <ul key={pIndex} className="list-disc list-inside space-y-2 mb-4 ml-4">
+                {items.map((item, itemIndex) => (
+                  <li key={itemIndex} className="font-sans text-muted-foreground leading-relaxed">
+                    {parseInlineMarkdown(item)}
+                  </li>
+                ))}
+              </ul>
+            );
+          }
+        }
+        
+        // Regular paragraph with inline markdown
+        return (
+          <p key={pIndex} className="mb-4">
+            {parseInlineMarkdown(paragraph)}
+          </p>
+        );
+      })}
+    </>
+  );
+};
+
+// Helper function to parse inline markdown (bold **text**)
+const parseInlineMarkdown = (text: string) => {
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
@@ -40,8 +197,8 @@ const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
     tools = toolsMetric.value;
   } else {
     // Try to infer from approach description or use common defaults
-    const approachText = project.approach.description.toLowerCase();
     const overviewText = project.overview.toLowerCase();
+    const approachText = project.approach?.description?.toLowerCase() || "";
     const combinedText = approachText + " " + overviewText;
     
     if (combinedText.includes("midjourney") || combinedText.includes("banana nano")) {
@@ -66,13 +223,15 @@ const extractProjectInfo = (project: ReturnType<typeof getProjectDetail>) => {
     role = project.role || "Designer";
   }
 
-  // Extract year from metrics
+  // Extract year from metrics or use project.date
   let year = "";
   const yearMetric = project.results.metrics.find(m => 
     m.label.toLowerCase() === "year" || m.label.toLowerCase().includes("year")
   );
   if (yearMetric) {
     year = yearMetric.value;
+  } else if (project.date) {
+    year = project.date;
   }
 
   // Extract team from metrics or use project.team
@@ -245,7 +404,7 @@ const ProjectDetail = () => {
                 <div>
                   <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">Overview</h2>
                   <p className="font-sans text-muted-foreground leading-relaxed">
-                    {parseMarkdown(project.overview)}
+                    {parseMarkdown(project.overview, id)}
                   </p>
                 </div>
                 {project.media[0] && (
@@ -263,13 +422,10 @@ const ProjectDetail = () => {
               >
                 <div>
                   <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.problem.title}</h2>
-                  <p className="font-sans text-muted-foreground leading-relaxed">
-                    {parseMarkdown(project.problem.description)}
-                  </p>
+                  <div className="font-sans text-muted-foreground leading-relaxed">
+                    {parseMarkdown(project.problem.description, id)}
+                  </div>
                 </div>
-                {project.media[1] && (
-                  <ParallaxMedia item={project.media[1]} alt={`${project.title} - 2`} />
-                )}
               </motion.div>
 
               {/* Additional media items */}
@@ -287,22 +443,22 @@ const ProjectDetail = () => {
             </div>
           ) : (
             /* Original stacked layout for other projects */
-            <div className="space-y-16">
+            <div className="space-y-24 md:space-y-32">
               {/* Problem */}
               <section>
                 <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.problem.title}</h2>
-                  <p className="font-sans text-muted-foreground leading-relaxed w-full">
-                  {parseMarkdown(project.problem.description)}
-                </p>
+                  <div className="font-sans text-muted-foreground leading-relaxed w-full">
+                  {parseMarkdown(project.problem.description, id)}
+                </div>
               </section>
 
               {/* Process */}
               <section>
                 <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.process.title}</h2>
                 {project.process.description ? (
-                  <p className="font-sans text-muted-foreground leading-relaxed w-full">
-                    {parseMarkdown(project.process.description)}
-                  </p>
+                  <div className="font-sans text-muted-foreground leading-relaxed w-full">
+                    {parseMarkdown(project.process.description, id)}
+                  </div>
                 ) : (
                   <ul className="space-y-3 w-full">
                     {project.process.steps?.map((step, index) => (
@@ -318,9 +474,9 @@ const ProjectDetail = () => {
               {project.approach && (
                 <section>
                   <h2 className="font-serif text-3xl md:text-4xl font-bold mb-12">{project.approach.title}</h2>
-                  <p className="font-sans text-muted-foreground leading-relaxed w-full">
-                    {parseMarkdown(project.approach.description)}
-                  </p>
+                  <div className="font-sans text-muted-foreground leading-relaxed w-full">
+                    {parseMarkdown(project.approach.description, id)}
+                  </div>
                 </section>
               )}
 
@@ -343,9 +499,9 @@ const ProjectDetail = () => {
                     </div>
                   )}
                   {project.results.description && (
-                    <p className="font-sans text-muted-foreground leading-relaxed w-full">
-                      {parseMarkdown(project.results.description)}
-                    </p>
+                    <div className="font-sans text-muted-foreground leading-relaxed w-full">
+                      {parseMarkdown(project.results.description, id)}
+                    </div>
                   )}
                 </section>
               )}

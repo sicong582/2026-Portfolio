@@ -55,15 +55,6 @@ const ProjectOverview = ({ description, details }: ProjectOverviewProps) => {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
-                  TOOLS
-                </p>
-                <p className="font-sans text-base text-foreground font-medium">{details.tools}</p>
-              </motion.div>
-              <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-2 font-light">
                   ROLE
                 </p>
                 <p className="font-sans text-base text-foreground font-medium">{details.role}</p>

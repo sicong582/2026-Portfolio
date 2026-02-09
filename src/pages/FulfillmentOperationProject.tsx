@@ -29,8 +29,15 @@ const parseMarkdown = (text: string) => {
   const paragraphs = text.split(/\n\n/);
   
   return paragraphs.map((paragraph, pIndex) => {
+    const trimmed = paragraph.trim();
+    
+    // Skip horizontal rules (---)
+    if (trimmed === '---' || trimmed.match(/^-{3,}$/)) {
+      return null;
+    }
+    
     // Check if it's an h3 heading
-    if (paragraph.trim().startsWith('###')) {
+    if (trimmed.startsWith('###')) {
       const headingText = paragraph.trim().substring(3).trim();
       return (
         <h3 key={pIndex} className="font-serif text-xl md:text-2xl font-semibold mt-16 mb-4">

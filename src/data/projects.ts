@@ -8,14 +8,12 @@ import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
 
 // Purchase Order Group project images
-import purchaseOrder1 from "@/assets/projects/purchase-order-group/purchase-order-1.png";
-import purchaseOrder2 from "@/assets/projects/purchase-order-group/purchase-order-2.png";
-import purchaseOrder3 from "@/assets/projects/purchase-order-group/purchase-order-3.png";
-import purchaseOrder4 from "@/assets/projects/purchase-order-group/purchase-order-4.png";
-import purchaseOrder5 from "@/assets/projects/purchase-order-group/purchase-order-5.png";
-import purchaseOrder6 from "@/assets/projects/purchase-order-group/purchase-order-6.png";
-import purchaseOrder7 from "@/assets/projects/purchase-order-group/purchase-order-7.gif";
-import purchaseOrder8 from "@/assets/projects/purchase-order-group/purchase-order-8.gif";
+import purchaseOrder2 from "@/assets/projects/Inventory Ordering Platform/purchase-order-2.png";
+import purchaseOrder4 from "@/assets/projects/Inventory Ordering Platform/purchase-order-4.png";
+import purchaseOrder5 from "@/assets/projects/Inventory Ordering Platform/purchase-order-5.png";
+import purchaseOrder6 from "@/assets/projects/Inventory Ordering Platform/purchase-order-6.png";
+import purchaseOrder7 from "@/assets/projects/Inventory Ordering Platform/purchase-order-7.gif";
+import purchaseOrder8 from "@/assets/projects/Inventory Ordering Platform/purchase-order-8.gif";
 
 // Types
 export interface MediaItem {
@@ -79,56 +77,42 @@ export const projects: Project[] = [
   // B2B Product Projects
   {
     id: "purchase-order-group",
-    title: "Purchase Order Group",
+    title: "Inventory Ordering Platform",
     type: "Web Application",
     date: "2025",
     image: projectCoverPurchaseOrderGroup,
     description: "Vendor workflow system with React components and design system.",
     category: "b2b",
     detail: {
-      title: "Purchase Order Group",
+      title: "Inventory Ordering Platform",
       type: "Web Application",
       date: "2025",
       role: "Product Designer & User Researcher",
       duration: "12 weeks",
       team: "Staff Product Designer, Product Managers, Software Engineers",
-      overview: "A comprehensive vendor workflow system designed to streamline purchase order management. Built with React components and a robust design system to ensure consistency and scalability.",
+      overview: "I led the 0→1 design of a B2B inventory ordering platform used by In-Stock Managers to manage purchase decisions at scale. Partnering closely with product, engineering, and operations, I defined the system architecture, reframed fragmented workflows into a unified decision model, and drove alignment from concept to launch. The resulting platform reduced operational risk, accelerated planning, and established the foundation for future automation.",
       problem: {
-        title: "Defining the Problem — When In-Stock Managers Couldn't See the Full Picture",
-        description: "### The Users\n\nIn-Stock Managers (ISMs) are responsible for ensuring the right products are available in the right quantity, at the right time. They coordinate purchasing, forecasting, and vendor communication across hundreds of SKUs and multiple partners.\n\nTheir work directly affects revenue, customer experience, and operational efficiency.\n\n---\n\n### The Reality They Faced\n\nWhen I joined the team, ISMs had to manage their work across nine disconnected internal systems. Each tool showed only a partial view of inventory, demand, and purchase orders.\n\nTo make a single update, users were forced to:\n\n- Cross-check multiple dashboards\n- Export and reconcile data in spreadsheets\n- Validate information through email and calls\n- Manually track status and errors\n\nThere was no unified source of truth.\n\nISMs became responsible for stitching systems together through manual effort.",
+        title: "When In-Stock Managers Couldn't See the Full Picture",
+        description: "### The Users\n\nIn-Stock Managers (ISMs) are responsible for ensuring the right products are available in the right quantity, at the right time. They coordinate purchasing, forecasting, and vendor communication across hundreds of SKUs and multiple partners.\n\nTheir work directly affects revenue, customer experience, and operational efficiency.\n\n[IMAGE:purchase-order-2]\n\n### The Reality They Faced\n\nWhen I joined the team, ISMs had to manage their work across nine disconnected internal systems. Each tool showed only a partial view of inventory, demand, and purchase orders.\n\nTo make a single update, users were forced to:\n\n- Cross-check multiple dashboards\n- Export and reconcile data in spreadsheets\n- Validate information through email and calls\n- Manually track status and errors\n\nThere was no unified source of truth.\n\nISMs became responsible for stitching systems together through manual effort.",
       },
       process: {
-        title: "Design Process",
-        steps: [
-          "User Research: Conducted interviews with vendors and procurement teams",
-          "System Design: Created React component library and design system",
-          "Prototyping: Built interactive prototypes for key workflows",
-          "Testing: Validated with real users and iterated",
-        ],
+        title: "Process — Driving Alignment Through Design",
+        description: "### Using Design Artifacts to Set Priorities\n\nTo understand the problem, I conducted in-depth interviews with five ISMs and mapped 14 major pain points across nine internal tools.\n\nWhen I presented these findings, stakeholders had different opinions on how to proceed:\n\n- Should we fix issues one by one?\n- Should we redesign everything at once?\n- Should we phase improvements over time?\n\nTo move the team forward, I created a high-fidelity storyboard and facilitated a two-day prioritization workshop.\n\nTogether, we aligned on a phased approach and identified Purchase Order tooling as the highest-impact starting point.\n\nThis became the foundation for the 0→1 redesign.\n\n---\n\n### Understanding the Cost of Manual Work\n\nOne of the biggest pain points was the Excel-based workflow.\n\nTo update data, ISMs had to:\n\n1. Download a spreadsheet\n2. Edit it locally\n3. Re-upload it\n4. Wait for confirmation\n\nThis process took 15–30 minutes per update and provided little visibility into errors or status.\n\nSmall mistakes often led to major downstream issues.",
       },
       approach: {
-        title: "The Approach",
-        description: "We focused on building a scalable design system with reusable React components. The design emphasizes consistency, efficiency, and user-friendly workflows for vendor operations.",
+        title: "From Manual Work to Scalable Workflows",
+        description: "### Designing a Unified Editing Experience\n\nI redesigned the workflow to allow ISMs to upload data once and then manage purchase orders directly within the platform.\n\nKey improvements included:\n\n- Inline editing\n- Real-time validation\n- Clear processing feedback\n- Error prevention mechanisms\n\nThis eliminated repeated uploads and reduced dependency on offline tools.\n\n[IMAGE:purchase-order-4]\n\n[IMAGES_ROW:purchase-order-5,purchase-order-6]\n\n---\n\n### Enabling Multi-Vendor Operations\n\nResearch showed that most ISMs work with 5–10 vendors daily, yet the legacy system only supported one vendor at a time.\n\nI designed batch editing and filtering patterns that allowed users to update multiple vendors and programs in a single flow.\n\nThis better reflected how work actually happens.\n\n[IMAGE:purchase-order-7]\n\n[IMAGE:purchase-order-8]",
       },
       results: {
-        title: "The Results",
+        title: "Results — Measurable Business Impact",
         metrics: [
-          { label: "Workflow Efficiency", value: "+50%" },
-          { label: "Component Reuse", value: "80%" },
-          { label: "User Satisfaction", value: "90%" },
+          { label: "Tools Consolidated", value: "4 → 1" },
+          { label: "Update Time Reduction", value: "45–60 min → 5–10 min" },
+          { label: "Net Promoter Score", value: "+35" },
         ],
-        description: "The system significantly improved vendor workflow efficiency while establishing a reusable component library for future projects.",
+        description: "### Improving Efficiency and Confidence\n\nAfter launch:\n\n- Four separate purchase order tools were consolidated into one platform\n- Update time was reduced from 45–60 minutes to 5–10 minutes\n- Net Promoter Score increased by +35\n\nMore importantly, ISMs reported:\n\n- Greater confidence in planning\n- Fewer manual workarounds\n- Reduced escalation volume\n- Stronger vendor coordination\n\nThe new platform became the foundation for future automation and optimization.",
       },
-      media: [
-        { type: "image", src: purchaseOrder1 },
-        { type: "image", src: purchaseOrder2 },
-        { type: "image", src: purchaseOrder3 },
-        { type: "image", src: purchaseOrder4 },
-        { type: "image", src: purchaseOrder5 },
-        { type: "image", src: purchaseOrder6 },
-        { type: "image", src: purchaseOrder7 },
-        { type: "image", src: purchaseOrder8 },
-      ],
+      media: [],
     },
   },
   {
