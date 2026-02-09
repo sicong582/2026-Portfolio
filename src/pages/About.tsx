@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import BottomNavigation from "@/components/BottomNavigation";
 import headshot from "@/assets/headshot.webp";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -14,6 +15,7 @@ const About = () => {
         description="Learn about Sicong Chen's journey as a product designer, from AKQA to Amazon, specializing in B2B platforms and AI-powered experiences."
       />
       <Header />
+      <BottomNavigation />
       
       <main id="main-content" className="pt-32 pb-24">
         <div className="container-wide">

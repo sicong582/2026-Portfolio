@@ -35,11 +35,6 @@ const Header = () => {
               <img src={logoImage} alt="Sicong Chen" className="h-12 w-auto" loading="eager" />
             </Link>
           </motion.div>
-          <div className="hidden md:block max-w-md pt-2">
-            <p className="font-sans text-sm text-muted-foreground leading-relaxed">
-              I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions.
-            </p>
-          </div>
         </div>
 
       </nav>

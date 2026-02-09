@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import BottomNavigation from "@/components/BottomNavigation";
 import ProjectCard from "@/components/ProjectCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedProjectSummaries } from "@/utils/projectTranslations";
@@ -16,6 +17,7 @@ const Work = () => {
         description="Explore my portfolio of design projects including B2B products, marketing design, and conceptual work."
       />
       <Header />
+      <BottomNavigation />
       
       <main id="main-content" className="pt-32 pb-24">
         <div className="container-wide">

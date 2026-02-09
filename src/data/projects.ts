@@ -1,10 +1,10 @@
 // Shared project data - single source of truth for all project information
 // Placeholder images - replace with actual project images when available
-import projectCoverDashboard from "@/assets/project-cover-dashboard.png";
+import projectCoverPurchaseOrderGroup from "@/assets/project-cover-purchase order group-1.png";
 import projectCoverFulfillment from "@/assets/project-cover-fulfillment.png";
+import projectCoverAdobeFirewall from "@/assets/project-cover-adobe firewall rule management.png";
 import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
-import projectCoverAI from "@/assets/project-cover-ai.png";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
 
 // Types
@@ -72,7 +72,7 @@ export const projects: Project[] = [
     title: "Purchase Order Group",
     type: "UX Design",
     date: "2024",
-    image: projectCoverDashboard, // Placeholder - replace with actual image
+    image: projectCoverPurchaseOrderGroup,
     description: "Vendor workflow system with React components and design system.",
     category: "b2b",
     detail: {
@@ -119,42 +119,36 @@ export const projects: Project[] = [
     title: "Fulfillment Operation Tooling",
     type: "UX Design",
     date: "2024",
-    image: projectCoverFulfillment, // Placeholder - replace with actual image
-    description: "Warehouse management platform enabling efficient inventory and shipping operations.",
+    image: projectCoverFulfillment,
+    description: "Redesigning warehouse tools for associates working in extreme cold, reducing process time by 75%.",
     category: "b2b",
     detail: {
       title: "Fulfillment Operation Tooling",
-      type: "UX Design",
+      type: "Android App (Internal Tool)",
       date: "2024",
-      role: "UX Designer",
+      role: "Product Designer & User Researcher",
       duration: "16 weeks",
-      team: "3 Designers, 2 Developers",
-      overview: "A comprehensive warehouse management platform designed to streamline fulfillment operations, enabling teams to manage inventory, track shipments, and optimize workflows efficiently.",
+      team: "Product Managers, Software Engineers",
+      overview: "Defined and led a pilot redesign for an internal Amazon warehouse operations tool, using on-site research to reframe the problem and establish scan-driven workflow patterns that scale across warehouse-facing supply chain systems.",
       problem: {
-        title: "The Problem",
-        description: "Warehouse teams were using multiple disconnected tools, leading to inefficiencies, errors, and lack of real-time visibility into operations. The system needed to handle high-volume operations while remaining user-friendly.",
+        title: "The Challenge — A \"Quick Review\" That Wasn't So Quick",
+        description: "The engineering team initially reached out for what they described as a small design review of a feature called **Predictive Transform**—a system that forecasts high-demand frozen products and predicts quantities likely to sell soon.\n\nOn the surface, the request sounded straightforward.\n\nBut during the walkthrough, it quickly became clear that the interface was anything but intuitive. I found myself taking extensive notes just to understand how the system worked. Even after two hours, I was still confused.\n\nThat raised a critical question:\n\n> *If it takes a designer two hours to understand this tool, how will a warehouse associate figure it out during a busy shift?*\n\n### The Broader Context — 75 Tools, One Common Pain\n\nWarehouse associates rely on **approximately 75 internal tools** to complete their work—covering everything from unloading and scanning to packing and shipping.\n\nMost of these tools were built years ago, before designers were involved in the development process. As a result, many interfaces were:\n\n- Functionally correct but difficult to use\n- Inconsistent in components and interaction patterns\n- Time-consuming to navigate, especially across tools\n\nThe business team had already recognized this challenge. Their long-term vision was to **consolidate 75 tools into 3–4 unified systems** over five years.\n\n### Turning One Tool into a Pilot\n\nWhile reviewing Predictive Transform, I noticed something important: it shared many core UI elements—scan actions, quantity inputs, expiration date fields—with dozens of other warehouse tools.\n\nInstead of treating this as a one-off UX review, I proposed using Predictive Transform as a **pilot project**.\n\nThe goal was not just to improve a single workflow, but to redesign shared components that could scale across multiple tools—laying the foundation for a more unified, human-centered system for warehouse associates.",
       },
       process: {
-        title: "Design Process",
-        steps: [
-          "User Research: Conducted field studies and interviews with warehouse staff",
-          "Analysis: Mapped existing workflows and identified bottlenecks",
-          "Design: Created wireframes and prototypes for key workflows",
-          "Testing: Validated designs with warehouse teams and iterated",
-        ],
+        title: "Working Under Constraint",
+        description: "This project began in my **second week at Amazon**—and it was also my first project on the team.\n\nShortly after, my manager left the company, leaving me with limited guidance or historical context. What was initially scoped as a small UX audit quickly grew into a broader design challenge.\n\nBecause the project lacked a clear product direction, I partnered closely with the PM to draft the **BRD from scratch**. The first version of the user story focused heavily on on-screen interactions—clicks, steps, and flows—but failed to reflect what actually happens in a physical warehouse.\n\nThere was a clear gap between the digital workflow and real-world conditions.\n\nTo bridge that gap, I decided to go into the warehouse myself.\n\n### Observing Reality\n\nI shadowed several associates during their shifts, observing how they scanned, picked, and packed items in freezer areas.\n\nOne moment stayed with me. I watched an associate with a visible arm injury continue lifting heavy bags of frozen potatoes while operating a scanner. Despite the pain, she kept working—adapting her movements to get the job done.\n\nThat experience fundamentally changed how I approached the problem. Our tools didn't just need to work in ideal conditions—they needed to support real people working under physical strain, time pressure, and extreme environments.\n\n### From Observation to Insight\n\nBack at my desk, I translated these observations into a user journey map that captured:\n\n- Movement between physical stations\n- Interaction with devices and scanners\n- Environmental constraints such as cold temperatures, gloves, and limited dexterity\n\nThis artifact became a shared reference point for PMs, engineers, and business stakeholders. It helped the team see the end-to-end experience through the associate's eyes and grounded future discussions in reality rather than assumptions.",
       },
       approach: {
-        title: "The Approach",
-        description: "We focused on creating a unified platform that consolidates multiple tools into a single, intuitive interface. The design prioritizes speed, accuracy, and real-time data visibility to support high-volume operations.",
+        title: "Designing for the Real World",
+        description: "### From \"Click to Proceed\" to \"Scan and Go\"\n\nOne of the first design challenges was finding a way to give associates a clear overview of their tasks while enabling them to move quickly through each step.\n\nThe initial proposal was to display a long task list with clickable CTAs. On paper, it made sense.\n\nBut in the warehouse, associates often work with **one hand lifting items and the other holding a scanner**. Clicking buttons wasn't just inconvenient—it was often physically impossible.\n\nThis insight led to a fundamental shift in the interaction model.\n\nInstead of tapping to begin tasks, we introduced a **scan-to-start** interaction. Associates could initiate tasks instantly by scanning—without breaking their flow or freeing up a hand.\n\nThis change significantly improved usability under real-world conditions.\n\n### Letting Scanning Drive the Workflow\n\nTo balance visibility with simplicity, we narrowed the interface to show only what truly mattered:\n\n- Which item to pick\n- Where to find it\n- How many to collect\n\nEvery step was designed to **auto-advance**—no extra taps, no confirmation buttons.\n\nOnce an associate scanned an item using the TC device's side scanner, the system automatically:\n\n- Confirmed the pick\n- Updated task status\n- Advanced to the next item\n\nThis **scan-to-progress** model mirrored how associates naturally work—keeping both hands engaged and their attention on the floor, not the screen.",
       },
       results: {
-        title: "The Results",
+        title: "Proven in the Warehouse",
         metrics: [
-          { label: "Efficiency Increase", value: "35%" },
-          { label: "Error Reduction", value: "50%" },
-          { label: "Adoption Rate", value: "95%" },
+          { label: "Process Time Reduction", value: "75%" },
+          { label: "Time Saved Per Shift", value: "3 hours" },
         ],
-        description: "The platform significantly improved operational efficiency and reduced errors, with high adoption rates among warehouse teams.",
+        description: "### Validation with Real Users\n\nI presented the final prototype to two site managers and one warehouse associate. The feedback was overwhelmingly positive. They consistently described the design as simple, intuitive, and efficient.\n\n> \"It feels like I just keep scanning, and it automatically moves to the next task. That's easy to use.\"\n> \n> \n> — Jason, Site Manager, Amazon Fresh (Paramus, NJ)\n\n> \"I like that it looks and behaves like the other replenishment tools we already use. I didn't need to learn anything new.\"\n> \n> \n> — Ricky, Site Manager, JFK2 Fulfillment Center\n\n### Real Impact, Real People\n\nBefore the redesign, associates could spend up to **4 hours** navigating screens, clicking through long task lists, and manually confirming actions.\n\nIn early evaluations, the redesigned workflow reduced process time by **approximately 75%**, allowing associates to complete the same work in about **1 hour**.\n\nMore importantly, the experience reduced cognitive and physical friction, helping associates stay focused on the job rather than the interface.\n\n### Scaling Toward a 5-Year Vision\n\nThis project revealed an opportunity far beyond a single tool.\n\nThe patterns established through the Predictive Transform redesign—scan-driven actions, streamlined task progression, and reusable components—are now being applied across additional workflows, including **Inventory Viewer**, **Cycle Count**, and **Expired Item Removal**.\n\nBy identifying and standardizing shared UI components, I helped establish a scalable design foundation that supports consistency, faster development, and better usability across Amazon's internal supply chain tools.",
       },
       media: [
         // Images will be added when available
@@ -166,7 +160,7 @@ export const projects: Project[] = [
     title: "Adobe Firewall Rule Management",
     type: "UX Design",
     date: "2018",
-    image: projectCoverDashboard,
+    image: projectCoverAdobeFirewall,
     description: "Turning an Engineer-Built Security Tool into a Clear, Trustworthy Experience",
     category: "b2b",
     detail: {

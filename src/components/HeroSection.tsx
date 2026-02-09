@@ -120,29 +120,7 @@ const HeroSection = () => {
             }}
           >
             <p>
-              My work focuses on driving efficiency, user adoption, and business impact—from improving internal operations to supporting customer growth. Outside of work, I enjoy{" "}
-              <motion.a 
-                href="https://medium.com/@sicongchen-582" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-foreground underline underline-offset-4 transition-colors inline-block"
-                whileHover={{ scale: 1.05, x: 2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                writing
-              </motion.a>
-              {" "}and{" "}
-              <motion.a 
-                href="https://adplist.org/mentors/sicong-chen" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-foreground underline underline-offset-4 transition-colors inline-block"
-                whileHover={{ scale: 1.05, x: 2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                mentoring
-              </motion.a>
-              —sharing what I've learned and learning from others along the way.
+              I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions.
             </p>
           </motion.div>
         </motion.header>

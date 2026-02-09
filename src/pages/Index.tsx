@@ -10,7 +10,6 @@ import IllustrationSection from "@/components/IllustrationSection";
 import DynamicBackground from "@/components/DynamicBackground";
 import StarFieldBackground from "@/components/StarFieldBackground";
 import BottomNavigation from "@/components/BottomNavigation";
-import LanguageToggle from "@/components/LanguageToggle";
 
 // COLLINS-style smooth section animations
 const sectionVariants = {
@@ -38,9 +37,6 @@ const Index = () => {
         description="Portfolio of Sicong Chen - Product Designer crafting thoughtful digital experiences. Specializing in B2B operational platforms and AI-powered experiences."
       />
       <Header />
-      
-      {/* Language Toggle */}
-      <LanguageToggle />
       
       {/* Starfield background (Three.js) */}
       <StarFieldBackground />

@@ -94,7 +94,7 @@ const ProjectsSection = () => {
               <ProjectCard 
                 {...project} 
                 variant="small" 
-                aspectRatio="4/3"
+                aspectRatio="1/1"
               />
             </motion.div>
           );

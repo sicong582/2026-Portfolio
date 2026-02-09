@@ -5,13 +5,16 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import ProjectOverview from "@/components/projects/ProjectOverview";
+import PasswordProtection from "@/components/PasswordProtection";
 import RewordingProject from "./RewordingProject";
 import AudiProject from "./AudiProject";
 import PayPalProject from "./PayPalProject";
 import AdobeSecurityProject from "./AdobeSecurityProject";
+import FulfillmentOperationProject from "./FulfillmentOperationProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedProjectDetail, getTranslatedProjectSummaries } from "@/utils/projectTranslations";
+import { PROTECTED_PROJECTS } from "@/components/PasswordProtection";
 
 // Helper function to parse markdown bold text (**text**)
 const parseMarkdown = (text: string) => {
@@ -131,7 +134,7 @@ const ParallaxMedia = ({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
   
   const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
@@ -179,10 +182,17 @@ const ProjectDetail = () => {
     return <AdobeSecurityProject />;
   }
 
+  if (id === "fulfillment-operation-tooling") {
+    return <FulfillmentOperationProject />;
+  }
+
   const project = id ? getTranslatedProjectDetail(id, language) : null;
   
   // Use new side-by-side layout only for project-7 (AI Exploration)
   const useAlternatingLayout = id === "project-7";
+
+  // Check if project requires password protection
+  const isProtected = id && PROTECTED_PROJECTS.hasOwnProperty(id);
 
   if (!project) {
     return (
@@ -201,7 +211,7 @@ const ProjectDetail = () => {
     );
   }
 
-  return (
+  const projectContent = (
     <>
       <SEO 
         title={`${project.title} | Sicong Chen`}
@@ -415,6 +425,17 @@ const ProjectDetail = () => {
       <Footer />
     </>
   );
+
+  // Wrap protected projects with password protection
+  if (isProtected && id) {
+    return (
+      <PasswordProtection projectId={id} projectTitle={project.title}>
+        {projectContent}
+      </PasswordProtection>
+    );
+  }
+
+  return projectContent;
 };
 
 export default ProjectDetail;

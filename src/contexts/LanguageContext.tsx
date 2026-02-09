@@ -31,7 +31,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.about": "About",
     "common.sunMode": "Sun Mode",
     // Hero Section
-    "hero.description1": "I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions. My work focuses on driving efficiency, user adoption, and business impact—from improving internal operations to supporting customer growth.",
+    "hero.description1": "I specialize in B2B operational platforms and AI-powered experiences, turning complex processes into simple, scalable solutions.",
     "hero.description2": "Outside of work, I enjoy {writing} and {mentoring}—sharing what I've learned and learning from others along the way.",
     "hero.writing": "writing",
     "hero.mentoring": "mentoring",
@@ -88,7 +88,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.about": "关于",
     "common.sunMode": "阳光模式",
     // Hero Section
-    "hero.description1": "我专注于B2B运营平台和AI驱动的体验，将复杂的流程转化为简单、可扩展的解决方案。我的工作专注于提高效率、用户采用率和业务影响——从改善内部运营到支持客户增长。",
+    "hero.description1": "我专注于B2B运营平台和AI驱动的体验，将复杂的流程转化为简单、可扩展的解决方案。",
     "hero.description2": "工作之余，我喜欢{writing}和{mentoring}——分享我所学到的，并在过程中向他人学习。",
     "hero.writing": "写作",
     "hero.mentoring": "指导",

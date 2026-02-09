@@ -8,6 +8,7 @@ const BottomNavigation = () => {
   const { t } = useLanguage();
   const location = useLocation();
   const [sunMode, setSunMode] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const isWorkActive = location.pathname.startsWith("/project") || location.pathname === "/work";
   const isHomeActive = location.pathname === "/";
@@ -23,22 +24,6 @@ const BottomNavigation = () => {
       hasHighlight: true,
     },
     {
-      id: "work",
-      icon: Sparkles,
-      label: t("common.work"),
-      to: "/work",
-      isActive: isWorkActive,
-      isDark: true,
-    },
-    {
-      id: "mail",
-      icon: Mail,
-      label: t("common.contact"),
-      action: () => {
-        window.location.href = "mailto:hello@sicongchen.com";
-      },
-    },
-    {
       id: "home",
       icon: Home,
       label: t("common.home"),
@@ -47,10 +32,26 @@ const BottomNavigation = () => {
       isDark: true,
     },
     {
+      id: "work",
+      icon: Sparkles,
+      label: t("common.work"),
+      to: "/work",
+      isActive: isWorkActive,
+      isDark: true,
+    },
+    {
       id: "about",
       icon: Calendar,
       label: t("common.about"),
       to: "/about",
+    },
+    {
+      id: "mail",
+      icon: Mail,
+      label: t("common.contact"),
+      action: () => {
+        window.location.href = "mailto:hello@sicongchen.com";
+      },
     },
   ];
 
@@ -65,7 +66,7 @@ const BottomNavigation = () => {
       <div className="flex flex-col items-center gap-1 bg-background/60 backdrop-blur-xl rounded-2xl py-3 px-2 border border-foreground/10 shadow-lg">
         {navItems.map((item, index) => {
           const Icon = item.icon;
-          const showSeparator = index === 2; // After mail icon
+          const showSeparator = index === 4; // After about, before email
 
           return (
             <div key={item.id} className="flex flex-col items-center w-full">
@@ -75,12 +76,60 @@ const BottomNavigation = () => {
               
               {item.to ? (
                 <Link to={item.to}>
+                  <motion.div
+                    className="relative"
+                    onMouseEnter={() => setHoveredItem(item.id)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    <motion.button
+                      className={`flex items-center justify-center w-10 h-10 rounded-full transition-all relative ${
+                        item.isActive
+                          ? "bg-foreground/20 text-foreground"
+                          : item.isDark
+                          ? "text-foreground/70 hover:text-foreground hover:bg-foreground/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-foreground/10"
+                      }`}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      aria-label={item.label}
+                    >
+                      {item.hasHighlight && item.isActive && (
+                        <motion.div
+                          className="absolute inset-0 bg-foreground/10 rounded-full"
+                          layoutId="activeHighlight"
+                          transition={{ duration: 0.3 }}
+                        />
+                      )}
+                      <Icon className="h-5 w-5 relative z-10" />
+                    </motion.button>
+                    {hoveredItem === item.id && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-foreground text-background px-3 py-1.5 rounded-md text-sm font-sans shadow-lg pointer-events-none z-50"
+                      >
+                        {item.label}
+                        <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-t-transparent border-b-transparent border-r-foreground" />
+                      </motion.div>
+                    )}
+                  </motion.div>
+                </Link>
+              ) : (
+                <motion.div
+                  className="relative"
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                >
                   <motion.button
+                    onClick={item.action}
                     className={`flex items-center justify-center w-10 h-10 rounded-full transition-all relative ${
                       item.isActive
                         ? "bg-foreground/20 text-foreground"
-                        : item.isDark
-                        ? "text-foreground/70 hover:text-foreground hover:bg-foreground/10"
+                        : item.hasHighlight
+                        ? "bg-foreground/10 text-muted-foreground hover:text-foreground"
                         : "text-muted-foreground hover:text-foreground hover:bg-foreground/10"
                     }`}
                     whileHover={{ scale: 1.1 }}
@@ -90,38 +139,26 @@ const BottomNavigation = () => {
                   >
                     {item.hasHighlight && item.isActive && (
                       <motion.div
-                        className="absolute inset-0 bg-foreground/10 rounded-full"
-                        layoutId="activeHighlight"
+                        className="absolute inset-0 bg-foreground/15 rounded-full"
+                        layoutId="sunHighlight"
                         transition={{ duration: 0.3 }}
                       />
                     )}
                     <Icon className="h-5 w-5 relative z-10" />
                   </motion.button>
-                </Link>
-              ) : (
-                <motion.button
-                  onClick={item.action}
-                  className={`flex items-center justify-center w-10 h-10 rounded-full transition-all relative ${
-                    item.isActive
-                      ? "bg-foreground/20 text-foreground"
-                      : item.hasHighlight
-                      ? "bg-foreground/10 text-muted-foreground hover:text-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-foreground/10"
-                  }`}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  aria-label={item.label}
-                >
-                  {item.hasHighlight && item.isActive && (
+                  {hoveredItem === item.id && (
                     <motion.div
-                      className="absolute inset-0 bg-foreground/15 rounded-full"
-                      layoutId="sunHighlight"
-                      transition={{ duration: 0.3 }}
-                    />
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-foreground text-background px-3 py-1.5 rounded-md text-sm font-sans shadow-lg pointer-events-none z-50"
+                    >
+                      {item.label}
+                      <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-t-transparent border-b-transparent border-r-foreground" />
+                    </motion.div>
                   )}
-                  <Icon className="h-5 w-5 relative z-10" />
-                </motion.button>
+                </motion.div>
               )}
               </div>
           );

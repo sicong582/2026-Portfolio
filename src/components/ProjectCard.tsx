@@ -10,7 +10,7 @@ interface ProjectCardProps {
   image: string;
   description?: string;
   variant?: "large" | "small";
-  aspectRatio?: "16/9" | "4/3";
+  aspectRatio?: "16/9" | "4/3" | "1/1";
 }
 
 const ProjectCard = ({
@@ -29,7 +29,7 @@ const ProjectCard = ({
   
   // Determine aspect ratio: use prop if provided, otherwise use variant default
   const finalAspectRatio = aspectRatio 
-    ? (aspectRatio === "16/9" ? "aspect-[16/9]" : "aspect-[4/3]")
+    ? (aspectRatio === "16/9" ? "aspect-[16/9]" : aspectRatio === "1/1" ? "aspect-square" : "aspect-[4/3]")
     : variant === "large" 
       ? "aspect-[16/9]" 
       : "aspect-[4/3]";
@@ -58,11 +58,11 @@ const ProjectCard = ({
             : "0 4px 12px rgba(0, 0, 0, 0.08)",
         }}
       >
-        <figure className="card-content relative inline-block">
+        <figure className={`card-content relative inline-block ${finalAspectRatio} w-full overflow-hidden bg-card`}>
           <motion.img
             src={image}
             alt={title}
-            className="w-auto h-auto max-w-full max-h-[600px] block object-contain"
+            className="w-full h-full object-contain"
             loading="lazy"
             animate={{ 
               scale: isHovered ? 1.08 : 1,
