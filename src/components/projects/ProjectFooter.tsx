@@ -33,7 +33,7 @@ const ProjectFooter = ({ nextProjectId, nextProjectTitle }: ProjectFooterProps) 
           )}
 
           <motion.a
-            href="mailto:hello@sicongchen.com"
+            href="mailto:sicong582@gmail.com"
             className="flex items-center gap-3 font-sans text-lg text-foreground hover:text-muted-foreground transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

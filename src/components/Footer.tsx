@@ -12,26 +12,18 @@ const Footer = () => {
           </p>
           <address className="footer-social flex gap-6 font-sans text-sm uppercase tracking-wider not-italic">
             <a
-              href="mailto:hello@sicongchen.com"
+              href="mailto:sicong582@gmail.com"
               className="text-foreground hover:text-muted-foreground transition-colors"
             >
               {t("common.email")}
             </a>
             <a
-              href="https://linkedin.com/in/sicongchen"
+              href="https://www.linkedin.com/in/sicongchen1/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground hover:text-muted-foreground transition-colors"
             >
               {t("common.linkedin")}
-            </a>
-            <a
-              href="https://calendly.com/sicongchen"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground hover:text-muted-foreground transition-colors"
-            >
-              {t("common.scheduleCall")}
             </a>
           </address>
         </section>

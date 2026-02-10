@@ -50,7 +50,7 @@ const BottomNavigation = () => {
       icon: Mail,
       label: t("common.contact"),
       action: () => {
-        window.location.href = "mailto:hello@sicongchen.com";
+        window.location.href = "mailto:sicong582@gmail.com";
       },
     },
   ];
