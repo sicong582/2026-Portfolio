@@ -117,8 +117,8 @@ Private project - All rights reserved.
 
 **Sicong Chen**
 - Portfolio: [sicongchen.com](https://sicongchen.com)
-- LinkedIn: [linkedin.com/in/sicongchen](https://linkedin.com/in/sicongchen)
-- Email: hello@sicongchen.com
+- LinkedIn: [linkedin.com/in/sicongchen1/](https://www.linkedin.com/in/sicongchen1/)
+- Email: sicong582@gmail.com
 
 ---
 
