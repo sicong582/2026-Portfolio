@@ -11,7 +11,7 @@ import { getProjectDetail, getAllProjectSummaries } from "@/data/projects";
 // import paypal1 from "@/assets/projects/paypal/Paypal-1.jpg"; // File missing - uncomment when file is added
 import paypal2 from "@/assets/projects/paypal/Paypal-2.gif";
 import paypal3 from "@/assets/projects/paypal/Paypal-3.png";
-import paypal4 from "@/assets/projects/paypal/Paypal-4.jpeg";
+import paypal4 from "@/assets/projects/paypal/PayPal-4.jpeg";
 import paypal5 from "@/assets/projects/paypal/PayPal-5.jpeg";
 import paypal6 from "@/assets/projects/paypal/PayPal-6.jpeg";
 import paypal7 from "@/assets/projects/paypal/PayPal-7.jpeg";
