@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import ProjectOverview from "@/components/projects/ProjectOverview";
+import PasswordProtection from "@/components/PasswordProtection";
 import { getProjectDetail } from "@/data/projects";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedProjectDetail, getTranslatedProjectSummaries } from "@/utils/projectTranslations";
@@ -165,7 +166,7 @@ const parseItalic = (text: string, isBold: boolean, baseIndex: number) => {
   });
 };
 
-const AdobeSecurityProject = () => {
+const AdobeSecurityProjectContent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
   const project = getTranslatedProjectDetail("security-tooling", language);
@@ -623,6 +624,19 @@ const AdobeSecurityProject = () => {
 
       <Footer />
     </div>
+  );
+};
+
+const AdobeSecurityProject = () => {
+  const { language } = useLanguage();
+  const project = getTranslatedProjectDetail("security-tooling", language);
+  
+  if (!project) return null;
+
+  return (
+    <PasswordProtection projectId="security-tooling" projectTitle={project.title}>
+      <AdobeSecurityProjectContent />
+    </PasswordProtection>
   );
 };
 

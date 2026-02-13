@@ -170,14 +170,6 @@ const About = () => {
               >
                 {t("common.linkedin")}
               </a>
-              <a
-                href="https://calendly.com/sicongchen"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground hover:text-muted-foreground transition-colors"
-              >
-                {t("common.scheduleCall")}
-              </a>
             </div>
           </div>
         </div>

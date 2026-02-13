@@ -12,6 +12,7 @@ interface PasswordProtectionProps {
 const PROTECTED_PROJECTS: Record<string, string> = {
   "purchase-order-group": "6363",
   "fulfillment-operation-tooling": "6363",
+  "security-tooling": "6363",
 };
 
 const PasswordProtection = ({ projectId, projectTitle, children }: PasswordProtectionProps) => {
