@@ -6,6 +6,7 @@ import projectCoverAdobeFirewall from "@/assets/project-cover-adobe firewall rul
 import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
+import vibeCodingCover from "@/assets/projects/vibe-coding/vibe-coding-cover.png";
 
 // Purchase Order Group project images
 import purchaseOrder2 from "@/assets/projects/Inventory Ordering Platform/purchase-order-2.png";
@@ -74,6 +75,45 @@ export interface Project extends ProjectSummary {
 
 // Full project data
 export const projects: Project[] = [
+  {
+    id: "vibe-coding",
+    title: "Vibe Coding",
+    type: "Interactive",
+    date: "2026",
+    image: vibeCodingCover,
+    description:
+      "SnapMind prototype in-page, motion GIF studies, and Bubble Battle UI exploration—experiments in one case study.",
+    category: "design-engineering",
+    detail: {
+      title: "Vibe Coding",
+      type: "Web",
+      date: "2026",
+      role: "Designer & Developer",
+      duration: "Ongoing",
+      team: "Solo",
+      overview:
+        "A custom experiments page: SnapMind as a same-origin HTML prototype in an iframe, motion studies as GIFs, and Bubble Battle as a static UI showcase—add links or embeds as more demos ship.",
+      problem: {
+        title: "About",
+        description:
+          "Placeholder section for the standard project template. The Vibe Coding page uses a custom layout instead.",
+      },
+      process: {
+        title: "Process",
+        description: "See the custom project page for the real layout.",
+      },
+      results: {
+        title: "Links",
+        metrics: [
+          { label: "Format", value: "SnapMind embed + GIF rows + UI still" },
+          { label: "Year", value: "2026" },
+        ],
+        description:
+          "SnapMind uses `/snapmind-demo/`. Optional `VITE_VIBE_CODING_DEMO_URL` is the default “Try it here” target for other rows when no URL is set.",
+      },
+      media: [],
+    },
+  },
   // B2B Product Projects
   {
     id: "purchase-order-group",
@@ -411,8 +451,15 @@ export const getVisualBrandProjects = (): ProjectSummary[] => {
 };
 
 export const getDesignEngineeringProjects = (): ProjectSummary[] => {
-  // No design engineering projects currently
-  return [];
+  return projects.filter((p) => p.category === "design-engineering").map((p) => ({
+    id: p.id,
+    title: p.title,
+    type: p.type,
+    date: p.date,
+    image: p.image,
+    description: p.description,
+    category: p.category,
+  }));
 };
 
 // Legacy function names for backward compatibility

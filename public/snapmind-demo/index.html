@@ -1,0 +1,1485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapMind — Design prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #fafafa;
+      --bg-subtle: #f4f4f5;
+      --surface: #ffffff;
+      --surface-elevated: #fcfcfd;
+      --surface-soft: #f8fafc;
+      --text: #09090b;
+      --text-secondary: #52525b;
+      --text-tertiary: #71717a;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --royal: #2563eb;
+      --royal-deep: #1d4ed8;
+      --royal-soft: #dbeafe;
+      --accent-text: #1e3a8a;
+      --danger: #dc2626;
+      --radius-lg: 22px;
+      --shadow: 0 16px 34px rgba(24, 24, 27, 0.08);
+      --shadow-soft: 0 10px 24px rgba(37, 99, 235, 0.12);
+      --transition: all 0.3s ease-in-out;
+      --font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 520px at 50% -220px, #dbeafe 0%, rgba(219, 234, 254, 0) 70%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: calc(28px + env(safe-area-inset-top, 0px)) 24px calc(36px + env(safe-area-inset-bottom, 0px));
+    }
+    .shell--home {
+      max-width: 560px;
+    }
+
+    .scatter-home {
+      position: relative;
+      isolation: isolate;
+      padding: 20px;
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 94%, white 6%);
+      box-shadow: 0 18px 46px rgba(15, 23, 42, 0.08);
+    }
+    .scatter-title {
+      position: relative;
+      z-index: 40;
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 1.56rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      text-align: center;
+      color: #18181b;
+    }
+    .scatter-subtitle {
+      margin: 8px 0 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-tertiary);
+    }
+    .category-strip {
+      position: relative;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 0 16px;
+      padding: 0 2px;
+      flex-wrap: wrap;
+      background: transparent;
+    }
+    .category-chip {
+      flex: 1;
+      min-width: 0;
+      max-width: 112px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 10px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--surface-elevated) 88%, #f8fafc 12%);
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .category-chip:hover {
+      border-color: var(--border-strong);
+      background: var(--surface);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+    .category-chip:focus-visible {
+      outline: 2px solid var(--royal);
+      outline-offset: 2px;
+    }
+    .category-chip.is-active {
+      border-color: rgba(37, 99, 235, 0.45);
+      background: #eff6ff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+    }
+    .category-chip-img-wrap {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .category-chip-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .category-chip-text {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #52525b;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .category-chip.is-active .category-chip-text {
+      color: var(--royal-deep);
+    }
+
+    .scatter-toolbar {
+      position: relative;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      padding: 10px;
+      background: var(--surface-soft);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+    }
+    .scatter-icon-btn {
+      position: relative;
+      z-index: 41;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: #3f3f46;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .scatter-icon-btn:hover {
+      background: var(--surface);
+      border-color: var(--border-strong);
+    }
+    .scatter-icon-btn:focus-visible {
+      outline: 2px solid var(--royal);
+      outline-offset: 2px;
+    }
+    .scatter-icon-btn svg { width: 20px; height: 20px; }
+
+    .scatter-count-pill {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      letter-spacing: 0.01em;
+    }
+    .scatter-sort {
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text-secondary);
+      padding: 0 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .scatter-upload {
+      position: relative;
+      z-index: 41;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(145deg, rgba(37, 99, 235, 0.98) 0%, rgba(29, 78, 216, 1) 100%);
+      color: #fff;
+      font-size: 1.75rem;
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: var(--transition);
+    }
+    .scatter-upload:hover {
+      filter: brightness(1.06);
+      transform: scale(1.03);
+    }
+    .scatter-upload:focus-visible {
+      outline: 2px solid var(--royal-deep);
+      outline-offset: 3px;
+    }
+    .scatter-upload:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .onboarding-hint {
+      margin: 0 0 10px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      background: rgba(239, 246, 255, 0.8);
+      color: var(--accent-text);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+    .onboarding-hint.hidden { display: none !important; }
+    .search-row {
+      display: none;
+      margin: 0 0 10px;
+    }
+    .search-row.visible { display: block; }
+    .search-input {
+      width: 100%;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      padding: 0 12px;
+      font-size: 0.86rem;
+      color: var(--text);
+    }
+    .search-input:focus-visible {
+      outline: 2px solid var(--royal);
+      outline-offset: 1px;
+    }
+    .scatter-stage {
+      position: relative;
+      z-index: 1;
+      min-height: min(78vh, 640px);
+      margin: 0;
+      padding-top: 10px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fbfcff 0%, #f8fafc 100%);
+      border: 1px solid #eef2f7;
+    }
+    /* Empty state: pull cluster + hint up toward the search / add row */
+    .scatter-stage.scatter-stage--empty {
+      min-height: min(52vh, 480px);
+      padding-top: clamp(12px, 3vh, 28px);
+    }
+    .category-groups {
+      display: grid;
+      gap: 16px;
+      padding: 12px;
+    }
+    .category-group {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface-elevated);
+      overflow: hidden;
+    }
+    .category-group-head {
+      margin: 0;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+    }
+    .category-group-stage {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fbfcff 0%, #f5f7fb 100%);
+    }
+    .scatter-card {
+      position: absolute;
+      cursor: pointer;
+      padding: 0;
+      border: none;
+      background: transparent;
+      border-radius: 11px;
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.13), 0 4px 10px rgba(15, 23, 42, 0.07);
+      transition: var(--transition);
+    }
+    .scatter-card:hover {
+      transform: translate(-50%, -50%) rotate(var(--rot)) scale(1.03) !important;
+      box-shadow: 0 20px 42px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 23, 42, 0.09);
+      z-index: 100 !important;
+    }
+    .scatter-card:focus-visible {
+      outline: 2px solid var(--royal);
+      outline-offset: 4px;
+    }
+    .scatter-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 11px;
+      background: #f4f4f5;
+    }
+    .screenshot-placeholder {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 11px;
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .screenshot-placeholder-head {
+      height: 16px;
+      border-radius: 999px;
+      background: #f4f4f5;
+      width: 58%;
+    }
+    .screenshot-placeholder-hero {
+      flex: 1;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fafafa 0%, #f4f4f5 100%);
+      border: 1px solid #f4f4f5;
+    }
+    .screenshot-placeholder-lines {
+      display: grid;
+      gap: 6px;
+    }
+    .screenshot-placeholder-line {
+      height: 8px;
+      border-radius: 999px;
+      background: #e4e4e7;
+    }
+    .screenshot-placeholder-line.short { width: 64%; }
+    .screenshot-placeholder-line.mid { width: 82%; }
+    .screenshot-placeholder-line.full { width: 100%; }
+    .scatter-card--ghost {
+      pointer-events: none;
+      opacity: 0.5;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+    .scatter-empty-hint {
+      position: absolute;
+      left: 50%;
+      top: 34%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      z-index: 80;
+      pointer-events: none;
+      max-width: 260px;
+      line-height: 1.5;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .scatter-stage.scatter-stage--empty .scatter-empty-hint {
+      top: 22%;
+    }
+    .scatter-filter-empty {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      max-width: 240px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      transition: var(--transition);
+    }
+    .btn.ghost {
+      border-color: transparent;
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .hidden { display: none !important; }
+
+    .toast {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      right: 24px;
+      background: linear-gradient(135deg, var(--royal-deep), #1e3a8a);
+      color: #fafafa;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: var(--transition);
+      pointer-events: none;
+      z-index: 50;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .toast.toast--success {
+      background: linear-gradient(135deg, #15803d, #166534);
+      box-shadow: 0 12px 28px rgba(22, 101, 52, 0.35);
+    }
+
+    .serif-title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: var(--royal);
+      letter-spacing: -0.02em;
+    }
+    .muted { color: var(--text-secondary); }
+
+    /* Insights overlay + paper */
+    .insights-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+    .insights-overlay.hidden { display: none !important; }
+    .insights-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .insights-inner {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      max-height: min(94vh, 900px);
+      background: var(--surface);
+      border-radius: 24px 24px 0 0;
+      border: 1px solid var(--border);
+      box-shadow: 0 -12px 42px rgba(15, 23, 42, 0.14);
+      padding: 14px 22px calc(22px + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1;
+      animation: insightsSlideUp 0.35s ease-out;
+    }
+    @keyframes insightsSlideUp {
+      from { transform: translateY(100%); opacity: 0.9; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .insights-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .insights-header .serif-title {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    .insights-scroll {
+      max-height: 38vh;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .insight-block {
+      padding: 14px 16px;
+      background: var(--bg-subtle);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .insight-block h4 {
+      margin: 0 0 8px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+    .insight-block p {
+      margin: 0;
+      font-size: 0.9375rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .insights-hint {
+      margin: 0;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .insights-hint strong { color: var(--royal); font-weight: 600; }
+    .insights-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .paper-stage {
+      position: relative;
+      height: 300px;
+      flex-shrink: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      background: transparent;
+      perspective: 1000px;
+      perspective-origin: 50% 38%;
+      touch-action: none;
+    }
+    .paper-zone-down {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42%;
+      background: transparent;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .paper-zone-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 40%;
+      background: transparent;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .paper-sheet {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      width: 200px;
+      height: 248px;
+      margin-left: -100px;
+      margin-top: -124px;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.2);
+      cursor: grab;
+      z-index: 2;
+      transition: transform 0.06s linear;
+      user-select: none;
+    }
+    .paper-sheet.is-dragging { cursor: grabbing; transition: none; }
+    .paper-sheet.is-anim-out {
+      pointer-events: none;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease;
+    }
+    .paper-sheet img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 14px;
+      display: block;
+      pointer-events: none;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell shell--home">
+    <section id="view-home" class="scatter-home" aria-label="Your collection">
+      <h1 class="scatter-title">Your SnapMind</h1>
+      <p class="scatter-subtitle">From screenshots to signals—understand your habits, interests, and routines.</p>
+      <div class="category-strip" role="toolbar" aria-label="Categories">
+        <button type="button" class="category-chip" data-category="To eat" aria-pressed="false">
+          <span class="category-chip-img-wrap"><img src="prototype-assets/category-to-eat.png" alt="" width="64" height="64" loading="lazy" /></span>
+          <span class="category-chip-text">To eat</span>
+        </button>
+        <button type="button" class="category-chip" data-category="To buy" aria-pressed="false">
+          <span class="category-chip-img-wrap"><img src="prototype-assets/category-to-buy.png" alt="" width="64" height="64" loading="lazy" /></span>
+          <span class="category-chip-text">To buy</span>
+        </button>
+        <button type="button" class="category-chip" data-category="To inspire" aria-pressed="false">
+          <span class="category-chip-img-wrap"><img src="prototype-assets/category-to-inspire.png" alt="" width="64" height="64" loading="lazy" /></span>
+          <span class="category-chip-text">To inspire</span>
+        </button>
+      </div>
+      <div class="scatter-toolbar">
+        <button type="button" class="scatter-icon-btn" id="homeSearchBtn" aria-label="Search collection">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.2-3.2" />
+          </svg>
+        </button>
+        <span class="scatter-count-pill"><span id="homeCount">0</span> Screenshots</span>
+        <select id="sortSelect" class="scatter-sort" aria-label="Sort screenshots">
+          <option value="recent">Recent</option>
+          <option value="title">Title</option>
+          <option value="category">Category</option>
+        </select>
+        <button type="button" class="scatter-upload" id="pickBtn" aria-label="Load sample screenshots">
+          <span aria-hidden="true">+</span>
+        </button>
+      </div>
+      <div id="searchRow" class="search-row">
+        <input id="searchInput" class="search-input" type="text" placeholder="Search screenshots by title..." />
+      </div>
+      <div class="scatter-stage" id="scatterStage"></div>
+    </section>
+  </div>
+
+  <div id="insightsOverlay" class="insights-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="insightsTitle" aria-hidden="true">
+    <div class="insights-backdrop" id="insightsBackdrop" tabindex="-1" role="presentation"></div>
+    <div class="insights-inner">
+      <div class="insights-header">
+        <h2 class="serif-title" id="insightsTitle">Insights</h2>
+        <button type="button" class="btn ghost" id="insightsClose">Close</button>
+      </div>
+      <div class="insights-scroll" id="insightsScrollContent"></div>
+      <p class="insights-hint">Drag the screenshot paper <strong>down</strong> to crumple (done), or <strong>right</strong> to fold a plane (share).</p>
+      <p id="insightsOnboarding" class="onboarding-hint">Tip: You can also use buttons below if you don't want drag gestures.</p>
+      <div class="insights-actions">
+        <button type="button" class="btn" id="actionKeep">Keep</button>
+        <button type="button" class="btn" id="actionDismiss">Dismiss</button>
+        <button type="button" class="btn" id="actionShare">Share</button>
+      </div>
+      <div class="paper-stage" id="paperStage" aria-label="Paper interaction">
+        <div class="paper-zone-down" aria-hidden="true"></div>
+        <div class="paper-zone-right" aria-hidden="true"></div>
+        <div class="paper-sheet" id="paperSheet" role="img" aria-label="Draggable screenshot paper">
+          <img id="paperImg" width="400" height="496" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const categories = ["To eat", "To buy", "To inspire"];
+
+    const seed = [
+      {
+        id: 1,
+        title: "How to build better habits",
+        summary: "Framework for stacking cues and tracking streaks from a long-form article capture.",
+        confidence: 0.88,
+        category: "To inspire",
+        state: "pending",
+        theme: "Behavior design",
+        tags: ["habits", "productivity", "health"],
+        takeaways: ["Stack new habits onto existing cues", "Track weekly, not daily, to reduce noise"]
+      },
+      {
+        id: 2,
+        title: "Minimal workspace aesthetic",
+        summary: "Moodboard-style screenshot with calming palette, negative space, and natural light.",
+        confidence: 0.82,
+        category: "To buy",
+        state: "pending",
+        theme: "Calm interior",
+        tags: ["design", "workspace", "minimal"],
+        takeaways: ["Muted greens + warm wood", "Single focal plant"]
+      },
+      {
+        id: 3,
+        title: "High-protein pasta recipe",
+        summary: "Ingredients, cook time, and macros visible — actionable meal prep item.",
+        confidence: 0.91,
+        category: "To eat",
+        state: "pending",
+        theme: "Meal prep",
+        tags: ["recipe", "nutrition", "quick"],
+        takeaways: ["20g protein per serving", "12 min active time"]
+      },
+      {
+        id: 4,
+        title: "Hidden espresso bar in Kyoto",
+        summary: "Compact cafe guide with opening hours and walking distance from station.",
+        confidence: 0.84,
+        category: "To eat",
+        state: "pending",
+        theme: "Cafe shortlist",
+        tags: ["coffee", "travel", "guide"],
+        takeaways: ["Opens at 8:30 AM", "Cashless preferred"]
+      },
+      {
+        id: 5,
+        title: "Desk lamp comparison chart",
+        summary: "Brightness and color temperature table for three modern desk lamps.",
+        confidence: 0.8,
+        category: "To buy",
+        state: "pending",
+        theme: "Workspace gear",
+        tags: ["shopping", "lighting", "office"],
+        takeaways: ["4000K best for evening", "USB-C powered option available"]
+      },
+      {
+        id: 6,
+        title: "Note-taking layout inspiration",
+        summary: "Clean page composition with strong title hierarchy and spacious sections.",
+        confidence: 0.86,
+        category: "To inspire",
+        state: "pending",
+        theme: "Editorial notes",
+        tags: ["layout", "notes", "ui"],
+        takeaways: ["Large title + muted subcopy", "Use 8pt spacing rhythm"]
+      },
+      {
+        id: 7,
+        title: "Weekly grocery prep board",
+        summary: "Visual checklist board for quick meals and pantry refill reminders.",
+        confidence: 0.83,
+        category: "To eat",
+        state: "pending",
+        theme: "Meal planning",
+        tags: ["grocery", "meal prep", "routine"],
+        takeaways: ["Batch veggies on Sunday", "Keep 3 fallback meal options"]
+      },
+      {
+        id: 8,
+        title: "Minimal carry backpack shortlist",
+        summary: "Lightweight commuter backpack options with side-by-side feature notes.",
+        confidence: 0.79,
+        category: "To buy",
+        state: "pending",
+        theme: "Everyday carry",
+        tags: ["bag", "gear", "minimal"],
+        takeaways: ["Under 800g preferred", "Separate laptop compartment"]
+      }
+    ];
+
+    let items = [];
+    let selectedCategory = null;
+    let searchQuery = "";
+    let sortMode = "recent";
+    let hasAddedOnce = false;
+    let hasOpenedOnce = false;
+    const defaultCategoryScreenshots = [
+      "prototype-assets/mockup-screenshot-1.png",
+      "prototype-assets/mockup-screenshot-2.png",
+      "prototype-assets/mockup-screenshot-3.png",
+      "prototype-assets/mockup-screenshot-4.png",
+      "prototype-assets/mockup-screenshot-5.PNG",
+      "prototype-assets/mockup-screenshot-6.PNG",
+      "prototype-assets/mockup-screenshot-7.PNG",
+      "prototype-assets/mockup-screenshot-8.PNG",
+      "prototype-assets/mockup-screenshot-9.PNG",
+    ];
+    const screenshotTitleMap = {
+      "prototype-assets/mockup-screenshot-1.png": "GoT Behind-the-Scenes Feed",
+      "prototype-assets/mockup-screenshot-2.png": "Troll 2 Netflix Release Post",
+      "prototype-assets/mockup-screenshot-3.png": "Strategy & Business Thread",
+      "prototype-assets/mockup-screenshot-4.png": "Instagram Lenticular Rings Post",
+      "prototype-assets/mockup-screenshot-5.PNG": "April Calendar Overview",
+      "prototype-assets/mockup-screenshot-6.PNG": "Floral Dress Rack at Sample Sale",
+      "prototype-assets/mockup-screenshot-7.PNG": "Marketplace Deals Grid",
+      "prototype-assets/mockup-screenshot-8.PNG": "Linear Hiring Discussion",
+      "prototype-assets/mockup-screenshot-9.PNG": "Social Fashion Photo Feed",
+    };
+
+    const scatterStage = document.getElementById("scatterStage");
+
+    /** Demo fallback pool if no uploaded image exists for an item. */
+    const realScreenshotImages = [
+      "prototype-assets/mockup-screenshot-1.png",
+      "prototype-assets/mockup-screenshot-2.png",
+      "prototype-assets/mockup-screenshot-3.png",
+      "prototype-assets/mockup-screenshot-4.png",
+      "prototype-assets/mockup-screenshot-5.PNG",
+      "prototype-assets/mockup-screenshot-6.PNG",
+      "prototype-assets/mockup-screenshot-7.PNG",
+      "prototype-assets/mockup-screenshot-8.PNG",
+      "prototype-assets/mockup-screenshot-9.PNG"
+    ];
+
+    function mockupSrcForItem(item) {
+      if (item && item.imageSrc) return item.imageSrc;
+      if (item && Number.isFinite(item.mockupIndex)) {
+        return realScreenshotImages[item.mockupIndex % realScreenshotImages.length];
+      }
+      const id = Number(item && item.id) || 1;
+      return realScreenshotImages[(id - 1) % realScreenshotImages.length];
+    }
+
+    function withMockupAssignments(inputItems) {
+      return inputItems.map((it, idx) => ({ ...it, mockupIndex: idx % realScreenshotImages.length }));
+    }
+
+    let toastHideTimer = null;
+    function toast(msg, opts = {}) {
+      const el = document.getElementById("toast");
+      if (toastHideTimer) clearTimeout(toastHideTimer);
+      el.textContent = msg;
+      el.classList.toggle("toast--success", Boolean(opts.success));
+      el.classList.add("show");
+      const ms = typeof opts.duration === "number" ? opts.duration : 1600;
+      toastHideTimer = setTimeout(() => {
+        el.classList.remove("show", "toast--success");
+        toastHideTimer = null;
+      }, ms);
+    }
+
+    function stats() {
+      const active = items.filter((i) => i.state !== "dismissed");
+      const el = document.getElementById("homeCount");
+      if (el) el.textContent = active.length;
+    }
+
+    function scatterTransform(seed, opts = {}) {
+      const r = (n) => {
+        const x = Math.sin(seed * 12.9898 + n * 78.233) * 43758.5453;
+        return x - Math.floor(x);
+      };
+      const rot = (r(1) * 28 - 14).toFixed(2);
+      const leftMin = opts.ghost ? -16 : 4;
+      const leftRange = opts.ghost ? 98 : 78;
+      const left = (leftMin + r(2) * leftRange).toFixed(1);
+      /* Filled state: keep centers lower so cards do not overlap the + button row */
+      /* Empty ghost state: allow higher placement so the cluster sits under the toolbar */
+      const topMin = opts.ghost ? 16 : 38;
+      const topRange = opts.ghost ? 44 : 48;
+      const top = (topMin + r(3) * topRange).toFixed(1);
+      const w = 88 + Math.floor(r(4) * 44);
+      const z = 8 + Math.floor(r(5) * 20);
+      return { rot, left, top, w, z };
+    }
+
+    function scatterCardHtml(item, opts = {}) {
+      if (opts.layout === "groupFit") {
+        const index = Number.isFinite(opts.index) ? opts.index : 0;
+        const total = Math.max(1, Number.isFinite(opts.total) ? opts.total : 1);
+        const step = 66 / Math.max(1, total - 1);
+        const left = (17 + index * step).toFixed(1);
+        const top = 58;
+        const width = 31;
+        const rot = (index % 2 === 0 ? -5 : 5) + (index === 1 ? 1.5 : 0);
+        const label = escapeHtml(item.title || "Screenshot");
+        const src = mockupSrcForItem(item);
+        return `
+          <button type="button" class="scatter-card" style="--rot:${rot}deg;left:${left}%;top:${top}%;width:${width}%;z-index:${20 + index};transform:translate(-50%,-50%) rotate(${rot}deg);" onclick="openInsights(${item.id})" aria-label="${label}">
+            <img src="${src}" width="200" height="300" alt="" loading="lazy" />
+          </button>`;
+      }
+      const seedBase = typeof opts.seedBase === "number" ? opts.seedBase : 31.7;
+      const t = scatterTransform(item.id * seedBase, { ghost: false });
+      const label = escapeHtml(item.title || "Screenshot");
+      const src = mockupSrcForItem(item);
+      return `
+        <button type="button" class="scatter-card" style="--rot:${t.rot}deg;left:${t.left}%;top:${t.top}%;width:${t.w}px;z-index:${t.z};transform:translate(-50%,-50%) rotate(${t.rot}deg);" onclick="openInsights(${item.id})" aria-label="${label}">
+          <img src="${src}" width="200" height="300" alt="" loading="lazy" />
+        </button>`;
+    }
+
+    function ghostScatterHtml() {
+      const ghosts = [];
+      for (let i = 0; i < 7; i++) {
+        const t = scatterTransform(-(i + 1) * 17.3, { ghost: true });
+        ghosts.push(
+          `<div class="scatter-card scatter-card--ghost" style="--rot:${t.rot}deg;left:${t.left}%;top:${t.top}%;width:${t.w}px;z-index:${t.z};transform:translate(-50%,-50%) rotate(${t.rot}deg);" aria-hidden="true">
+            <div class="screenshot-placeholder">
+              <div class="screenshot-placeholder-head"></div>
+              <div class="screenshot-placeholder-hero"></div>
+              <div class="screenshot-placeholder-lines">
+                <div class="screenshot-placeholder-line full"></div>
+                <div class="screenshot-placeholder-line mid"></div>
+                <div class="screenshot-placeholder-line short"></div>
+              </div>
+            </div>
+          </div>`
+        );
+      }
+      return ghosts.join("");
+    }
+
+    function visibleForScatter() {
+      const active = items.filter((i) => i.state !== "dismissed");
+      const byCategory = !selectedCategory ? active : active.filter((i) => i.category === selectedCategory);
+      const byQuery = !searchQuery
+        ? byCategory
+        : byCategory.filter((i) => (i.title || "").toLowerCase().includes(searchQuery.toLowerCase()));
+      const sorted = [...byQuery];
+      if (sortMode === "title") sorted.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+      else if (sortMode === "category") sorted.sort((a, b) => (a.category || "").localeCompare(b.category || ""));
+      else sorted.sort((a, b) => b.id - a.id);
+      return sorted;
+    }
+
+    function syncCategoryChips() {
+      document.querySelectorAll(".category-chip").forEach((btn) => {
+        const cat = btn.getAttribute("data-category");
+        const on = selectedCategory === cat;
+        btn.classList.toggle("is-active", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    }
+
+    function renderScatter() {
+      const allActive = items.filter((i) => i.state !== "dismissed");
+      const visible = visibleForScatter();
+      if (!allActive.length) {
+        scatterStage.classList.add("scatter-stage--empty");
+        scatterStage.innerHTML = ghostScatterHtml();
+        return;
+      }
+      scatterStage.classList.remove("scatter-stage--empty");
+      if (!visible.length) {
+        scatterStage.innerHTML =
+          '<p class="scatter-filter-empty">No screenshots in this category yet. Tap the chip again to show all.</p>';
+        return;
+      }
+      const targetCategories = selectedCategory ? [selectedCategory] : categories;
+      const grouped = targetCategories
+        .map((cat, idx) => {
+          const list = visible.filter((it) => it.category === cat);
+          if (!list.length) return "";
+          return `
+            <section class="category-group" aria-label="${escapeHtml(cat)} section">
+              <h3 class="category-group-head">${escapeHtml(cat)}</h3>
+              <div class="category-group-stage">
+                ${list
+                  .slice(0, 3)
+                  .map((it, cardIdx) => scatterCardHtml(it, { layout: "groupFit", index: cardIdx, total: Math.min(list.length, 3) }))
+                  .join("")}
+              </div>
+            </section>
+          `;
+        })
+        .filter(Boolean)
+        .join("");
+      scatterStage.innerHTML = `<div class="category-groups">${grouped}</div>`;
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement("div");
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function render() {
+      syncCategoryChips();
+      renderScatter();
+      stats();
+      const hint = document.getElementById("onboardingHint");
+      if (hint) hint.classList.toggle("hidden", hasAddedOnce || items.length > 0);
+    }
+
+    function buildDefaultCategoryItems() {
+      const baseId = Date.now();
+      return defaultCategoryScreenshots.map((src, idx) =>
+        generateAiInsights({
+          id: baseId + idx,
+          title: titleForScreenshotSrc(src),
+          summary: "Existing screenshot from your asset set.",
+          confidence: 0.78,
+          category: categories[idx % categories.length],
+          state: "pending",
+          theme: "Default seeded",
+          tags: ["default", "screenshot"],
+          takeaways: ["Review and classify this screenshot."],
+          imageSrc: src,
+        })
+      );
+    }
+
+    function buildAssetCategoryItems() {
+      const baseId = Date.now();
+      return defaultCategoryScreenshots.slice(0, 9).map((src, idx) =>
+        generateAiInsights({
+          id: baseId + idx,
+          title: titleForScreenshotSrc(src),
+          summary: "Imported from mockup screenshot assets.",
+          confidence: 0.8,
+          category: categories[Math.floor(idx / 3)],
+          state: "pending",
+          theme: "Asset uploaded",
+          tags: ["uploaded", "mockup"],
+          takeaways: ["Review and classify this screenshot."],
+          imageSrc: src,
+        })
+      );
+    }
+
+    function find(id) {
+      return items.find((i) => i.id === id);
+    }
+
+    window.overrideCategory = (id, value) => {
+      const item = find(id);
+      if (!item) return;
+      item.category = value;
+      toast("Category updated");
+      render();
+    };
+
+    window.saveIdea = (id) => {
+      const item = find(id);
+      if (!item) return;
+      item.state = "idea";
+      toast("Added to Ideas");
+      render();
+    };
+
+    window.keepItem = (id) => {
+      const item = find(id);
+      if (!item) return;
+      item.state = "kept";
+      toast("Marked as kept");
+      render();
+    };
+
+    window.dismissItem = (id) => {
+      const item = find(id);
+      if (!item) return;
+      item.state = "dismissed";
+      toast("Dismissed");
+      render();
+    };
+
+    window.exportItem = (id) => {
+      const item = find(id);
+      if (!item) return;
+      const md = `# ${item.title}\n\n**Category:** ${item.category}\n**Confidence:** ${Math.round(item.confidence * 100)}%\n\n## Summary\n${item.summary}\n`;
+      navigator.clipboard.writeText(md).then(() => toast("Markdown copied"));
+    };
+
+    function runScan() {
+      const btn = document.getElementById("pickBtn");
+      if (btn) btn.disabled = true;
+      const uploaded = buildAssetCategoryItems();
+      selectedCategory = null;
+      items = uploaded;
+      hasAddedOnce = true;
+      render();
+      if (btn) btn.disabled = false;
+      toast("Uploaded 9 screenshots: 3 per category", { success: true, duration: 2600 });
+    }
+
+    function fileNameToTitle(name = "") {
+      const noExt = name.replace(/\.[^/.]+$/, "");
+      const cleaned = noExt.replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+      return cleaned || "Screenshot";
+    }
+
+    function titleForScreenshotSrc(src) {
+      return screenshotTitleMap[src] || fileNameToTitle((src || "").split("/").pop() || "");
+    }
+
+    function generateAiInsights(base) {
+      const title = (base.title || "").toLowerCase();
+      const has = (words) => words.some((w) => title.includes(w));
+      let summary = base.summary || "Captured content ready for quick review.";
+      let theme = base.theme || "General capture";
+      let tags = base.tags && base.tags.length ? [...base.tags] : ["screenshot"];
+      let takeaways = base.takeaways && base.takeaways.length ? [...base.takeaways] : ["Review and classify this screenshot."];
+      let confidence = Number.isFinite(base.confidence) ? base.confidence : 0.75;
+
+      if (has(["netflix", "movie", "troll", "feed"])) {
+        summary = "Entertainment timeline with clear release context and highly shareable moments.";
+        theme = "Media watchlist";
+        tags = ["entertainment", "social", "watchlist"];
+        takeaways = ["Capture release timing.", "Save the best post for quick sharing."];
+        confidence = 0.86;
+      } else if (has(["strategy", "business", "linear", "hiring"])) {
+        summary = "Professional insights with strong signal for learning, strategy, and career decisions.";
+        theme = "Career and strategy";
+        tags = ["business", "career", "learning"];
+        takeaways = ["Extract one reusable principle.", "Turn key idea into an action note."]; 
+        confidence = 0.89;
+      } else if (has(["calendar", "april"])) {
+        summary = "Date-centric capture that is useful for planning and follow-up reminders.";
+        theme = "Time planning";
+        tags = ["calendar", "planning", "schedule"];
+        takeaways = ["Pin the key date.", "Create one follow-up task from this view."];
+        confidence = 0.91;
+      } else if (has(["marketplace", "sale", "fashion", "vogue", "instagram", "ring"])) {
+        summary = "Product and style discovery capture suited for purchase tracking and shortlist building.";
+        theme = "Shopping shortlist";
+        tags = ["shopping", "style", "products"];
+        takeaways = ["Compare top options.", "Track source and price before checkout."];
+        confidence = 0.84;
+      }
+
+      if (base.category === "To buy" && !tags.includes("to-buy")) tags.push("to-buy");
+      if (base.category === "To inspire" && !tags.includes("inspiration")) tags.push("inspiration");
+      if (base.category === "To eat" && !tags.includes("food")) tags.push("food");
+
+      return { ...base, summary, theme, tags, takeaways, confidence };
+    }
+
+    function itemsFromFiles(files) {
+      const baseId = Date.now();
+      return files.map((file, idx) =>
+        generateAiInsights({
+          id: baseId + idx,
+          title: fileNameToTitle(file.name),
+          summary: "Imported from your screenshot library.",
+          confidence: 0.7,
+          category: selectedCategory || categories[idx % categories.length],
+          state: "pending",
+          theme: "Imported capture",
+          tags: ["uploaded", "screenshot"],
+          takeaways: ["Review and classify this screenshot."],
+          imageSrc: URL.createObjectURL(file),
+        })
+      );
+    }
+
+    function ingestPickedFiles(fileList) {
+      const files = Array.from(fileList || []).filter((f) => f && f.type && f.type.startsWith("image/"));
+      if (!files.length) {
+        toast("No image selected");
+        return;
+      }
+      const btn = document.getElementById("pickBtn");
+      if (btn) btn.disabled = true;
+      const uploaded = itemsFromFiles(files);
+      items = [...uploaded, ...items];
+      render();
+      if (btn) btn.disabled = false;
+      const n = uploaded.length;
+      const categoryMsg = selectedCategory ? ` to ${selectedCategory}` : "";
+      toast(
+        `Upload successful — ${n} screenshot${n === 1 ? "" : "s"} added${categoryMsg}`,
+        { success: true, duration: 2800 }
+      );
+    }
+
+    let currentInsightsId = null;
+    const paperSheet = () => document.getElementById("paperSheet");
+    const paperImg = () => document.getElementById("paperImg");
+    const insightsOverlay = () => document.getElementById("insightsOverlay");
+
+    function insightHeadline(cat) {
+      const m = {
+        "To eat": "Recipes & food",
+        "To buy": "Shopping & finds",
+        "To inspire": "Mood & ideas"
+      };
+      return m[cat] || "Summary";
+    }
+
+    function buildInsightsHtml(item) {
+      const headline = insightHeadline(item.category);
+      const blocks = [];
+      const c = item.category;
+      if (c === "To inspire") {
+        const lines = (item.takeaways && item.takeaways.length ? item.takeaways : [item.summary]).map(
+          (t) => `<p>${escapeHtml(t)}</p>`
+        );
+        blocks.push(`<div class="insight-block"><h4>Key takeaways</h4>${lines.join("")}</div>`);
+        if (item.theme) {
+          blocks.push(`<div class="insight-block"><h4>Theme</h4><p>${escapeHtml(item.theme)}</p></div>`);
+        }
+        if (item.tags && item.tags.length) {
+          blocks.push(
+            `<div class="insight-block"><h4>Tags</h4><p>${item.tags.map((t) => escapeHtml(t)).join(" · ")}</p></div>`
+          );
+        }
+      } else if (c === "To buy") {
+        const bits = [item.theme, item.summary].filter(Boolean).map((t) => `<p>${escapeHtml(t)}</p>`);
+        blocks.push(`<div class="insight-block"><h4>${headline}</h4>${bits.join("")}</div>`);
+        if (item.tags && item.tags.length) {
+          blocks.push(
+            `<div class="insight-block"><h4>Tags</h4><p>${item.tags.map((t) => escapeHtml(t)).join(" · ")}</p></div>`
+          );
+        }
+      } else if (c === "To eat") {
+        blocks.push(`<div class="insight-block"><h4>Ingredients & notes</h4><p>${escapeHtml(item.summary)}</p></div>`);
+        if (item.takeaways && item.takeaways.length) {
+          blocks.push(
+            `<div class="insight-block"><h4>Checklist</h4>${item.takeaways.map((t) => `<p>${escapeHtml(t)}</p>`).join("")}</div>`
+          );
+        }
+      } else {
+        blocks.push(`<div class="insight-block"><h4>Notes</h4><p>${escapeHtml(item.summary)}</p></div>`);
+      }
+      return `
+        <div>
+          <h3 class="serif-title" style="font-size:1.35rem;margin:0 0 8px;">${escapeHtml(item.title)}</h3>
+          <p class="muted" style="margin:0 0 12px;font-size:0.875rem;">${escapeHtml(headline)} · AI-generated from screenshot context</p>
+        </div>
+        ${blocks.join("")}
+      `;
+    }
+
+    function applyPaperTransform(dx, dy, crumpleP, planeP) {
+      const el = paperSheet();
+      if (!el) return;
+      const rx = -crumpleP * 28 + planeP * -52;
+      const ry = crumpleP * 20 + planeP * 68;
+      const sc = 1 - crumpleP * 0.58;
+      el.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotateX(${rx}deg) rotateY(${ry}deg) scale(${sc})`;
+    }
+
+    function resetPaperTransform() {
+      applyPaperTransform(0, 0, 0, 0);
+    }
+
+    let dragPaper = { active: false, startX: 0, startY: 0, curX: 0, curY: 0 };
+
+    function onPaperPointerDown(e) {
+      if (!currentInsightsId) return;
+      const el = paperSheet();
+      if (!el || el.classList.contains("is-anim-out")) return;
+      e.preventDefault();
+      dragPaper.active = true;
+      dragPaper.startX = e.clientX;
+      dragPaper.startY = e.clientY;
+      dragPaper.curX = 0;
+      dragPaper.curY = 0;
+      el.classList.add("is-dragging");
+      try {
+        el.setPointerCapture(e.pointerId);
+      } catch (_) {}
+    }
+
+    function onPaperPointerMove(e) {
+      if (!dragPaper.active) return;
+      const dx = e.clientX - dragPaper.startX;
+      const dy = e.clientY - dragPaper.startY;
+      dragPaper.curX = dx;
+      dragPaper.curY = dy;
+      const ax = Math.abs(dx);
+      const ay = Math.abs(dy);
+      let crumpleP = 0;
+      let planeP = 0;
+      if (ay >= ax && dy > 0) crumpleP = Math.min(1, dy / 110);
+      else if (ax > ay && dx > 0) planeP = Math.min(1, dx / 110);
+      applyPaperTransform(dx, dy, crumpleP, planeP);
+    }
+
+    function onPaperPointerUp(e) {
+      const el = paperSheet();
+      if (!dragPaper.active || !el) return;
+      dragPaper.active = false;
+      el.classList.remove("is-dragging");
+      try {
+        if (e.pointerId != null) el.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      const dx = dragPaper.curX;
+      const dy = dragPaper.curY;
+      const ax = Math.abs(dx);
+      const ay = Math.abs(dy);
+      const threshold = 72;
+      if (ax > ay && dx > threshold) {
+        finishPaperPlane();
+      } else if (ay >= ax && dy > threshold) {
+        finishPaperCrumple();
+      } else {
+        el.style.transition = "transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)";
+        resetPaperTransform();
+        setTimeout(() => {
+          el.style.transition = "";
+        }, 480);
+      }
+    }
+
+    function closeInsightsOverlay() {
+      const ov = insightsOverlay();
+      if (!ov) return;
+      ov.classList.add("hidden");
+      ov.setAttribute("aria-hidden", "true");
+      currentInsightsId = null;
+      const el = paperSheet();
+      if (el) {
+        el.classList.remove("is-anim-out", "is-dragging");
+        el.style.opacity = "";
+        resetPaperTransform();
+      }
+    }
+
+    function finishPaperCrumple() {
+      const el = paperSheet();
+      if (!el || currentInsightsId == null) return;
+      const id = currentInsightsId;
+      el.classList.add("is-anim-out");
+      applyPaperTransform(0, 130, 1, 0);
+      el.style.opacity = "0";
+      setTimeout(() => {
+        const item = find(id);
+        if (item) item.state = "dismissed";
+        closeInsightsOverlay();
+        render();
+        toast("Crumpled — done");
+      }, 480);
+    }
+
+    function finishPaperPlane() {
+      const el = paperSheet();
+      if (!el || currentInsightsId == null) return;
+      const id = currentInsightsId;
+      el.classList.add("is-anim-out");
+      applyPaperTransform(220, -40, 0.15, 1);
+      el.style.opacity = "0";
+      setTimeout(() => {
+        const item = find(id);
+        if (item) item.state = "kept";
+        closeInsightsOverlay();
+        render();
+        if (item) {
+          const md = `# ${item.title}\n\n(Shared from SnapMind HTML demo)\n\n${item.summary}\n`;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(md).then(
+              () => toast("Plane — summary copied; paste to share"),
+              () => toast("Plane — kept")
+            );
+          } else {
+            toast("Plane — marked kept");
+          }
+        }
+      }, 420);
+    }
+
+    function keepFromButton() {
+      if (currentInsightsId == null) return;
+      const item = find(currentInsightsId);
+      if (item) item.state = "kept";
+      closeInsightsOverlay();
+      render();
+      toast("Marked as kept");
+    }
+
+    function dismissFromButton() {
+      if (currentInsightsId == null) return;
+      const item = find(currentInsightsId);
+      if (item) item.state = "dismissed";
+      closeInsightsOverlay();
+      render();
+      toast("Dismissed");
+    }
+
+    window.openInsights = (id) => {
+      const item = find(id);
+      if (!item || item.state !== "pending") {
+        toast("Only pending items");
+        return;
+      }
+      currentInsightsId = id;
+      hasOpenedOnce = true;
+      const intro = document.getElementById("insightsOnboarding");
+      if (intro) intro.classList.add("hidden");
+      document.getElementById("insightsScrollContent").innerHTML = buildInsightsHtml(item);
+      paperImg().src = mockupSrcForItem(item);
+      paperImg().alt = item.title;
+      const el = paperSheet();
+      el.classList.remove("is-anim-out");
+      el.style.opacity = "1";
+      el.style.transition = "";
+      resetPaperTransform();
+      const ov = insightsOverlay();
+      ov.classList.remove("hidden");
+      ov.setAttribute("aria-hidden", "false");
+    };
+
+    document.getElementById("insightsClose").addEventListener("click", closeInsightsOverlay);
+    document.getElementById("insightsBackdrop").addEventListener("click", closeInsightsOverlay);
+
+    (function wirePaperGestures() {
+      const sheet = document.getElementById("paperSheet");
+      if (!sheet) return;
+      sheet.addEventListener("pointerdown", onPaperPointerDown);
+      sheet.addEventListener("pointermove", onPaperPointerMove);
+      sheet.addEventListener("pointerup", onPaperPointerUp);
+      sheet.addEventListener("pointercancel", onPaperPointerUp);
+    })();
+
+    document.getElementById("pickBtn").addEventListener("click", () => {
+      runScan();
+    });
+
+    document.getElementById("homeSearchBtn").addEventListener("click", () => {
+      const row = document.getElementById("searchRow");
+      const input = document.getElementById("searchInput");
+      if (!row || !input) return;
+      row.classList.toggle("visible");
+      if (row.classList.contains("visible")) input.focus();
+      else {
+        searchQuery = "";
+        input.value = "";
+        render();
+      }
+    });
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim();
+      render();
+    });
+    document.getElementById("sortSelect").addEventListener("change", (e) => {
+      sortMode = e.target.value;
+      render();
+    });
+    document.getElementById("actionKeep").addEventListener("click", () => {
+      keepFromButton();
+    });
+    document.getElementById("actionDismiss").addEventListener("click", () => {
+      dismissFromButton();
+    });
+    document.getElementById("actionShare").addEventListener("click", () => {
+      if (currentInsightsId != null) {
+        finishPaperPlane();
+      }
+    });
+
+    document.querySelectorAll(".category-chip").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cat = btn.getAttribute("data-category");
+        if (selectedCategory === cat) selectedCategory = null;
+        else selectedCategory = cat;
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

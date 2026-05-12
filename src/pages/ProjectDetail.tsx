@@ -11,6 +11,7 @@ import AudiProject from "./AudiProject";
 import PayPalProject from "./PayPalProject";
 import AdobeSecurityProject from "./AdobeSecurityProject";
 import FulfillmentOperationProject from "./FulfillmentOperationProject";
+import VibeCodingProject from "./VibeCodingProject";
 import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedProjectDetail, getTranslatedProjectSummaries } from "@/utils/projectTranslations";
@@ -314,6 +315,10 @@ const ProjectDetail = () => {
 
   if (id === "fulfillment-operation-tooling") {
     return <FulfillmentOperationProject />;
+  }
+
+  if (id === "vibe-coding") {
+    return <VibeCodingProject />;
   }
 
   const project = id ? getTranslatedProjectDetail(id, language) : null;
