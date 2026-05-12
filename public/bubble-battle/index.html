@@ -1,0 +1,4774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <title>Bubble Battle</title>
+  <style>
+    :root {
+      --panel: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #fafafa;
+      --muted: rgba(250, 250, 250, 0.72);
+      --shadow-read: 0 2px 14px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.85);
+      /* Apple-style HUD tokens (title + instructions only) */
+      --apple-hud-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+        "Helvetica Neue", system-ui, sans-serif;
+      --apple-hud-material: rgba(255, 255, 255, 0.72);
+      --apple-hud-material-solid: rgba(248, 248, 248, 0.94);
+      --apple-hud-border: rgba(0, 0, 0, 0.06);
+      --apple-hud-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+      --apple-label: rgba(0, 0, 0, 0.88);
+      --apple-secondary-label: rgba(60, 60, 67, 0.68);
+      --apple-tertiary-label: rgba(60, 60, 67, 0.48);
+    }
+    * { box-sizing: border-box; }
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      margin: 0;
+      min-height: 100%;
+      height: 100%;
+      background: #0c0f14;
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+    .app {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    #bootErr {
+      flex-shrink: 0;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      z-index: 200;
+    }
+    #stage {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      position: relative;
+      border-radius: 0;
+      border: none;
+      overflow: hidden;
+      background: #87ceeb;
+      display: grid;
+      place-items: stretch;
+    }
+    #stage canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      vertical-align: top;
+      touch-action: none;
+      z-index: 1;
+    }
+    /* Instructions + title: Apple-style vibrancy, SF stack, label hierarchy */
+    .help-anchor {
+      position: absolute;
+      right: max(12px, env(safe-area-inset-right));
+      top: max(12px, env(safe-area-inset-top));
+      z-index: 15;
+      max-width: min(300px, calc(100% - 24px));
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .help-anchor .help,
+    .help-anchor .help-reveal-btn {
+      pointer-events: auto;
+    }
+    .help strong {
+      color: var(--apple-label);
+      font-weight: 600;
+    }
+    .help {
+      position: static;
+      margin: 0;
+      max-width: 100%;
+      overflow: visible;
+      border-radius: 16px;
+      border: 0.5px solid var(--apple-hud-border);
+      background: var(--apple-hud-material-solid);
+      box-shadow: var(--apple-hud-shadow);
+      padding: 14px 16px 16px;
+      font-family: var(--apple-hud-font);
+      color: var(--apple-secondary-label);
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.01em;
+      text-shadow: none;
+      text-align: left;
+      -webkit-font-smoothing: antialiased;
+      transition: box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+        transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    @media (hover: hover) {
+      .help:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.65) inset;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .help {
+        transition: none;
+      }
+    }
+    @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+      .help {
+        background: var(--apple-hud-material);
+        -webkit-backdrop-filter: blur(40px) saturate(180%);
+        backdrop-filter: blur(40px) saturate(180%);
+      }
+    }
+    .help-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 10px;
+      padding-bottom: 10px;
+      border-bottom: 0.5px solid rgba(60, 60, 67, 0.12);
+    }
+    .help-heading {
+      margin: 0;
+      padding: 0;
+      border: none;
+      flex: 1;
+      min-width: 0;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.024em;
+      line-height: 1.24;
+      color: var(--apple-label);
+      text-shadow: none;
+    }
+    .help-hide-btn {
+      flex-shrink: 0;
+      margin: 0;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--apple-hud-font);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--apple-label);
+      background: rgba(120, 120, 128, 0.12);
+      cursor: pointer;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.25s cubic-bezier(0.25, 0.1, 0.25, 1),
+        transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .help-hide-btn:hover {
+      background: rgba(120, 120, 128, 0.18);
+    }
+    .help-hide-btn:active {
+      transform: scale(0.98);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .help-hide-btn {
+        transition: none;
+      }
+    }
+    .help-reveal-btn {
+      margin: 0;
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: 0.5px solid var(--apple-hud-border);
+      background: var(--apple-hud-material-solid);
+      box-shadow: var(--apple-hud-shadow);
+      font-family: var(--apple-hud-font);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+      color: var(--apple-label);
+      cursor: pointer;
+      -webkit-font-smoothing: antialiased;
+      transition: box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+        transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .help-reveal-btn:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.65) inset;
+    }
+    .help-reveal-btn:active {
+      transform: scale(0.98);
+    }
+    @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+      .help-reveal-btn {
+        background: var(--apple-hud-material);
+        -webkit-backdrop-filter: blur(40px) saturate(180%);
+        backdrop-filter: blur(40px) saturate(180%);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .help-reveal-btn {
+        transition: none;
+      }
+    }
+    .help-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--apple-secondary-label);
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.008em;
+    }
+    .help-list li {
+      margin: 0 0 10px;
+      padding-left: 0;
+    }
+    .help-list li:last-child { margin-bottom: 0; }
+    .game-title {
+      position: absolute;
+      left: max(12px, env(safe-area-inset-left));
+      top: max(12px, env(safe-area-inset-top));
+      z-index: 15;
+      margin: 0;
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: 0.5px solid var(--apple-hud-border);
+      background: var(--apple-hud-material-solid);
+      box-shadow: var(--apple-hud-shadow);
+      font-family: var(--apple-hud-font);
+      font-size: clamp(1.125rem, 3.2vw, 1.3125rem);
+      font-weight: 700;
+      letter-spacing: -0.022em;
+      line-height: 1.2;
+      color: var(--apple-label);
+      text-shadow: none;
+      pointer-events: none;
+      text-align: left;
+      -webkit-font-smoothing: antialiased;
+    }
+    @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+      .game-title {
+        background: var(--apple-hud-material);
+        -webkit-backdrop-filter: blur(40px) saturate(180%);
+        backdrop-filter: blur(40px) saturate(180%);
+      }
+    }
+    .hint { margin: 0; font-size: .78rem; color: var(--muted); text-shadow: var(--shadow-read); }
+    .help code {
+      font-family: "SF Mono", ui-monospace, "Menlo", monospace;
+      font-size: 0.76em;
+      padding: 2px 6px;
+      border-radius: 5px;
+      border: none;
+      background: rgba(120, 120, 128, 0.12);
+      color: var(--apple-label);
+      text-shadow: none;
+    }
+    .help kbd {
+      font-family: "SF Mono", ui-monospace, "Menlo", monospace;
+      font-size: 0.76rem;
+      font-weight: 500;
+      padding: 3px 7px;
+      border-radius: 5px;
+      border: 0.5px solid rgba(0, 0, 0, 0.08);
+      background: rgba(120, 120, 128, 0.12);
+      color: var(--apple-label);
+      text-shadow: none;
+      box-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.45) inset;
+    }
+    kbd {
+      font-family: ui-monospace, monospace;
+      font-size: .72rem;
+      padding: 1px 5px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: transparent;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: var(--shadow-read);
+    }
+    /* Round flow: game start / round end (game mechanics feedback) */
+    .game-flow-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.32s ease-in-out;
+      background: transparent;
+    }
+    .game-flow-overlay.game-flow-overlay--on {
+      opacity: 1;
+    }
+    .game-flow-overlay[hidden] {
+      display: none !important;
+    }
+    .game-flow-card {
+      max-width: min(92%, 380px);
+      padding: 22px 26px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: transparent;
+      backdrop-filter: none;
+      box-shadow: none;
+      text-align: center;
+    }
+    .game-flow-card--countdown .game-flow-title {
+      margin-bottom: 10px;
+    }
+    .game-flow-title {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: rgba(255, 255, 255, 0.96);
+      text-shadow: var(--shadow-read);
+      line-height: 1.2;
+    }
+    .game-flow-card.game-flow-card--win .game-flow-title {
+      color: #86efac;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65), 0 0 24px rgba(22, 163, 74, 0.35);
+    }
+    .game-flow-card.game-flow-card--lose .game-flow-title {
+      color: #fca5a5;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65), 0 0 20px rgba(185, 28, 28, 0.35);
+    }
+    .game-flow-count {
+      margin: 8px 0 12px;
+      font-size: clamp(2.75rem, 14vw, 4.25rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: rgba(255, 255, 255, 0.98);
+      text-shadow: var(--shadow-read);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      transition: transform 0.18s ease-out, color 0.2s ease;
+    }
+    .game-flow-card.game-flow-card--countdown .game-flow-count {
+      transform: scale(1.02);
+    }
+    .game-flow-card.game-flow-card--go .game-flow-count {
+      margin: 10px 0 14px;
+      font-size: clamp(2rem, 10vw, 3rem);
+      font-weight: 800;
+      color: #86efac;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7), 0 0 28px rgba(34, 197, 94, 0.35);
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div id="stage">
+      <p class="game-title">Bubble Battle</p>
+      <div class="help-anchor">
+        <div
+          id="help"
+          class="help"
+          role="region"
+          aria-labelledby="helpHeading"
+        >
+          <div class="help-header">
+            <p class="help-heading" id="helpHeading">How to Play</p>
+            <button type="button" class="help-hide-btn" id="helpHideBtn" aria-label="Hide instructions">
+              Hide
+            </button>
+          </div>
+          <ul class="help-list">
+            <li><strong>Goal.</strong> Clear every mushroom. Each bomb blows after a <strong>short fuse</strong> (~0.9s; try <code>?fuse=2</code> for slower rounds); flames go one tile up/down/left/right (plus shape) — avoid them. If a blast hits you, the <strong>round restarts</strong> with a new field.</li>
+            <li><strong>Controls.</strong> <kbd>WASD</kbd> or arrows to move. <kbd>Space</kbd> plants a bomb (up to six; chains allowed).</li>
+            <li><strong>View.</strong> Drag to orbit, scroll to zoom. <kbd>P</kbd> and <kbd>G</kbd> switch views. Use <strong>Hide</strong> or <kbd>H</kbd> to collapse this panel — tap <strong>How to Play</strong> to open it again.</li>
+          </ul>
+        </div>
+        <button
+          type="button"
+          class="help-reveal-btn"
+          id="helpRevealBtn"
+          hidden
+          aria-controls="help"
+          aria-expanded="false"
+          aria-label="Show How to Play instructions"
+        >
+          How to Play
+        </button>
+      </div>
+      <div id="gameFlowOverlay" class="game-flow-overlay" hidden>
+        <div id="gameFlowCard" class="game-flow-card" role="status">
+          <p id="gameFlowTitle" class="game-flow-title"></p>
+          <p id="gameFlowCount" class="game-flow-count" hidden aria-live="assertive"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+    const appRoot = document.querySelector(".app");
+    const bootErr = document.createElement("div");
+    bootErr.id = "bootErr";
+    bootErr.style.cssText =
+      "display:none;margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#fef2f2;color:#991b1b;font-size:13px;line-height:1.45;";
+    (appRoot || document.body).prepend(bootErr);
+    window.addEventListener("error", (ev) => {
+      bootErr.style.display = "block";
+      bootErr.textContent = "Script error: " + (ev.error?.message || ev.message || String(ev));
+    });
+    window.addEventListener("unhandledrejection", (ev) => {
+      bootErr.style.display = "block";
+      bootErr.textContent =
+        "Load failed: " +
+        (ev.reason?.message || String(ev.reason)) +
+        " · Do not open this page as file://. From the project folder run npm run start, then open http://127.0.0.1:3000/ (try another port with npm run start -- 8080).";
+    });
+
+    const CFG = {
+      cols: 13,
+      rows: 11,
+      /** Seconds until bubble detonates (wall-clock). Shorter default = snappier rounds. Override: ?fuse=1.5 */
+      bombFuse: 0.9,
+      /** Placed bubble mesh radius vs hero-scale base (slightly under 1 reads less bulky on the tile). */
+      bombBubbleRadiusMul: 0.88,
+      /** Plus-shape flame length in cells from bomb center (1 = only the four orthogonally adjacent tiles). */
+      blastRange: 1,
+      moveGap: 0.092,
+      maxPlacedBombs: 6,
+      blockHeight: 0.62,
+      explosionShake: 0.078,
+      shakeDecay: 17,
+      exposureBump: 0.11,
+      exposureClamp: 1.38,
+      winPauseMs: 2000,
+      bumpSquashDur: 0.11,
+      bombPlacePunchDur: 0.14,
+      /** Extra Y when walking on game-ground.glb (?feetLift=). Keep 0 so hero/mushrooms sit flush on the mesh; raise only if z-fighting. */
+      backdropFeetLift: 0,
+      /** Micro-offset shared by hero + mushrooms — anti z-fight only (not visible “hover”). */
+      actorGroundClearance: 0.003,
+      /** Included in actorFeetSurfaceY; 0 keeps stems flush with hero feet height. */
+      brickPropGroundClearance: 0,
+      /** Legacy name: only used for mushroom slab filter in seedRoadblockBricks (see mushroomSlabPlaneTolerance). */
+      brickPlaneTolerance: 0.48,
+      /**
+       * Mushroom spawn only: max |deckY − center deck| to still count as same checker slab (meters in world space).
+       * Larger = more interior tiles qualify on uneven game-ground.glb; too large may put props on side ledges.
+       * Override ?mushPlaneTol=1.4
+       */
+      mushroomSlabPlaneTolerance: 1.22,
+      /**
+       * With game-ground.glb: shrink horizontal bbox by this fraction per X/Z edge before mapping
+       * logical cells → world (aligns columns/rows with the checker slab, not distant scenery).
+       * Override with URL ?bgInset=0.06 (0–0.44).
+       */
+      backdropGridInset: 0,
+      /** GLB hero board scale nudge (imported boards); mushrooms reuse the same multiplier in prepareBrickPropTemplate for consistent sizing. */
+      playerGlbBoardScaleMul: 1.55,
+      /** Optional hero-only Y nudge (?playerFeet=). Default 0; use small positive if a specific GLB still clips under tiles. */
+      playerFeetAdjust: 0,
+      /** Mushroom.glb roadblocks only: extra surface offset (?mushroomFeet=). Negative sits slightly into deck if stems float. */
+      mushroomFeetAdjust: -0.01,
+      /**
+       * When true: all eligible core cells compete for fill. When false: half-checker filter on core cells.
+       */
+      mushroomRandomPlacement: true,
+      /**
+       * Inset from inner playfield edge where mushrooms may spawn (0 = whole interior slab for max density).
+       * Larger values keep a no-mushroom ring for wall-adjacent movement (?mushBorder=).
+       */
+      mushroomBorderRings: 0,
+      /**
+       * Target brick count ≈ fraction of interior candidate cells (walkable slab tiles only; excludes spawn reserve).
+       * singlePath: empty cells ≈ ceil((1 - mushFill) * n); higher mushFill = denser. Tune with ?mushFill=
+       * bnbHall: fill anchors ~40%; mushFill only nudges (do not mix with random + very high mushFill).
+       */
+      mushroomBoardFillFraction: 0.99,
+      /**
+       * bnbHall only: aim for this many CELL_BRICK mushrooms (trim/add after pillar/hub/scatter).
+       * Use -1 for ratio-only mode (mushFill). Override ?mushCount=40 | auto
+       */
+      mushroomTargetBrickCount: 58,
+      /** At least this many empty candidate cells stay clear (in addition to spawn reserve). */
+      mushroomMinWalkEmptyCells: 1,
+      /**
+       * Combined with mushroomMinWalkEmptyCells via max → minimum empties; lower = denser (random / arcade). ?mushFill=
+       */
+      mushroomMinWalkEmptyFrac: 0.01,
+      /**
+       * random = uniform shuffle up to mushFill (dense random field).
+       * singlePath ≈ mushFill bricks; remaining candidates form one 4-connected empty corridor from spawn-adjacent cells.
+       * snakePath = boustrophedon Snake sweep; rest bricks; one dominant walk spine.
+       * bnbHall = Crazy Arcade style: side lanes + staggered pillar columns + dense hub + scatter; BFS keeps all cells reachable.
+       * clusterArcade = stump-like runs + scatter; narrowCorridor = spine + bridge.
+       * ?mushLayout=random | path | snake | hall | arcade | corridor
+       */
+      mushroomLayout: "bnbHall",
+      /** Max |XZ| mesh offset from cell center, as fraction of one grid stride (visual only; grid logic unchanged). */
+      mushroomDecorXZHalfCell: 0.2,
+      /** Per-mushroom uniform scale spread ± around 1 from cell hash (visual only). */
+      mushroomDecorScaleSpread: 0.08,
+      /** Only if mushroomRandomPlacement is false: half of core candidates (checker). */
+      mushroomCheckerboardHalf: true,
+      /**
+       * Optional corner bias (same K from mushFill). none = uniform / screenshot-like randomness.
+       * br / tl / tr / bl — ?mushCorner=br & ?mushBias=0.7
+       */
+      mushroomSpatialBiasCorner: "none",
+      /** 0 = uniform shuffle; 1 = strong corner preference. ?mushBias= */
+      mushroomSpatialBiasStrength: 0,
+      /**
+       * Chebyshev radius around spawn with no mushrooms: 0 = foot cell only (unless plus ring); 1 = 3×3. ?spawnClear=
+       */
+      mushroomSpawnReserveChebyshevR: 0,
+      /**
+       * true = foot cell + four orthogonals stay clear (diagonals may brick). ?spawnPlus=0 off ?spawnPlus=1 on
+       */
+      mushroomSpawnReservePlusRing: true,
+      /**
+       * With same mushFill, prefer bricks closer to spawn (0 = uniform). ?nearSpawn=
+       */
+      mushroomSpawnProximityBiasStrength: 0,
+      /**
+       * With game-ground.glb + fallback checker: one shared actorFeetSurfaceY from board center so
+       * primary-character / Mushroom.glb match the same slab height as the visible ground.
+       * Disable with ?flatPlane=0.
+       */
+      backdropUnifiedActorPlane: true,
+      /** Hero uniform scale after normalize.?actorScale= */
+      actorVisualScaleMul: 0.5,
+      /**
+       * Extra scale after grid-aligned normalize for mushrooms; default 1, same chain as hero (playerMul×actorScale). ?brickScale=
+       */
+      mushroomActorVisualScaleMul: 1,
+    };
+    const _qs = new URLSearchParams(location.search);
+    {
+      const raw = (_qs.get("fuse") || "").trim();
+      if (raw) {
+        const n = Number(raw);
+        if (Number.isFinite(n) && n >= 0.15 && n <= 60) CFG.bombFuse = n;
+      }
+    }
+    /** Only if obstacle mushroom GLB exports inverted; use ?brickFlipX=1 to enable flip + foot re-seat. */
+    const BRICK_FLIP_X_180 = _qs.get("brickFlipX") === "1";
+    /** Walk deck raycast: default highest upward-facing hit along ray. ?deckPick=min = lowest upward hit (legacy). */
+    const DECK_PICK_MIN_Y = _qs.get("deckPick") === "min";
+    /** Hide obvious floating mushrooms in game-ground.glb (name heuristic + clears playfield). ?backdropCull=0 keeps all. */
+    const BACKDROP_CULL_FLOATERS = _qs.get("backdropCull") !== "0";
+    /** Treat faces as “floor” if world up · normal exceeds this (slopes still count). */
+    const DECK_UPWARD_DOT = 0.12;
+    const COLS = CFG.cols, ROWS = CFG.rows;
+    /** Actor sizes as a fraction of average world stride per cell (see refreshGroundDerivedScale). */
+    const ACTOR_SCALE_TO_GROUND_GRID = {
+      /** Normalize hero/mushroom bbox to similar cell footprint; then × board/actor muls (see makePlayerChar / prepareBrickPropTemplate). */
+      playerXZ: 0.98,
+      playerY: 1.06,
+      mushroomXZ: 0.98,
+      mushroomY: 1.06,
+      fallbackPlayer: 1.12,
+      fallbackMushroom: 1.12,
+    };
+    const CELL_EMPTY = 0, CELL_SOLID = 1, CELL_BRICK = 2;
+
+    const LIGHT_PRESETS = {
+      gameplay: { ambient: 0.92, hemi: 0.48, sun: 1.35, faceFill: 0.82, rim: 0.38, exposure: 1.05 },
+      portrait: { ambient: 1.02, hemi: 0.42, sun: 1.05, faceFill: 1.28, rim: 0.32, exposure: 1.08 }
+    };
+
+    const stage = document.getElementById("stage");
+    if (!stage) {
+      bootErr.style.display = "block";
+      bootErr.textContent = "Missing #stage — cannot mount the canvas.";
+      throw new Error("missing #stage");
+    }
+    const helpPanel = document.getElementById("help");
+    const helpRevealBtn = document.getElementById("helpRevealBtn");
+    const helpHideBtn = document.getElementById("helpHideBtn");
+
+    function setInstructionsVisible(visible) {
+      if (!helpPanel) return;
+      helpPanel.hidden = !visible;
+      if (helpRevealBtn) {
+        helpRevealBtn.hidden = visible;
+        helpRevealBtn.setAttribute("aria-expanded", visible ? "true" : "false");
+      }
+    }
+
+    if (helpHideBtn && helpPanel) {
+      helpHideBtn.addEventListener("click", () => {
+        setInstructionsVisible(false);
+        helpRevealBtn?.focus();
+      });
+    }
+    if (helpRevealBtn && helpPanel) {
+      helpRevealBtn.addEventListener("click", () => {
+        setInstructionsVisible(true);
+        helpHideBtn?.focus();
+      });
+    }
+
+    const setStatus = () => {};
+
+    if (location.protocol === "file:") {
+      bootErr.style.display = "block";
+      bootErr.style.background = "#fff7ed";
+      bootErr.style.color = "#9a3412";
+      bootErr.textContent =
+        "This page was opened as file://. Run npm run start in the project folder and open http://127.0.0.1:3000/ instead.";
+    }
+
+    let playerMesh, island;
+    /** Visual-only terrain below the playable island; never used for sampleGroundY raycasts. */
+    let groundBackdropRoot = null;
+    /** When set, hero + roadblock mushrooms use this world Y for feet (game-ground + fallback board). */
+    let backdropUnifiedPlaneY = null;
+    const modelState = {
+      board: null,
+      player: null,
+      brickPropTemplate: null,
+      brickPropSource: null,
+      groundBackdropTemplate: null,
+      /** Average world-units per grid step (1 for procedural island, bbox-derived for GLB board). */
+      groundWorldUnitsPerGrid: null,
+      playerSourceUrl: null,
+    };
+    const boardBounds = { minX: 0, maxX: COLS - 1, minY: 0, maxY: ROWS - 1 };
+    let grid = [];
+    let bombs = [];
+    let explosionsFx = [];
+    let blocksRoot;
+    let fxRoot;
+    let moveCooldown = 0;
+    let gameOver = false;
+    let cameraMode = "gameplay";
+    let hitPending = false;
+    const keysDown = new Set();
+
+    /** Arrow keys: some browsers leave `code` empty / Unidentified — always mirror `key`. */
+    function syncKeysDownFromKeyboardEvent(e, down) {
+      const op = down ? "add" : "delete";
+      /* Space is game-only; never track it — avoids sync glitches and Space-as-“click” defaults. */
+      if (e.code && e.code !== "Unidentified" && e.code !== "Space") keysDown[op](e.code);
+      const key = e.key;
+      if (
+        key === "ArrowUp" ||
+        key === "ArrowDown" ||
+        key === "ArrowLeft" ||
+        key === "ArrowRight"
+      ) {
+        keysDown[op](key);
+      }
+      /* WASD: mirror by character so alternate layouts / IME quirks still match movement checks. */
+      const lk = typeof key === "string" ? key.toLowerCase() : "";
+      if (lk === "w") keysDown[op]("KeyW");
+      else if (lk === "a") keysDown[op]("KeyA");
+      else if (lk === "s") keysDown[op]("KeyS");
+      else if (lk === "d") keysDown[op]("KeyD");
+    }
+    let lastTick = performance.now();
+    /** All gameplay GLBs below live under this folder in the repo (served by npm run start). */
+    const ASSETS_3D_DIR = "Assets/3D Model/";
+    /** Destructible mushroom — prefer props/, fallback root Assets (older layouts). */
+    /** Large scenery mesh under the board (sky / terrain); optional. */
+    const GAME_GROUND_GLB = ASSETS_3D_DIR + "game-ground.glb";
+    const OBSTACLE_MUSHROOM_GLB = ASSETS_3D_DIR + "props/Mushroom.glb";
+    const OBSTACLE_MUSHROOM_LEGACY_GLB = ASSETS_3D_DIR + "Mushroom.glb";
+    /** Playable hero — prefer characters/, fallback root Assets. */
+    const PLAYER_PRIMARY_GLB = ASSETS_3D_DIR + "characters/primary-character.glb";
+    const PLAYER_PRIMARY_LEGACY_GLB = ASSETS_3D_DIR + "primary-character.glb";
+    /** Bump this when replacing primary-character.glb, or add ?playerRev=anything to bust cache. */
+    const PLAYER_PRIMARY_REV = _qs.get("playerRev") || "20260502c";
+    const BRICK_REL_TRY = [OBSTACLE_MUSHROOM_GLB, OBSTACLE_MUSHROOM_LEGACY_GLB];
+    /** Legacy hero only when explicitly requested — avoids silently masking a broken primary GLB path. */
+    const PLAYER_LEGACY_REL = ASSETS_3D_DIR + "mushroom+character+3d+model.glb";
+
+    /** Resolve against the page URL so paths work under non-root hosts and odd preview bases. */
+    function glbUrlCandidates(relPath) {
+      const list = [];
+      const add = (u) => {
+        if (u && !list.includes(u)) list.push(u);
+      };
+      try {
+        add(new URL(encodeURI(relPath), window.location.href).href);
+      } catch (_) {}
+      try {
+        add(new URL(relPath, window.location.href).href);
+      } catch (_) {}
+      add(encodeURI(relPath));
+      add(relPath);
+      return list;
+    }
+
+    function flattenGlbCandidates(relPaths) {
+      const urls = [];
+      for (let i = 0; i < relPaths.length; i++) {
+        const c = glbUrlCandidates(relPaths[i]);
+        for (let j = 0; j < c.length; j++) {
+          if (!urls.includes(c[j])) urls.push(c[j]);
+        }
+      }
+      return urls;
+    }
+
+    function bustPrimaryCharacterUrl(url) {
+      if (
+        !PLAYER_PRIMARY_REV ||
+        url.indexOf("primary-character") === -1
+      ) {
+        return url;
+      }
+      const sep = url.includes("?") ? "&" : "?";
+      return url + sep + "pb=" + encodeURIComponent(PLAYER_PRIMARY_REV);
+    }
+
+    const PLAYER_GL_TRY_URLS = flattenGlbCandidates([
+      PLAYER_PRIMARY_GLB,
+      PLAYER_PRIMARY_LEGACY_GLB,
+      ...(_qs.get("playerFallback") === "mushroom" ? [PLAYER_LEGACY_REL] : []),
+    ]).map(bustPrimaryCharacterUrl);
+    const BRICK_GL_TRY_URLS = flattenGlbCandidates(BRICK_REL_TRY);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#87CEEB");
+    const camera = new THREE.PerspectiveCamera(52, 1.6, 0.1, 120);
+    const centerX = (COLS - 1) / 2, centerY = (ROWS - 1) / 2;
+    const playerGrid = { x: 1, z: 1 };
+    const playerVis = { x: 1, z: 1 };
+    /** Fixed yaw between GLB forward and board axes; movement adds atan2(dx, dz) on top. */
+    const PLAYER_MODEL_YAW_OFFSET = -Math.PI / 4;
+    let playerFaceYaw = PLAYER_MODEL_YAW_OFFSET;
+    let playerTargetYaw = PLAYER_MODEL_YAW_OFFSET;
+    const PLAYER_TURN_SPEED = 12;
+
+    function resetPlayerFacing() {
+      playerFaceYaw = PLAYER_MODEL_YAW_OFFSET;
+      playerTargetYaw = PLAYER_MODEL_YAW_OFFSET;
+    }
+
+    function shortestAngleDelta(from, to) {
+      let d = to - from;
+      while (d > Math.PI) d -= Math.PI * 2;
+      while (d < -Math.PI) d += Math.PI * 2;
+      return d;
+    }
+    const radius = 13.2, yaw = Math.PI / 4, tilt = THREE.MathUtils.degToRad(36);
+
+    const raycaster = new THREE.Raycaster();
+    const _rayDown = new THREE.Vector3(0, -1, 0);
+    const _rayOrigin = new THREE.Vector3();
+    const _worldNormal = new THREE.Vector3();
+    const _tmpVec = new THREE.Vector3();
+    /** Mutable { x, z } return for gridCellCenterWorld — copy values before a second call. */
+    const _gridCellOut = { x: 0, z: 0 };
+    const _strideOut = { x: 1, z: 1 };
+    /** Horizontal bbox used to map board indices → world XZ (backdrop mesh when active, else island). */
+    const _playfieldGridBox = new THREE.Box3();
+    const _dollyVec = new THREE.Vector3();
+    const BLOCK_H = CFG.blockHeight;
+    const BLOCK_HALF = BLOCK_H / 2;
+    const _shakeOff = new THREE.Vector3();
+    let shakeAmp = 0;
+    let debugGridRoot;
+    let bumpSquashT = 0;
+    let roundWinPending = false;
+    let hasAnnouncedGameStart = false;
+    let flowBannerHideTimer = null;
+    let flowBannerFadeTimer = null;
+    let roundInputLockUntil = 0;
+    const roundStartCountdownTimers = [];
+    const FLOW_UI = {
+      winTitle: "Round complete",
+      loseTitle: "Round over",
+      roundBannerMs: 2600,
+      /** Short locks so round start / win / lose never block movement & bombs for many seconds. */
+      roundInputLockMs: 120,
+      countdownTickMs: 260,
+      countdownGoMs: 280,
+      postGoBannerMs: 380,
+    };
+
+    function clearRoundStartCountdown() {
+      while (roundStartCountdownTimers.length) {
+        clearTimeout(roundStartCountdownTimers.pop());
+      }
+    }
+
+    /** Tear down win/lose/countdown overlay so a fresh bootstrap never leaves a stuck banner. */
+    function dismissFlowBannerImmediately() {
+      clearRoundStartCountdown();
+      clearTimeout(flowBannerHideTimer);
+      clearTimeout(flowBannerFadeTimer);
+      flowBannerHideTimer = null;
+      flowBannerFadeTimer = null;
+      const overlay = document.getElementById("gameFlowOverlay");
+      if (overlay) {
+        overlay.classList.remove("game-flow-overlay--on");
+        overlay.setAttribute("hidden", "");
+      }
+    }
+
+    function showFlowBanner(title, variant, opts = {}) {
+      clearRoundStartCountdown();
+      const overlay = document.getElementById("gameFlowOverlay");
+      const card = document.getElementById("gameFlowCard");
+      const tEl = document.getElementById("gameFlowTitle");
+      const cEl = document.getElementById("gameFlowCount");
+      if (!overlay || !card || !tEl) return;
+      if (cEl) {
+        cEl.setAttribute("hidden", "");
+        cEl.textContent = "";
+      }
+      card.classList.remove(
+        "game-flow-card--win",
+        "game-flow-card--lose",
+        "game-flow-card--countdown",
+        "game-flow-card--go"
+      );
+      const durationMs = opts.durationMs ?? FLOW_UI.roundBannerMs;
+      const inputLockMs = opts.inputLockMs ?? FLOW_UI.roundInputLockMs;
+      clearTimeout(flowBannerHideTimer);
+      clearTimeout(flowBannerFadeTimer);
+      if (variant === "win") card.classList.add("game-flow-card--win");
+      else if (variant === "lose") card.classList.add("game-flow-card--lose");
+      tEl.textContent = title;
+      overlay.removeAttribute("hidden");
+      overlay.classList.remove("game-flow-overlay--on");
+      requestAnimationFrame(() => overlay.classList.add("game-flow-overlay--on"));
+      if (inputLockMs > 0) {
+        roundInputLockUntil = Math.max(
+          roundInputLockUntil,
+          performance.now() + inputLockMs
+        );
+      }
+      flowBannerHideTimer = setTimeout(() => {
+        overlay.classList.remove("game-flow-overlay--on");
+        flowBannerFadeTimer = setTimeout(() => overlay.setAttribute("hidden", ""), 340);
+      }, durationMs);
+    }
+
+    function runRoundStartCountdown(phaseTitle) {
+      clearRoundStartCountdown();
+      clearTimeout(flowBannerHideTimer);
+      clearTimeout(flowBannerFadeTimer);
+
+      const overlay = document.getElementById("gameFlowOverlay");
+      const card = document.getElementById("gameFlowCard");
+      const tEl = document.getElementById("gameFlowTitle");
+      const cEl = document.getElementById("gameFlowCount");
+      if (!overlay || !card || !tEl || !cEl) return;
+
+      const tick = FLOW_UI.countdownTickMs;
+      const goHold = FLOW_UI.countdownGoMs;
+      const postGo = FLOW_UI.postGoBannerMs;
+
+      card.classList.remove("game-flow-card--win", "game-flow-card--lose", "game-flow-card--go");
+      card.classList.add("game-flow-card--countdown");
+
+      const lockMs =
+        3 * tick + goHold + FLOW_UI.roundInputLockMs;
+      roundInputLockUntil = Math.max(
+        roundInputLockUntil,
+        performance.now() + lockMs
+      );
+
+      tEl.textContent = phaseTitle;
+      cEl.textContent = "3";
+      cEl.removeAttribute("hidden");
+
+      overlay.removeAttribute("hidden");
+      overlay.classList.remove("game-flow-overlay--on");
+      requestAnimationFrame(() => overlay.classList.add("game-flow-overlay--on"));
+
+      const schedule = (fn, delay) => {
+        roundStartCountdownTimers.push(setTimeout(fn, delay));
+      };
+
+      schedule(() => {
+        cEl.textContent = "2";
+      }, tick);
+      schedule(() => {
+        cEl.textContent = "1";
+      }, tick * 2);
+      schedule(() => {
+        card.classList.remove("game-flow-card--countdown");
+        card.classList.add("game-flow-card--go");
+        cEl.textContent = "Go!";
+        focusGameCanvas();
+      }, tick * 3);
+      schedule(() => {
+        card.classList.remove("game-flow-card--go");
+        cEl.setAttribute("hidden", "");
+        cEl.textContent = "";
+        tEl.textContent = phaseTitle;
+        flowBannerHideTimer = setTimeout(() => {
+          overlay.classList.remove("game-flow-overlay--on");
+          flowBannerFadeTimer = setTimeout(() => {
+            overlay.setAttribute("hidden", "");
+          }, 340);
+        }, postGo);
+      }, tick * 3 + goHold);
+    }
+
+    function announceRoundStartIfEnabled(enabled) {
+      if (!enabled) return;
+      const title = hasAnnouncedGameStart ? "Round start" : "Game start";
+      hasAnnouncedGameStart = true;
+      runRoundStartCountdown(title);
+    }
+
+    function groundBackdropActive() {
+      return !!(groundBackdropRoot && groundBackdropRoot.parent);
+    }
+
+    /** Fallback procedural board + game-ground.glb: logical grid maps via backdrop bbox (indices are not world XZ). */
+    function useBackdropPlayfieldMapping() {
+      return (
+        groundBackdropActive() &&
+        island &&
+        island.userData &&
+        island.userData.isFallbackBoard
+      );
+    }
+
+    function refreshBackdropUnifiedPlaneY() {
+      backdropUnifiedPlaneY = null;
+      if (_qs.get("flatPlane") === "0") return;
+      if (!CFG.backdropUnifiedActorPlane) return;
+      if (!groundBackdropActive() || !island || !useBackdropPlayfieldMapping()) return;
+      const cref = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
+      const y =
+        feetSurfaceSamplesMinY(island, cref.x, cref.z) +
+        CFG.brickPropGroundClearance +
+        CFG.actorGroundClearance;
+      if (Number.isFinite(y)) backdropUnifiedPlaneY = y;
+    }
+
+    /**
+     * Downward-ray hits are nearest-first. Default: **maximum Y** among upward-facing hits = top walk slab (visible floor).
+     * Skipping steep side faces avoids choosing a deeper hit when the closest intersection isn’t “floor”.
+     * DECK_PICK_MIN_Y: lowest upward-facing hit (legacy — under layered scenery).
+     */
+    function deckYFromRayHits(hits) {
+      if (DECK_PICK_MIN_Y) {
+        let best = null;
+        for (let i = 0; i < hits.length; i++) {
+          const h = hits[i];
+          _worldNormal.copy(h.face.normal).transformDirection(h.object.matrixWorld);
+          if (_worldNormal.y > DECK_UPWARD_DOT) {
+            const y = h.point.y;
+            if (best === null || y < best) best = y;
+          }
+        }
+        return best;
+      }
+      let best = null;
+      for (let i = 0; i < hits.length; i++) {
+        const h = hits[i];
+        _worldNormal.copy(h.face.normal).transformDirection(h.object.matrixWorld);
+        if (_worldNormal.y > DECK_UPWARD_DOT) {
+          const y = h.point.y;
+          if (best === null || y > best) best = y;
+        }
+      }
+      return best;
+    }
+
+    /** Hide floating checker tiles when game-ground.glb provides the visible terrain. */
+    function updatePlayfieldTileVisibility() {
+      if (!island) return;
+      const hideTiles = groundBackdropActive();
+      island.traverse((n) => {
+        if (n.isMesh && n.userData.isPlayfieldTile) n.visible = !hideTiles;
+      });
+    }
+
+    function backdropFootLiftAmount() {
+      const raw = _qs.get("feetLift");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v)) return v;
+      }
+      return CFG.backdropFeetLift;
+    }
+
+    /** Extra world Y for player root only (?playerFeet=-0.08 if GLB pivot sits high). */
+    function playerFeetLiftExtra() {
+      const raw = _qs.get("playerFeet");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v)) return v;
+      }
+      return CFG.playerFeetAdjust;
+    }
+
+    function actorVisualScaleMultiplier() {
+      const raw = _qs.get("actorScale");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v > 0.05 && v < 8) return v;
+      }
+      return CFG.actorVisualScaleMul;
+    }
+
+    /** Same board nudge as hero GLB (`playerGlbBoardScaleMul` × optional ?playerMul=). */
+    function playerBoardScaleMultiplier() {
+      let mul = CFG.playerGlbBoardScaleMul;
+      const rawMul = _qs.get("playerMul");
+      if (rawMul !== null && rawMul !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v > 0.35 && v < 4) mul *= v;
+      }
+      return mul;
+    }
+
+    /** Mushroom scale after normalize; with hero-sized props, ties into prepareBrickPropTemplate board/actor chain. ?brickScale= */
+    function mushroomActorVisualScaleMultiplier() {
+      const raw = _qs.get("brickScale");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v > 0.05 && v < 8) return v;
+      }
+      const m = CFG.mushroomActorVisualScaleMul;
+      if (Number.isFinite(m) && m > 0) return m;
+      return 1;
+    }
+
+    function mushroomBorderRingsValue() {
+      const raw = _qs.get("mushBorder");
+      if (raw !== null && raw !== "") {
+        const v = Number.parseInt(raw, 10);
+        if (Number.isFinite(v) && v >= 0 && v <= 6) return v;
+      }
+      return CFG.mushroomBorderRings;
+    }
+
+    /** Board-level fill 0–1 (?mushFill=); else mushroomBoardFillFraction. */
+    function mushroomBoardFillFractionValue() {
+      const raw = _qs.get("mushFill");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v >= 0 && v <= 1) return v;
+      }
+      return CFG.mushroomBoardFillFraction;
+    }
+
+    /**
+     * bnbHall mushroom cap/floor: fixed count when >= 0 (?mushCount=38), else mushFill ratio only (?mushCount=auto).
+     */
+    function mushroomTargetBrickCountValue() {
+      const raw = (_qs.get("mushCount") || "").trim();
+      if (raw !== "") {
+        const low = raw.toLowerCase();
+        if (low === "auto" || low === "ratio") return null;
+        const v = Number.parseInt(raw, 10);
+        if (Number.isFinite(v) && v >= 0 && v <= 500) return v;
+      }
+      const t = CFG.mushroomTargetBrickCount;
+      if (Number.isFinite(t) && t >= 0) return Math.floor(t);
+      return null;
+    }
+
+    /** World-space deck height spread vs board center for mushroom slab cells (?mushPlaneTol=). */
+    function mushroomSlabPlaneToleranceValue() {
+      const raw = _qs.get("mushPlaneTol");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v >= 0.05 && v <= 4) return v;
+      }
+      const t = CFG.mushroomSlabPlaneTolerance;
+      if (Number.isFinite(t) && t > 0) return t;
+      return CFG.brickPlaneTolerance;
+    }
+
+    /**
+     * True when cell center lies on the backdrop checker slab and deck height matches the main play plane
+     * (same rules as mushroom seed candidates). Used to avoid props / stray bricks on side ledges or off-slab.
+     */
+    function mushroomDeckCellMatchesPlayPlane(x, z) {
+      if (!island || !inPlayBounds(x, z)) return false;
+      const cw = gridCellCenterWorld(x, z);
+      if (!cellXZOverGroundBackdropSlab(cw.x, cw.z)) return false;
+      const cref = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
+      const planeRef = feetAdjustedGroundY(island, cref.x, cref.z);
+      const deck = feetAdjustedGroundY(island, cw.x, cw.z);
+      const tol = mushroomSlabPlaneToleranceValue();
+      return Math.abs(deck - planeRef) <= tol;
+    }
+
+    function mushroomSpatialBiasCornerValue() {
+      const raw = (_qs.get("mushCorner") || "").toLowerCase().trim();
+      if (raw === "none" || raw === "off" || raw === "0") return "none";
+      if (raw === "br" || raw === "rb" || raw === "se") return "br";
+      if (raw === "tl" || raw === "nw") return "tl";
+      if (raw === "tr" || raw === "ne") return "tr";
+      if (raw === "bl" || raw === "sw") return "bl";
+      const L = String(CFG.mushroomSpatialBiasCorner || "none").toLowerCase();
+      if (L === "br" || L === "tl" || L === "tr" || L === "bl") return L;
+      return "none";
+    }
+
+    function mushroomSpatialBiasStrengthValue() {
+      const raw = _qs.get("mushBias");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v >= 0 && v <= 1) return v;
+      }
+      const s = CFG.mushroomSpatialBiasStrength;
+      if (Number.isFinite(s) && s >= 0 && s <= 1) return s;
+      return 0;
+    }
+
+    /** Integer 0–2: no mushrooms in square (2r+1)² centered on spawn. ?spawnClear= */
+    function mushroomSpawnReserveChebyshevRValue() {
+      const raw = _qs.get("spawnClear");
+      if (raw !== null && raw !== "") {
+        const v = Number.parseInt(raw, 10);
+        if (Number.isFinite(v) && v >= 0 && v <= 2) return v;
+      }
+      const r = CFG.mushroomSpawnReserveChebyshevR;
+      if (Number.isFinite(r) && r >= 0 && r <= 2) return Math.floor(r);
+      return 0;
+    }
+
+    /** Plus ring: spawn cell + 4 cardinal neighbors (no diagonals). ?spawnPlus=0 | 1 */
+    function mushroomSpawnReservePlusRingValue() {
+      const raw = (_qs.get("spawnPlus") || "").trim().toLowerCase();
+      if (raw === "0" || raw === "false" || raw === "off") return false;
+      if (raw === "1" || raw === "true" || raw === "on") return true;
+      return !!CFG.mushroomSpawnReservePlusRing;
+    }
+
+    /** 0–1: stronger = prefer bricks closer to spawn when sorting candidates. ?nearSpawn= */
+    function mushroomSpawnProximityBiasStrengthValue() {
+      const raw = _qs.get("nearSpawn");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v) && v >= 0 && v <= 1) return v;
+      }
+      const s = CFG.mushroomSpawnProximityBiasStrength;
+      if (Number.isFinite(s) && s >= 0 && s <= 1) return s;
+      return 0;
+    }
+
+    /** 1 = on spawn, falls off with Manhattan distance (for placement sort only). */
+    function mushroomNearSpawnScore01(x, z, spawn) {
+      const d = Math.abs(x - spawn.x) + Math.abs(z - spawn.z);
+      const span =
+        boardBounds.maxX -
+        boardBounds.minX +
+        (boardBounds.maxY - boardBounds.minY);
+      const maxD = Math.max(2, span * 0.5);
+      return THREE.MathUtils.clamp(1 - d / maxD, 0, 1);
+    }
+
+    /** 0 = far from corner, 1 = at corner (interior grid only). */
+    function mushroomCornerScore01(x, z, corner) {
+      const ix0 = boardBounds.minX + 1;
+      const ix1 = boardBounds.maxX - 1;
+      const iz0 = boardBounds.minY + 1;
+      const iz1 = boardBounds.maxY - 1;
+      const rx = (x - ix0) / Math.max(1e-6, ix1 - ix0);
+      const rz = (z - iz0) / Math.max(1e-6, iz1 - iz0);
+      const clamp01 = (t) => THREE.MathUtils.clamp(t, 0, 1);
+      switch (corner) {
+        case "br":
+          return clamp01((rx + rz) * 0.5);
+        case "tl":
+          return clamp01(((1 - rx) + (1 - rz)) * 0.5);
+        case "tr":
+          return clamp01((rx + (1 - rz)) * 0.5);
+        case "bl":
+          return clamp01(((1 - rx) + rz) * 0.5);
+        default:
+          return 0.5;
+      }
+    }
+
+    /**
+     * In-place: shuffle, or sort so bricks prefer near-spawn and/or corner (same K from mushFill).
+     * Near-spawn takes precedence when both are active.
+     */
+    function orderCandidatesForPlacementBias(arr, spawn) {
+      const nearStr = mushroomSpawnProximityBiasStrengthValue();
+      const corner = mushroomSpatialBiasCornerValue();
+      const str = mushroomSpatialBiasStrengthValue();
+      if (nearStr < 1e-6 && (str < 1e-6 || corner === "none")) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+        return;
+      }
+      for (let i = 0; i < arr.length; i++) {
+        const c = arr[i];
+        if (nearStr > 1e-6 && spawn) {
+          const ns = mushroomNearSpawnScore01(c.x, c.z, spawn);
+          c._biasSort = ns * nearStr + Math.random() * (1 - nearStr);
+        } else {
+          const base = mushroomCornerScore01(c.x, c.z, corner);
+          c._biasSort = base * str + Math.random() * (1 - str);
+        }
+      }
+      arr.sort((a, b) => b._biasSort - a._biasSort);
+      for (let i = 0; i < arr.length; i++) delete arr[i]._biasSort;
+    }
+
+    /** random | singlePath | snakePath | bnbHall | narrowCorridor | clusterArcade (?mushLayout=…). ?preferCfg=1 = ignore URL, use CFG only. */
+    function mushroomLayoutValue() {
+      if (_qs.get("preferCfg") === "1") {
+        const L = CFG.mushroomLayout;
+        if (L === "random") return "random";
+        if (L === "singlePath") return "singlePath";
+        if (L === "snakePath") return "snakePath";
+        if (L === "bnbHall") return "bnbHall";
+        if (L === "narrowCorridor") return "narrowCorridor";
+        if (L === "clusterArcade") return "clusterArcade";
+        return "bnbHall";
+      }
+      const raw = (_qs.get("mushLayout") || "").toLowerCase().trim();
+      if (raw === "random") return "random";
+      if (
+        raw === "singlepath" ||
+        raw === "path" ||
+        raw === "oneway" ||
+        raw === "single"
+      )
+        return "singlePath";
+      if (
+        raw === "snake" ||
+        raw === "snakepath" ||
+        raw === "serpentine" ||
+        raw === "zigzag"
+      )
+        return "snakePath";
+      if (
+        raw === "bnbhall" ||
+        raw === "hall" ||
+        raw === "classic" ||
+        raw === "pillars" ||
+        raw === "poptag"
+      )
+        return "bnbHall";
+      if (
+        raw === "corridor" ||
+        raw === "narrow" ||
+        raw === "narrowcorridor"
+      )
+        return "narrowCorridor";
+      if (raw === "arcade" || raw === "cluster" || raw === "bnb")
+        return "clusterArcade";
+      const L = CFG.mushroomLayout;
+      if (L === "random") return "random";
+      if (L === "singlePath") return "singlePath";
+      if (L === "snakePath") return "snakePath";
+      if (L === "bnbHall") return "bnbHall";
+      if (L === "narrowCorridor") return "narrowCorridor";
+      if (L === "clusterArcade") return "clusterArcade";
+      return "bnbHall";
+    }
+
+    const _MUSHROOM_CORRIDOR_DIRS = [
+      [0, 1],
+      [0, -1],
+      [1, 0],
+      [-1, 0],
+    ];
+
+    function _mushroomColumnCoverage(x, candSet) {
+      let n = 0;
+      for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+        if (candSet.has(`${x},${z}`)) n++;
+      }
+      return n;
+    }
+
+    /** Vertical strip with most slab candidates; tie-break closest to spawn X. */
+    function pickMushroomCorridorStripX(spawn, candSet) {
+      let bestX = boardBounds.minX + 1;
+      let bestN = -1;
+      let bestDist = 1e9;
+      for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+        const n = _mushroomColumnCoverage(x, candSet);
+        const d = Math.abs(x - spawn.x);
+        if (n > bestN || (n === bestN && d < bestDist)) {
+          bestN = n;
+          bestX = x;
+          bestDist = d;
+        }
+      }
+      return bestX;
+    }
+
+    /** Strip cells + shortest path in candSet from spawn-adjacent cells to the strip (width-1 spine). */
+    function buildMushroomNarrowCorridorSet(candSet, reserve, stripX) {
+      const stripKeys = new Set();
+      for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+        const k = `${stripX},${z}`;
+        if (candSet.has(k)) stripKeys.add(k);
+      }
+      const corridor = new Set(stripKeys);
+      const startSet = new Set();
+      for (const key of candSet) {
+        const [xs, zs] = key.split(",").map(Number);
+        for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+          const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+          if (reserve.has(`${xs + dx},${zs + dz}`)) {
+            startSet.add(key);
+            break;
+          }
+        }
+      }
+      const starts = [...startSet];
+      if (!starts.length) return corridor;
+      for (let si = 0; si < starts.length; si++) {
+        if (stripKeys.has(starts[si])) return corridor;
+      }
+      const q = [...starts];
+      const prev = new Map();
+      const seen = new Set(starts);
+      let hit = null;
+      while (q.length) {
+        const cur = q.shift();
+        if (stripKeys.has(cur)) {
+          hit = cur;
+          break;
+        }
+        const [x, z] = cur.split(",").map(Number);
+        for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+          const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+          const nk = `${x + dx},${z + dz}`;
+          if (!candSet.has(nk) || seen.has(nk)) continue;
+          seen.add(nk);
+          prev.set(nk, cur);
+          q.push(nk);
+        }
+      }
+      if (hit) {
+        let k = hit;
+        while (k) {
+          corridor.add(k);
+          k = prev.get(k);
+        }
+      }
+      return corridor;
+    }
+
+    /**
+     * One self-avoiding 4-neighbor polyline inside candSet, preferring a start adjacent to spawn.
+     * Used for singlePath: all other candidates become bricks.
+     */
+    function carveSinglePathSnake(candSet, spawn, targetLen) {
+      if (!candSet.size) return new Set();
+      let nNeed = Math.min(
+        Math.max(1, Math.floor(Number(targetLen)) || 0),
+        candSet.size
+      );
+
+      const neighKeys = [];
+      for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+        const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+        const k = `${spawn.x + dx},${spawn.z + dz}`;
+        if (candSet.has(k)) neighKeys.push(k);
+      }
+      let starts = neighKeys.slice();
+      if (!starts.length) {
+        let bestK = null;
+        let bestD = 1e9;
+        for (const k of candSet) {
+          const [x, z] = k.split(",").map(Number);
+          const d = Math.abs(x - spawn.x) + Math.abs(z - spawn.z);
+          if (d < bestD) {
+            bestD = d;
+            bestK = k;
+          }
+        }
+        starts = bestK ? [bestK] : [...candSet].slice(0, 1);
+      }
+
+      const shuffleInPlace = (arr) => {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+      };
+
+      const curPath = new Set();
+
+      function dfs(k) {
+        curPath.add(k);
+        if (curPath.size >= nNeed) return true;
+        const [x, z] = k.split(",").map(Number);
+        const opts = [];
+        for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+          const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+          const nk = `${x + dx},${z + dz}`;
+          if (candSet.has(nk) && !curPath.has(nk)) opts.push(nk);
+        }
+        shuffleInPlace(opts);
+        for (let oi = 0; oi < opts.length; oi++) {
+          if (dfs(opts[oi])) return true;
+        }
+        curPath.delete(k);
+        return false;
+      }
+
+      while (nNeed >= 1) {
+        for (let att = 0; att < 320; att++) {
+          shuffleInPlace(starts);
+          for (let si = 0; si < starts.length; si++) {
+            curPath.clear();
+            if (dfs(starts[si]) && curPath.size >= nNeed)
+              return new Set(curPath);
+          }
+        }
+        nNeed--;
+      }
+      return new Set(starts.length ? [starts[0]] : [...candSet].slice(0, 1));
+    }
+
+    /** Crazy Arcade–style walkability for temp brick set (grid SOLID unchanged). */
+    function bnbHallCellWalkable(x, z, bricks, candSet) {
+      if (!inPlayBounds(x, z)) return false;
+      if (grid[x][z] === CELL_SOLID) return false;
+      const k = `${x},${z}`;
+      if (candSet.has(k) && bricks.has(k)) return false;
+      return true;
+    }
+
+    function bnbHallReachableFromSpawn(spawn, bricks, candSet) {
+      const reach = new Set();
+      if (!bnbHallCellWalkable(spawn.x, spawn.z, bricks, candSet)) return reach;
+      const q = [[spawn.x, spawn.z]];
+      reach.add(`${spawn.x},${spawn.z}`);
+      while (q.length) {
+        const [x, z] = q.shift();
+        for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+          const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+          const nx = x + dx,
+            nz = z + dz;
+          const nk = `${nx},${nz}`;
+          if (!bnbHallCellWalkable(nx, nz, bricks, candSet)) continue;
+          if (reach.has(nk)) continue;
+          reach.add(nk);
+          q.push([nx, nz]);
+        }
+      }
+      return reach;
+    }
+
+    /**
+     * Remove mushrooms that touch the reachable empty region until every empty candidate cell is reachable.
+     */
+    function ensureBnBHallConnectivity(spawn, candSet, bricks) {
+      const maxIter = candSet.size + 80;
+      for (let iter = 0; iter < maxIter; iter++) {
+        const reach = bnbHallReachableFromSpawn(spawn, bricks, candSet);
+        let ok = true;
+        for (const k of candSet) {
+          if (bricks.has(k)) continue;
+          if (!reach.has(k)) {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) return;
+        const boundary = [];
+        for (const k of bricks) {
+          const [x, z] = k.split(",").map(Number);
+          for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+            const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+            if (reach.has(`${x + dx},${z + dz}`)) {
+              boundary.push(k);
+              break;
+            }
+          }
+        }
+        if (!boundary.length) return;
+        boundary.sort(() => Math.random() - 0.5);
+        bricks.delete(boundary[0]);
+      }
+    }
+
+    /** True when every empty cell in candSet is 4-reachable from spawn (same rule as ensureBnBHallConnectivity). */
+    function bnbHallConnectivityOk(spawn, candSet, bricks) {
+      const reach = bnbHallReachableFromSpawn(spawn, bricks, candSet);
+      for (const k of candSet) {
+        if (bricks.has(k)) continue;
+        if (!reach.has(k)) return false;
+      }
+      return true;
+    }
+
+    /** 4-neighbors already mushrooms — low count = open corridor / diagonal gap (prefer filling there). */
+    function bnbHallAdjacentPlacedBrickCount(k, brickSet) {
+      const [x, z] = k.split(",").map(Number);
+      let n = 0;
+      for (let di = 0; di < _MUSHROOM_CORRIDOR_DIRS.length; di++) {
+        const [dx, dz] = _MUSHROOM_CORRIDOR_DIRS[di];
+        if (brickSet.has(`${x + dx},${z + dz}`)) n++;
+      }
+      return n;
+    }
+
+    /**
+     * After connectivity repair eats into a fixed target count, add mushrooms back where possible
+     * without breaking reachability (greedy try each candidate).
+     */
+    function refillBnBHallTowardTarget(
+      spawn,
+      candSet,
+      reserve,
+      bricks,
+      targetBricks,
+      sideLaneColumnFn
+    ) {
+      if (bricks.size >= targetBricks) return;
+      const addPool = [];
+      for (const k of candSet) {
+        if (bricks.has(k) || reserve.has(k)) continue;
+        const [x] = k.split(",").map(Number);
+        if (sideLaneColumnFn(x)) continue;
+        addPool.push(k);
+      }
+      addPool.sort((a, b) => {
+        const na = bnbHallAdjacentPlacedBrickCount(a, bricks);
+        const nb = bnbHallAdjacentPlacedBrickCount(b, bricks);
+        if (na !== nb) return na - nb;
+        return Math.random() - 0.5;
+      });
+      for (let ai = 0; ai < addPool.length && bricks.size < targetBricks; ai++) {
+        const k = addPool[ai];
+        bricks.add(k);
+        if (!bnbHallConnectivityOk(spawn, candSet, bricks)) bricks.delete(k);
+      }
+    }
+
+    function bnbHallManhattanTo(x, z, cx, cz) {
+      return Math.abs(x - cx) + Math.abs(z - cz);
+    }
+
+    /** Greedy CELL_BRICK in Manhattan disk around one interior corner; each add guarded by bnbHallConnectivityOk. */
+    function bnbHallGreedyBrickCornerDisk(
+      spawn,
+      candSet,
+      reserve,
+      bricks,
+      cornerX,
+      cornerZ,
+      radius
+    ) {
+      const items = [];
+      for (const k of candSet) {
+        if (reserve.has(k) || bricks.has(k)) continue;
+        const [x, z] = k.split(",").map(Number);
+        const d = bnbHallManhattanTo(x, z, cornerX, cornerZ);
+        if (d > radius) continue;
+        items.push({ k, d });
+      }
+      items.sort((a, b) => {
+        if (a.d !== b.d) return a.d - b.d;
+        return Math.random() - 0.5;
+      });
+      for (let ii = 0; ii < items.length; ii++) {
+        const k = items[ii].k;
+        if (bricks.has(k)) continue;
+        bricks.add(k);
+        if (!bnbHallConnectivityOk(spawn, candSet, bricks)) bricks.delete(k);
+      }
+    }
+
+    /**
+     * Extra mushrooms near all four interior corners (tl / tr / bl / br — same as ?mushCorner=).
+     * BnB hall keeps side columns and pillar phase light near corners; this greedily bricks outward
+     * from corner zones while preserving full empty-cell reachability from spawn.
+     * Then slightly larger Manhattan disks at each corner add more mushrooms on exits if still connected.
+     */
+    function bnbHallBoostBlTrDiagonalCorners(spawn, candSet, reserve, bricks) {
+      const ix0 = boardBounds.minX + 1;
+      const ix1 = boardBounds.maxX - 1;
+      const iz0 = boardBounds.minY + 1;
+      const iz1 = boardBounds.maxY - 1;
+      const spanX = ix1 - ix0 + 1;
+      const spanZ = iz1 - iz0 + 1;
+      const radius = THREE.MathUtils.clamp(
+        Math.max(4, Math.floor((spanX + spanZ) / 4)),
+        4,
+        7
+      );
+      const tlX = ix0,
+        tlZ = iz0;
+      const trX = ix1,
+        trZ = iz0;
+      const blX = ix0,
+        blZ = iz1;
+      const brX = ix1,
+        brZ = iz1;
+      const items = [];
+      for (const k of candSet) {
+        if (reserve.has(k) || bricks.has(k)) continue;
+        const [x, z] = k.split(",").map(Number);
+        const dTl = bnbHallManhattanTo(x, z, tlX, tlZ);
+        const dTr = bnbHallManhattanTo(x, z, trX, trZ);
+        const dBl = bnbHallManhattanTo(x, z, blX, blZ);
+        const dBr = bnbHallManhattanTo(x, z, brX, brZ);
+        if (dTl > radius && dTr > radius && dBl > radius && dBr > radius) continue;
+        const dMin = Math.min(dTl, dTr, dBl, dBr);
+        const dMax = Math.max(dTl, dTr, dBl, dBr);
+        items.push({ k, dMin, dMax });
+      }
+      items.sort((a, b) => {
+        if (a.dMin !== b.dMin) return a.dMin - b.dMin;
+        if (a.dMax !== b.dMax) return a.dMax - b.dMax;
+        return Math.random() - 0.5;
+      });
+      for (let ii = 0; ii < items.length; ii++) {
+        const k = items[ii].k;
+        if (bricks.has(k)) continue;
+        bricks.add(k);
+        if (!bnbHallConnectivityOk(spawn, candSet, bricks)) bricks.delete(k);
+      }
+      const cornerExtraR = THREE.MathUtils.clamp(radius + 2, 5, 8);
+      bnbHallGreedyBrickCornerDisk(
+        spawn,
+        candSet,
+        reserve,
+        bricks,
+        blX,
+        blZ,
+        cornerExtraR
+      );
+      bnbHallGreedyBrickCornerDisk(
+        spawn,
+        candSet,
+        reserve,
+        bricks,
+        trX,
+        trZ,
+        cornerExtraR
+      );
+      bnbHallGreedyBrickCornerDisk(
+        spawn,
+        candSet,
+        reserve,
+        bricks,
+        tlX,
+        tlZ,
+        cornerExtraR
+      );
+      bnbHallGreedyBrickCornerDisk(
+        spawn,
+        candSet,
+        reserve,
+        bricks,
+        brX,
+        brZ,
+        cornerExtraR
+      );
+    }
+
+    function bnbHallChebyshevCellDist(x, z, cx, cz) {
+      return Math.max(Math.abs(x - cx), Math.abs(z - cz));
+    }
+
+    /**
+     * Fill mid-board clearings: greedy bricks from interior center outward (Chebyshev “square” disk).
+     * Covers rectangular central gaps better than a Manhattan diamond; still BFS-guarded per cell.
+     */
+    function bnbHallBoostMidBoardCenter(spawn, candSet, reserve, bricks) {
+      const ix0 = boardBounds.minX + 1;
+      const ix1 = boardBounds.maxX - 1;
+      const iz0 = boardBounds.minY + 1;
+      const iz1 = boardBounds.maxY - 1;
+      const mx = Math.floor((ix0 + ix1) / 2);
+      const mz = Math.floor((iz0 + iz1) / 2);
+      const spanX = ix1 - ix0 + 1;
+      const spanZ = iz1 - iz0 + 1;
+      const rCheb = THREE.MathUtils.clamp(
+        Math.round(Math.min(spanX, spanZ) * 0.44),
+        4,
+        8
+      );
+      const items = [];
+      for (const k of candSet) {
+        if (reserve.has(k) || bricks.has(k)) continue;
+        const [x, z] = k.split(",").map(Number);
+        const dc = bnbHallChebyshevCellDist(x, z, mx, mz);
+        if (dc > rCheb) continue;
+        const dm = bnbHallManhattanTo(x, z, mx, mz);
+        items.push({ k, dc, dm });
+      }
+      items.sort((a, b) => {
+        if (a.dc !== b.dc) return a.dc - b.dc;
+        if (a.dm !== b.dm) return a.dm - b.dm;
+        return Math.random() - 0.5;
+      });
+      for (let ii = 0; ii < items.length; ii++) {
+        const k = items[ii].k;
+        if (bricks.has(k)) continue;
+        bricks.add(k);
+        if (!bnbHallConnectivityOk(spawn, candSet, bricks)) bricks.delete(k);
+      }
+    }
+
+    /**
+     * Reference Crazy Arcade / BnB obstacle logic (adapted to any interior size):
+     * — Left/right interior columns stay clearer (scatter skips ix0 / ix1 unless refill pass).
+     * — Scatter + refill prefer cells with few adjacent mushrooms first; after probabilistic scatter,
+     *   a greedy BFS-safe pass fills toward target so open patches (e.g. mid-board) don’t stay under-filled.
+     * — Pillars: 2–3 vertical runs + gaps, but column phase alternates every horizontal band → breaks long
+     *   straight N–S corridors so viable routes tend to zig-zag (Z-style) across bands.
+     * — Dense hub near board center (3×3 … 5×5 by board size).
+     * — Default fixed count via mushroomTargetBrickCount; ?mushCount=auto restores mushFill ratio mode.
+     * Connectivity + optional refill after repair.
+     */
+    function buildBnBHallBrickSet(candSet, spawn, reserve) {
+      const bricks = new Set();
+      const ix0 = boardBounds.minX + 1;
+      const ix1 = boardBounds.maxX - 1;
+      const iz0 = boardBounds.minY + 1;
+      const iz1 = boardBounds.maxY - 1;
+
+      function add(x, z) {
+        const k = `${x},${z}`;
+        if (!candSet.has(k) || reserve.has(k)) return;
+        bricks.add(k);
+      }
+
+      /** Corner safety for pillar stacks (slightly wider than spawn corners). */
+      function nearCorner(x, z) {
+        const corners = [
+          [ix0, iz0],
+          [ix1, iz0],
+          [ix0, iz1],
+          [ix1, iz1],
+        ];
+        for (let i = 0; i < corners.length; i++) {
+          const [cx, cz] = corners[i];
+          if (Math.abs(x - cx) + Math.abs(z - cz) <= 3) return true;
+        }
+        return false;
+      }
+
+      /** Reference: side columns mostly open — scatter filler never lands on left/right interior lane. */
+      function sideLaneColumn(x) {
+        return x === ix0 || x === ix1;
+      }
+
+      const spanX = ix1 - ix0 + 1;
+      const spanZ = iz1 - iz0 + 1;
+      const pillarStart = ix0 + 2;
+      const pillarEnd = ix1 - 2;
+      if (pillarStart <= pillarEnd) {
+        const interiorZ = iz1 - iz0 + 1;
+        const bandH = THREE.MathUtils.clamp(
+          Math.round(interiorZ / 4),
+          3,
+          5
+        );
+        for (let zb = iz0; zb <= iz1; zb += bandH) {
+          const bandIdx = Math.floor((zb - iz0) / Math.max(1, bandH));
+          const phase = bandIdx & 1;
+          const zHi = Math.min(zb + bandH - 1, iz1);
+          for (let x = pillarStart + phase; x <= pillarEnd; x += 2) {
+            let z = zb;
+            while (z <= zHi) {
+              const run = 2 + (((x + z) >>> 0) & 1);
+              let placed = 0;
+              while (placed < run && z <= zHi) {
+                if (!nearCorner(x, z)) add(x, z);
+                placed++;
+                z++;
+              }
+              if (z <= zHi) z++;
+            }
+          }
+        }
+      }
+
+      const mx = Math.floor((ix0 + ix1) / 2);
+      const mz = Math.floor((iz0 + iz1) / 2);
+      let hubR = 1;
+      if (spanX < 7 || spanZ < 7) hubR = 0;
+      else if (spanX >= 11 && spanZ >= 11) hubR = 2;
+      for (let dx = -hubR; dx <= hubR; dx++) {
+        for (let dz = -hubR; dz <= hubR; dz++) {
+          add(mx + dx, mz + dz);
+        }
+      }
+
+      const minKeepEmpty = Math.min(14, Math.max(5, Math.floor(candSet.size * 0.22)));
+      const maxBricks = Math.max(0, candSet.size - minKeepEmpty);
+      const fixedTarget = mushroomTargetBrickCountValue();
+      let targetBricks;
+      if (fixedTarget !== null) {
+        targetBricks = Math.min(fixedTarget, maxBricks);
+      } else {
+        const frac = mushroomBoardFillFractionValue();
+        const targetRatio = THREE.MathUtils.clamp(
+          0.42 + (frac - 0.82) * 0.45,
+          0.33,
+          0.54
+        );
+        targetBricks = Math.min(Math.round(candSet.size * targetRatio), maxBricks);
+      }
+
+      const pool = [];
+      for (const k of candSet) {
+        if (bricks.has(k)) continue;
+        const [px, pz] = k.split(",").map(Number);
+        if (sideLaneColumn(px)) continue;
+        pool.push(k);
+      }
+      pool.sort((a, b) => {
+        const na = bnbHallAdjacentPlacedBrickCount(a, bricks);
+        const nb = bnbHallAdjacentPlacedBrickCount(b, bricks);
+        if (nb !== na) return nb - na;
+        return Math.random() - 0.5;
+      });
+      while (bricks.size < targetBricks && pool.length) {
+        const k = pool.pop();
+        const nc = bnbHallAdjacentPlacedBrickCount(k, bricks);
+        let p = 0.66;
+        if (nc <= 1) p = 0.9;
+        else if (nc === 2) p = 0.78;
+        if (Math.random() < p) bricks.add(k);
+      }
+      /* Deterministic top-up: random scatter often stops short of target — fill corridor-first while BFS ok. */
+      while (bricks.size < targetBricks && pool.length) {
+        const k = pool.pop();
+        bricks.add(k);
+        if (!bnbHallConnectivityOk(spawn, candSet, bricks)) bricks.delete(k);
+      }
+
+      if (bricks.size > targetBricks) {
+        const keys = [...bricks];
+        for (let i = keys.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = keys[i];
+          keys[i] = keys[j];
+          keys[j] = t;
+        }
+        for (let ki = 0; ki < keys.length && bricks.size > targetBricks; ki++) {
+          bricks.delete(keys[ki]);
+        }
+      }
+
+      ensureBnBHallConnectivity(spawn, candSet, bricks);
+      if (fixedTarget !== null && bricks.size < targetBricks) {
+        refillBnBHallTowardTarget(
+          spawn,
+          candSet,
+          reserve,
+          bricks,
+          targetBricks,
+          sideLaneColumn
+        );
+        if (bricks.size < targetBricks) {
+          refillBnBHallTowardTarget(
+            spawn,
+            candSet,
+            reserve,
+            bricks,
+            targetBricks,
+            () => false
+          );
+        }
+        ensureBnBHallConnectivity(spawn, candSet, bricks);
+        if (bricks.size < targetBricks) {
+          refillBnBHallTowardTarget(
+            spawn,
+            candSet,
+            reserve,
+            bricks,
+            targetBricks,
+            () => false
+          );
+        }
+      }
+      bnbHallBoostBlTrDiagonalCorners(spawn, candSet, reserve, bricks);
+      bnbHallBoostMidBoardCenter(spawn, candSet, reserve, bricks);
+      ensureBnBHallConnectivity(spawn, candSet, bricks);
+      return bricks;
+    }
+
+    function _gridKey4Adjacent(a, b) {
+      const [x1, z1] = a.split(",").map(Number);
+      const [x2, z2] = b.split(",").map(Number);
+      return Math.abs(x1 - x2) + Math.abs(z1 - z2) === 1;
+    }
+
+    /** Interior rectangle in row-major boustrophedon order (classic Snake sweep); consecutive cells share an edge. */
+    function _interiorSerpentineFullOrder(ix0, ix1, iz0, iz1) {
+      const order = [];
+      for (let zi = 0; zi <= iz1 - iz0; zi++) {
+        const z = iz0 + zi;
+        const ltr = (zi & 1) === 0;
+        if (ltr) {
+          for (let x = ix0; x <= ix1; x++) order.push(`${x},${z}`);
+        } else {
+          for (let x = ix1; x >= ix0; x--) order.push(`${x},${z}`);
+        }
+      }
+      return order;
+    }
+
+    /** Turn extra walkable cells back into bricks if they were only opened for BFS repair (keeps ~width-1 spine). */
+    function pruneSnakeExtraOpens(spawn, candSet, spineKeys, bricks) {
+      const extras = [];
+      for (const k of candSet) {
+        if (bricks.has(k)) continue;
+        if (spineKeys.has(k)) continue;
+        extras.push(k);
+      }
+      for (let i = extras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = extras[i];
+        extras[i] = extras[j];
+        extras[j] = t;
+      }
+      for (let ei = 0; ei < extras.length; ei++) {
+        const k = extras[ei];
+        bricks.add(k);
+        if (!bnbHallConnectivityOk(spawn, candSet, bricks)) bricks.delete(k);
+      }
+    }
+
+    /**
+     * Walkable strip follows classic Snake sweep (row LTR / RTL) — a minimal slit:
+     * default ~96.5% bricks; reserves only a thin walk budget (~3% cells, cap 8, min 3).
+     */
+    function buildSnakeGamePathKeys(candSet, spawn, reserve) {
+      const ix0 = boardBounds.minX + 1;
+      const ix1 = boardBounds.maxX - 1;
+      const iz0 = boardBounds.minY + 1;
+      const iz1 = boardBounds.maxY - 1;
+      const fullOrder = _interiorSerpentineFullOrder(ix0, ix1, iz0, iz1);
+      const nCand = candSet.size;
+      const fixedTarget = mushroomTargetBrickCountValue();
+      /* Minimum empty cells: minimal slit for movement + connectivity slack. */
+      const walkBudget = Math.max(
+        3,
+        Math.min(8, Math.ceil(nCand * 0.032))
+      );
+      const minEmptyKeep = Math.max(CFG.mushroomMinWalkEmptyCells, walkBudget);
+
+      let K;
+      if (fixedTarget !== null) {
+        K = Math.min(fixedTarget, Math.max(0, nCand - 4));
+      } else {
+        const frac = mushroomBoardFillFractionValue();
+        K = Math.min(Math.round(nCand * frac), Math.max(0, nCand - 4));
+        const kCap = Math.max(0, nCand - minEmptyKeep);
+        const kDense = Math.ceil(nCand * 0.965);
+        K = Math.max(K, Math.min(kDense, kCap));
+        K = Math.min(K, kCap);
+      }
+      K = Math.min(K, Math.max(0, nCand - Math.max(3, CFG.mushroomMinWalkEmptyCells)));
+      K = Math.max(0, K);
+
+      const wantPath = Math.max(minEmptyKeep, nCand - K);
+
+      const spawnKey = `${spawn.x},${spawn.z}`;
+      let startIdx = fullOrder.indexOf(spawnKey);
+      if (
+        startIdx < 0 ||
+        !candSet.has(spawnKey) ||
+        reserve.has(spawnKey)
+      ) {
+        startIdx = fullOrder.findIndex(
+          (k) => candSet.has(k) && !reserve.has(k)
+        );
+      }
+      if (startIdx < 0) return new Set();
+
+      const pathKeys = new Set();
+      let last = null;
+
+      function tryAdd(k) {
+        if (!candSet.has(k) || reserve.has(k)) return false;
+        if (!last) {
+          pathKeys.add(k);
+          last = k;
+          return true;
+        }
+        if (!_gridKey4Adjacent(last, k)) return false;
+        pathKeys.add(k);
+        last = k;
+        return true;
+      }
+
+      tryAdd(fullOrder[startIdx]);
+      for (
+        let i = startIdx + 1;
+        i < fullOrder.length && pathKeys.size < wantPath;
+        i++
+      ) {
+        tryAdd(fullOrder[i]);
+      }
+      for (let i = 0; i < startIdx && pathKeys.size < wantPath; i++) {
+        tryAdd(fullOrder[i]);
+      }
+
+      const spineKeys = new Set(pathKeys);
+
+      const bricks = new Set();
+      for (const k of candSet) {
+        if (!pathKeys.has(k)) bricks.add(k);
+      }
+      ensureBnBHallConnectivity(spawn, candSet, bricks);
+      pruneSnakeExtraOpens(spawn, candSet, spineKeys, bricks);
+
+      const out = new Set();
+      for (const k of candSet) {
+        if (!bricks.has(k)) out.add(k);
+      }
+      return out;
+    }
+
+    /** Interior cells where mushrooms may spawn (inset from inner edge of playfield next to walls). */
+    function inMushroomPlacementCore(x, z) {
+      const br = mushroomBorderRingsValue();
+      const ix0 = boardBounds.minX + 1 + br;
+      const ix1 = boardBounds.maxX - 1 - br;
+      const iz0 = boardBounds.minY + 1 + br;
+      const iz1 = boardBounds.maxY - 1 - br;
+      if (ix0 > ix1 || iz0 > iz1) return false;
+      return x >= ix0 && x <= ix1 && z >= iz0 && z <= iz1;
+    }
+
+    /** Extra world Y for Mushroom.glb props only (?mushroomFeet= — does not change hero or global ?feetLift=). */
+    function mushroomFeetLiftExtra() {
+      const raw = _qs.get("mushroomFeet");
+      if (raw !== null && raw !== "") {
+        const v = Number(raw);
+        if (Number.isFinite(v)) return v;
+      }
+      return CFG.mushroomFeetAdjust;
+    }
+
+    /**
+     * Feet correction from bbox min.y (use setFromObject(..., true) for SkinnedMesh).
+     * Clamp avoids huge bogus negatives from coarse bounds; precise skinned bounds stay within cap.
+     */
+    function clampPlayerFeetMinY(pbMinY, gu) {
+      const g = Number.isFinite(gu) && gu > 0 ? gu : 1;
+      if (!Number.isFinite(pbMinY)) return -0.02 * g;
+      /* Only discard extreme negatives (coarse skinned bounds); precise Box3 matches real feet below pivot. */
+      if (pbMinY < -8 * g) return -0.02 * g;
+      if (pbMinY > 0.22 * g) return 0.02 * g;
+      return pbMinY;
+    }
+
+    /** Ground used for placing actors; adds lift when walking on game-ground.glb so meshes stay above the surface. */
+    function feetAdjustedGroundY(islandRoot, x, z) {
+      let y = sampleGroundY(islandRoot, x, z);
+      if (groundBackdropActive()) y += backdropFootLiftAmount();
+      return y;
+    }
+
+    /**
+     * Deck / walk surface height in world space (top of playable cell).
+     * Without game-ground.glb: fallback checker uses fast analytic height from that mesh.
+     * With game-ground.glb: raycast both backdrop and playable island; deck height uses the **highest**
+     * upward-facing deck by default (?deckPick=min for lowest layer). Hidden checker meshes stay
+     * out of rays when tiles are invisible; analytical fallback maps cells to slab height.
+     */
+    function sampleGroundY(islandRoot, x, z) {
+      const fallbackAnalytic = () => {
+        islandRoot.updateMatrixWorld(true);
+        if (useBackdropPlayfieldMapping()) {
+          const c = worldXZToNearestCellCenterWorld(x, z);
+          let y = rayBackdropIslandDeckOrMinY(islandRoot, c.x, c.z);
+          if (y !== null && Number.isFinite(y)) return y;
+          _tmpVec.set(c.x - centerX, 0.07, c.z - centerY);
+          _tmpVec.applyMatrix4(islandRoot.matrixWorld);
+          return _tmpVec.y;
+        }
+        _tmpVec.set(x - centerX, 0.07, z - centerY);
+        _tmpVec.applyMatrix4(islandRoot.matrixWorld);
+        return _tmpVec.y;
+      };
+
+      if (groundBackdropActive()) {
+        let y = rayBackdropIslandDeckOrMinY(islandRoot, x, z);
+        if (y !== null && Number.isFinite(y)) return y;
+        if (useBackdropPlayfieldMapping()) {
+          const c = worldXZToNearestCellCenterWorld(x, z);
+          y = rayBackdropIslandDeckOrMinY(islandRoot, c.x, c.z);
+          if (y !== null && Number.isFinite(y)) return y;
+        }
+        if (islandRoot.userData && islandRoot.userData.isFallbackBoard)
+          return fallbackAnalytic();
+        groundBackdropRoot.updateMatrixWorld(true);
+        const fb = new THREE.Box3().setFromObject(groundBackdropRoot);
+        return fb.min.y + 0.08;
+      }
+
+      if (islandRoot.userData && islandRoot.userData.isFallbackBoard) {
+        return fallbackAnalytic();
+      }
+
+      _rayOrigin.set(x, 140, z);
+      raycaster.set(_rayOrigin, _rayDown);
+      const hits = raycaster.intersectObject(islandRoot, true);
+      const deckY2 = deckYFromRayHits(hits);
+      if (deckY2 !== null) return deckY2;
+      if (hits.length) {
+        let m = hits[0].point.y;
+        for (let i = 1; i < hits.length; i++) {
+          if (hits[i].point.y > m) m = hits[i].point.y;
+        }
+        return m;
+      }
+      const fb = new THREE.Box3().setFromObject(islandRoot);
+      return fb.min.y + 0.06;
+    }
+
+    /** Refresh _playfieldGridBox: with game-ground backdrop, use that mesh so grid matches background checker tiles. */
+    function updatePlayfieldGridBox() {
+      if (groundBackdropActive() && groundBackdropRoot) {
+        groundBackdropRoot.updateMatrixWorld(true);
+        _playfieldGridBox.setFromObject(groundBackdropRoot);
+        let frac = CFG.backdropGridInset;
+        const rawInset = _qs.get("bgInset");
+        if (rawInset !== null && rawInset !== "") {
+          const v = Number(rawInset);
+          if (Number.isFinite(v) && v >= 0 && v < 0.45) frac = v;
+        }
+        if (frac > 0) {
+          const sx = (_playfieldGridBox.max.x - _playfieldGridBox.min.x) * frac;
+          const sz = (_playfieldGridBox.max.z - _playfieldGridBox.min.z) * frac;
+          _playfieldGridBox.min.x += sx;
+          _playfieldGridBox.max.x -= sx;
+          _playfieldGridBox.min.z += sz;
+          _playfieldGridBox.max.z -= sz;
+        }
+        return;
+      }
+      if (island && !island.userData.isFallbackBoard) {
+        island.updateMatrixWorld(true);
+        _playfieldGridBox.setFromObject(island);
+      }
+    }
+
+    /** World XZ stride between adjacent grid columns / rows (1 for procedural checker). */
+    function gridWorldStrideXZ() {
+      if (!island || island.userData.isFallbackBoard) {
+        if (useBackdropPlayfieldMapping()) {
+          updatePlayfieldGridBox();
+          const box = _playfieldGridBox;
+          const cellsX = boardBounds.maxX - boardBounds.minX + 1;
+          const cellsZ = boardBounds.maxY - boardBounds.minY + 1;
+          _strideOut.x = (box.max.x - box.min.x) / Math.max(cellsX, 1);
+          _strideOut.z = (box.max.z - box.min.z) / Math.max(cellsZ, 1);
+          return _strideOut;
+        }
+        _strideOut.x = 1;
+        _strideOut.z = 1;
+        return _strideOut;
+      }
+      updatePlayfieldGridBox();
+      const box = _playfieldGridBox;
+      const cellsX = boardBounds.maxX - boardBounds.minX + 1;
+      const cellsZ = boardBounds.maxY - boardBounds.minY + 1;
+      _strideOut.x = (box.max.x - box.min.x) / Math.max(cellsX, 1);
+      _strideOut.z = (box.max.z - box.min.z) / Math.max(cellsZ, 1);
+      return _strideOut;
+    }
+
+    /**
+     * World-space center of logical cell (ix, iz).
+     * With game-ground.glb: mapping uses the backdrop’s XZ bounds so each cell sits on the background checker.
+     */
+    function gridCellCenterWorld(ix, iz) {
+      if (!island || island.userData.isFallbackBoard) {
+        if (useBackdropPlayfieldMapping()) {
+          updatePlayfieldGridBox();
+          const box = _playfieldGridBox;
+          const minX = boardBounds.minX;
+          const maxX = boardBounds.maxX;
+          const minZ = boardBounds.minY;
+          const maxZ = boardBounds.maxY;
+          const cellsX = maxX - minX + 1;
+          const cellsZ = maxZ - minZ + 1;
+          const tx = (ix - minX + 0.5) / cellsX;
+          const tz = (iz - minZ + 0.5) / cellsZ;
+          _gridCellOut.x = box.min.x + tx * (box.max.x - box.min.x);
+          _gridCellOut.z = box.min.z + tz * (box.max.z - box.min.z);
+          return _gridCellOut;
+        }
+        _gridCellOut.x = ix;
+        _gridCellOut.z = iz;
+        return _gridCellOut;
+      }
+      updatePlayfieldGridBox();
+      const box = _playfieldGridBox;
+      const minX = boardBounds.minX;
+      const maxX = boardBounds.maxX;
+      const minZ = boardBounds.minY;
+      const maxZ = boardBounds.maxY;
+      const cellsX = maxX - minX + 1;
+      const cellsZ = maxZ - minZ + 1;
+      const tx = (ix - minX + 0.5) / cellsX;
+      const tz = (iz - minZ + 0.5) / cellsZ;
+      _gridCellOut.x = box.min.x + tx * (box.max.x - box.min.x);
+      _gridCellOut.z = box.min.z + tz * (box.max.z - box.min.z);
+      return _gridCellOut;
+    }
+
+    /**
+     * World XZ on the imported slab → logical cell containing the point → that cell’s world center.
+     * Fixes sampleGroundY fallback that used (wx - centerX) as if wx were still a grid index.
+     */
+    function worldXZToNearestCellCenterWorld(wx, wz) {
+      if (!useBackdropPlayfieldMapping()) {
+        _gridCellOut.x = wx;
+        _gridCellOut.z = wz;
+        return _gridCellOut;
+      }
+      updatePlayfieldGridBox();
+      const box = _playfieldGridBox;
+      const minX = boardBounds.minX;
+      const maxX = boardBounds.maxX;
+      const minZ = boardBounds.minY;
+      const maxZ = boardBounds.maxY;
+      const cellsX = maxX - minX + 1;
+      const cellsZ = maxZ - minZ + 1;
+      const spanX = Math.max(box.max.x - box.min.x, 1e-6);
+      const spanZ = Math.max(box.max.z - box.min.z, 1e-6);
+      const cellW = spanX / cellsX;
+      const cellD = spanZ / cellsZ;
+      const ix = THREE.MathUtils.clamp(
+        minX + Math.floor((wx - box.min.x) / Math.max(cellW, 1e-9)),
+        minX,
+        maxX
+      );
+      const iz = THREE.MathUtils.clamp(
+        minZ + Math.floor((wz - box.min.z) / Math.max(cellD, 1e-9)),
+        minZ,
+        maxZ
+      );
+      return gridCellCenterWorld(ix, iz);
+    }
+
+    /**
+     * True if (wx,wz) sits above real game-ground geometry (walkable top), not empty space outside the mesa.
+     * Prevents Mushroom.glb spawns on grid cells that map outside the visible slab.
+     */
+    function cellXZOverGroundBackdropSlab(wx, wz) {
+      if (!groundBackdropActive()) return true;
+      groundBackdropRoot.updateMatrixWorld(true);
+      _rayOrigin.set(wx, 800, wz);
+      raycaster.set(_rayOrigin, _rayDown);
+      const hits = raycaster.intersectObject(groundBackdropRoot, true);
+      if (!hits.length) return false;
+      const deckY = deckYFromRayHits(hits);
+      return deckY !== null && Number.isFinite(deckY);
+    }
+
+    function spawnGridCellOverBackdropSlab(x, z) {
+      if (!groundBackdropActive()) return true;
+      const w = gridCellCenterWorld(x, z);
+      return cellXZOverGroundBackdropSlab(w.x, w.z);
+    }
+
+    /** Downward ray against backdrop + island; deck from upward-facing faces, else highest hit (top surface — never min-Y “deep” fallback). */
+    function rayBackdropIslandDeckOrMinY(islandRoot, wx, wz) {
+      if (!groundBackdropRoot) return null;
+      islandRoot.updateMatrixWorld(true);
+      groundBackdropRoot.updateMatrixWorld(true);
+      _rayOrigin.set(wx, 140, wz);
+      raycaster.set(_rayOrigin, _rayDown);
+      const hits = raycaster.intersectObjects(
+        [groundBackdropRoot, islandRoot],
+        true
+      );
+      const deckY = deckYFromRayHits(hits);
+      if (deckY !== null) return deckY;
+      if (hits.length) {
+        let m = hits[0].point.y;
+        for (let i = 1; i < hits.length; i++) {
+          if (hits[i].point.y > m) m = hits[i].point.y;
+        }
+        return m;
+      }
+      return null;
+    }
+
+    function gridSnapEpsilon() {
+      const st = gridWorldStrideXZ();
+      return Math.min(st.x, st.z) * 0.055;
+    }
+
+    /**
+     * Lowest deck height under world XZ (same multi-sample pattern as mushrooms).
+     * Center wx,wz is usually gridCellCenterWorld(ix,iz) or interpolated playerVis.
+     */
+    function feetSurfaceSamplesMinY(islandRoot, wx, wz) {
+      const offs = [[0, 0], [0.22, 0], [-0.22, 0], [0, 0.22], [0, -0.22]];
+      const fallbackGridEqualsWorld =
+        islandRoot.userData &&
+        islandRoot.userData.isFallbackBoard &&
+        !groundBackdropActive();
+      let ys;
+      if (fallbackGridEqualsWorld) {
+        ys = offs.map(([ox, oz]) =>
+          feetAdjustedGroundY(islandRoot, wx + ox, wz + oz)
+        );
+      } else {
+        const st = gridWorldStrideXZ();
+        ys = offs.map(([ox, oz]) =>
+          feetAdjustedGroundY(
+            islandRoot,
+            wx + ox * st.x,
+            wz + oz * st.z
+          )
+        );
+      }
+      return Math.min(...ys);
+    }
+
+    /**
+     * Shared walk surface Y for hero + roadblock mushrooms (multi-sample min + clearances).
+     * With game-ground + fallback board, optional single plane from board center (backdropUnifiedPlaneY).
+     */
+    function actorFeetSurfaceY(islandRoot, wx, wz) {
+      if (backdropUnifiedPlaneY !== null && Number.isFinite(backdropUnifiedPlaneY))
+        return backdropUnifiedPlaneY;
+      return (
+        feetSurfaceSamplesMinY(islandRoot, wx, wz) +
+        CFG.brickPropGroundClearance +
+        CFG.actorGroundClearance
+      );
+    }
+
+    /**
+     * Bubble / explosion FX: same vertical stack as the hero (syncChars uses nearest cell center + actorFeetSurfaceY + playerFeetLiftExtra).
+     * Mushrooms add mushroomFeetLiftExtra only in alignObjectFeetToGround — bomb rests on the hero deck line so it matches where you stand.
+     */
+    function bubbleFxDeckSurfaceY(probeX, probeZ) {
+      if (!island) return 0;
+      return (
+        actorFeetSurfaceY(island, probeX, probeZ) + playerFeetLiftExtra()
+      );
+    }
+
+    /** Portrait camera vertical target: match unified slab when active. */
+    function portraitCameraGroundTargetY() {
+      if (!island) return 0.58;
+      if (
+        backdropUnifiedPlaneY !== null &&
+        Number.isFinite(backdropUnifiedPlaneY)
+      )
+        return backdropUnifiedPlaneY + 0.52;
+      return feetAdjustedGroundY(island, playerVis.x, playerVis.z) + 0.58;
+    }
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    stage.appendChild(renderer.domElement);
+    renderer.domElement.style.display = "block";
+    renderer.domElement.style.position = "absolute";
+    renderer.domElement.style.inset = "0";
+    renderer.domElement.style.zIndex = "1";
+    renderer.domElement.tabIndex = 0;
+    renderer.domElement.style.outline = "none";
+    renderer.domElement.style.cursor = "grab";
+    renderer.domElement.title =
+      "Click to focus · Drag to orbit camera · WASD / arrows move on grid · Space drops bubble bomb";
+    function focusGameCanvas() {
+      try {
+        renderer.domElement.focus({ preventScroll: true });
+      } catch (_) {
+        renderer.domElement.focus();
+      }
+    }
+    renderer.domElement.addEventListener("mousedown", focusGameCanvas);
+    stage.addEventListener("click", focusGameCanvas);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.stopListenToKeyEvents();
+    controls.keys = {
+      LEFT: "__bb_noop_l__",
+      UP: "__bb_noop_u__",
+      RIGHT: "__bb_noop_r__",
+      BOTTOM: "__bb_noop_d__",
+    };
+    controls.target.set(centerX, 0, centerY);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enablePan = false;
+    controls.enableRotate = true;
+    controls.enableZoom = true;
+    controls.zoomSpeed = 1.1;
+    controls.rotateSpeed = 0.82;
+    controls.minPolarAngle = 0.06;
+    controls.maxPolarAngle = Math.PI / 2 - 0.06;
+    controls.minDistance = 6;
+    controls.maxDistance = 28;
+
+    function resize() {
+      const rect = stage.getBoundingClientRect();
+      const w = Math.max(2, Math.round(rect.width) || stage.clientWidth || 640),
+        h = Math.max(2, Math.round(rect.height) || stage.clientHeight || 400);
+      renderer.setSize(w, h);
+      renderer.domElement.style.width = "100%";
+      renderer.domElement.style.height = "100%";
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener("resize", resize);
+    resize();
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(() => resize());
+      ro.observe(stage);
+    }
+    window.addEventListener("load", () => {
+      resize();
+      controls.update();
+    });
+
+    const ambient = new THREE.AmbientLight(0xFFF8EC, 0.92);
+    const hemi = new THREE.HemisphereLight(0xeef7ff, 0xd9ecff, 0.48);
+    const sun = new THREE.DirectionalLight(0xFFF8D6, 1.35);
+    sun.position.set(-6, 18, -2);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    const faceFill = new THREE.DirectionalLight(0xffffff, 0.82);
+    faceFill.position.set(7, 7, 12);
+    const rimFill = new THREE.DirectionalLight(0xdaf1ff, 0.38);
+    rimFill.position.set(-7, 4, -8);
+    scene.add(ambient, hemi, sun, faceFill, rimFill);
+    blocksRoot = new THREE.Group();
+    fxRoot = new THREE.Group();
+    debugGridRoot = new THREE.Group();
+    debugGridRoot.visible = false;
+    scene.add(blocksRoot, fxRoot, debugGridRoot);
+
+    function applyLightPreset(name) {
+      const L = LIGHT_PRESETS[name];
+      if (!L) return;
+      ambient.intensity = L.ambient;
+      hemi.intensity = L.hemi;
+      sun.intensity = L.sun;
+      faceFill.intensity = L.faceFill;
+      rimFill.intensity = L.rim;
+      renderer.toneMappingExposure = L.exposure;
+    }
+
+    function applyCameraPreset(name) {
+      cameraMode = name;
+      if (name === "gameplay") {
+        controls.enableRotate = true;
+        controls.enablePan = false;
+        controls.rotateSpeed = 0.82;
+        controls.minPolarAngle = 0.06;
+        controls.maxPolarAngle = Math.PI / 2 - 0.06;
+        const cc = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
+        const gyCam = island ? sampleGroundY(island, cc.x, cc.z) : 0;
+        controls.target.set(cc.x, gyCam, cc.z);
+        camera.position.set(
+          cc.x + Math.cos(yaw) * radius,
+          gyCam + Math.sin(tilt) * radius,
+          cc.z + Math.sin(yaw) * radius
+        );
+        controls.minDistance = 6;
+        controls.maxDistance = 28;
+      } else if (name === "portrait") {
+        controls.enableRotate = true;
+        controls.enablePan = false;
+        controls.rotateSpeed = 0.92;
+        controls.minPolarAngle = 0.08;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+        const ty = island ? portraitCameraGroundTargetY() : 0.58;
+        controls.target.set(playerVis.x, ty, playerVis.z);
+        camera.position.set(playerVis.x + 3.95, 5.05, playerVis.z + 4.35);
+        controls.minDistance = 2.8;
+        controls.maxDistance = 14;
+      }
+      camera.updateProjectionMatrix();
+      controls.update();
+    }
+
+    /** Dolly vs controls.target: factor below 1 zooms in, above 1 zooms out (distance clamped). */
+    function dollyCamera(factor) {
+      const target = controls.target;
+      const dir = _dollyVec.subVectors(camera.position, target);
+      const dist = dir.length();
+      if (dist < 1e-6) return;
+      const minD = controls.minDistance;
+      const maxD = controls.maxDistance;
+      const next = THREE.MathUtils.clamp(dist * factor, minD, maxD);
+      dir.normalize().multiplyScalar(next);
+      camera.position.copy(target).add(dir);
+      controls.update();
+    }
+
+    function playUiTick() {
+      try {
+        const ACtx = window.AudioContext || window.webkitAudioContext;
+        if (!ACtx) return;
+        const ctx = new ACtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.value = 523;
+        gain.gain.value = 0.045;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.065);
+      } catch (_) {}
+    }
+
+    function playBumpJuice() {
+      try {
+        const ACtx = window.AudioContext || window.webkitAudioContext;
+        if (!ACtx) return;
+        const ctx = new ACtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "triangle";
+        osc.frequency.value = 180;
+        gain.gain.value = 0.038;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } catch (_) {}
+    }
+
+    function triggerExplosionJuice(cx, cz) {
+      const prev = renderer.toneMappingExposure;
+      renderer.toneMappingExposure = Math.min(CFG.exposureClamp, prev + CFG.exposureBump);
+      setTimeout(() => { renderer.toneMappingExposure = prev; }, 100);
+      shakeAmp = Math.min(0.16, shakeAmp + CFG.explosionShake);
+      void cx; void cz;
+    }
+
+    function countBricks() {
+      let n = 0;
+      for (let x = 0; x < COLS; x++) {
+        for (let z = 0; z < ROWS; z++) {
+          if (grid[x][z] === CELL_BRICK) n++;
+        }
+      }
+      return n;
+    }
+
+    /** Dev console only: confirms which mushroom layout loaded (helps cache / remote stale builds). */
+    function refreshLayoutHud(seedSkipped) {
+      if (seedSkipped) return;
+      const L = mushroomLayoutValue();
+      const urlMush = (_qs.get("mushLayout") || "").toLowerCase().trim();
+      if (typeof console !== "undefined" && console.info) {
+        console.info(
+          "[BubbleBattle] mushroom layout:",
+          L,
+          "· bricks:",
+          countBricks(),
+          urlMush ? `· URL mushLayout=${urlMush}` : ""
+        );
+      }
+    }
+
+    function updateHud() {
+    }
+
+    function rebuildDebugGrid() {
+      if (!debugGridRoot || !island) return;
+      while (debugGridRoot.children.length) {
+        const o = debugGridRoot.children[0];
+        debugGridRoot.remove(o);
+        if (o.geometry) o.geometry.dispose();
+        if (o.material) o.material.dispose();
+      }
+      const cc = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
+      const y0 = feetAdjustedGroundY(island, cc.x, cc.z) + 0.038;
+      const mat = new THREE.LineBasicMaterial({
+        color: 0xfafafa,
+        transparent: true,
+        opacity: 0.38,
+        depthWrite: false,
+      });
+      const verts = [];
+      const bx0 = boardBounds.minX, bx1 = boardBounds.maxX + 1;
+      const bz0 = boardBounds.minY, bz1 = boardBounds.maxY + 1;
+      const minR = boardBounds.minY, maxR = boardBounds.maxY;
+      const minC = boardBounds.minX, maxC = boardBounds.maxX;
+      for (let gx = bx0; gx <= bx1; gx++) {
+        const p0 = gridCellCenterWorld(gx, minR);
+        const p1 = gridCellCenterWorld(gx, maxR);
+        verts.push(p0.x, y0, p0.z, p1.x, y0, p1.z);
+      }
+      for (let gz = bz0; gz <= bz1; gz++) {
+        const p0 = gridCellCenterWorld(minC, gz);
+        const p1 = gridCellCenterWorld(maxC, gz);
+        verts.push(p0.x, y0, p0.z, p1.x, y0, p1.z);
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
+      debugGridRoot.add(new THREE.LineSegments(geo, mat));
+    }
+
+    function checkRoundClearWin() {
+      if (hitPending || roundWinPending || countBricks() > 0) return;
+      roundWinPending = true;
+      gameOver = true;
+      showFlowBanner(FLOW_UI.winTitle, "win", {
+        durationMs: Math.max(1400, CFG.winPauseMs - 420),
+        inputLockMs: 0,
+      });
+      try {
+        const ACtx = window.AudioContext || window.webkitAudioContext;
+        if (ACtx) {
+          const ctx = new ACtx();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sine";
+          osc.frequency.value = 784;
+          gain.gain.value = 0.055;
+          osc.start();
+          osc.stop(ctx.currentTime + 0.09);
+        }
+      } catch (_) {}
+      setStatus();
+      updateHud();
+      setTimeout(() => {
+        roundWinPending = false;
+        gameOver = false;
+        bootstrapLevelAfterIsland();
+        rebuildChars();
+        updateHud();
+        setStatus();
+      }, CFG.winPauseMs);
+    }
+
+    function scheduleBombTick(_msRemaining) {
+      void _msRemaining;
+    }
+
+    function inPlayBounds(ix, iz) {
+      return ix >= boardBounds.minX && ix <= boardBounds.maxX && iz >= boardBounds.minY && iz <= boardBounds.maxY;
+    }
+
+    function generateGrid() {
+      const g = Array.from({ length: COLS }, () => Array(ROWS).fill(CELL_EMPTY));
+      for (let x = 0; x < COLS; x++) {
+        for (let z = 0; z < ROWS; z++) {
+          const play =
+            x >= boardBounds.minX && x <= boardBounds.maxX &&
+            z >= boardBounds.minY && z <= boardBounds.maxY;
+          if (!play) {
+            g[x][z] = CELL_SOLID;
+            continue;
+          }
+          const edge =
+            x === boardBounds.minX || x === boardBounds.maxX ||
+            z === boardBounds.minY || z === boardBounds.maxY;
+          if (edge) {
+            g[x][z] = CELL_SOLID;
+            continue;
+          }
+          /* Interior stays empty until seedMushroomRoadblocks fills one mushroom per tile on the checker plane. */
+        }
+      }
+      grid = g;
+    }
+
+    function findSpawn() {
+      const cx = Math.floor(centerX);
+      const cz = Math.floor(centerY);
+      const tries = [
+        [cx, cz],
+        [cx - 1, cz],
+        [cx + 1, cz],
+        [cx, cz - 1],
+        [cx, cz + 1],
+        [cx - 1, cz - 1],
+        [cx + 1, cz + 1],
+        [boardBounds.minX + 1, boardBounds.minY + 1],
+        [boardBounds.minX + 1, boardBounds.minY + 2],
+        [boardBounds.minX + 2, boardBounds.minY + 1],
+        [boardBounds.maxX - 1, boardBounds.minY + 1],
+      ];
+      for (const [x, z] of tries) {
+        if (
+          inPlayBounds(x, z) &&
+          grid[x][z] === CELL_EMPTY &&
+          spawnGridCellOverBackdropSlab(x, z)
+        )
+          return { x, z };
+      }
+      for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+        for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+          if (
+            grid[x][z] === CELL_EMPTY &&
+            spawnGridCellOverBackdropSlab(x, z)
+          )
+            return { x, z };
+        }
+      }
+      return { x: Math.floor(centerX), z: Math.floor(centerY) };
+    }
+
+    /**
+     * Interior play cells → CELL_BRICK except spawn reserve and keys in keepEmpty (path / intentional walk).
+     * Fills cells that never entered candidates (e.g. slab plane filter) so empty checker tiles get mushrooms too.
+     * Then clears CELL_BRICK off the play slab so mushrooms never sit on side geometry / wrong deck height.
+     */
+    function brickInteriorExceptSpawnAndKeepEmpty(reserve, keepEmptyKeys) {
+      const ke =
+        keepEmptyKeys instanceof Set ? keepEmptyKeys : new Set(keepEmptyKeys);
+      for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+        for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+          if (grid[x][z] === CELL_SOLID) continue;
+          const k = `${x},${z}`;
+          if (reserve.has(k)) continue;
+          if (ke.has(k)) continue;
+          grid[x][z] = CELL_BRICK;
+        }
+      }
+      for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+        for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+          if (grid[x][z] !== CELL_BRICK) continue;
+          if (!mushroomDeckCellMatchesPlayPlane(x, z)) grid[x][z] = CELL_EMPTY;
+        }
+      }
+    }
+
+    /**
+     * Mushrooms: optional inset via mushroomBorderRings; spawn clear radius (see mushroomSpawnReserveChebyshevR).
+     * bnbHall: pillar columns + center hub + scatter, connectivity guard (no brickInterior fill-all).
+     * snakePath: boustrophedon “Snake” sweep as walk spine; mushCount / mushFill set mushroom budget.
+     * singlePath: ~mushFill bricks, one self-avoiding empty corridor from spawn-adjacent slab cells.
+     * narrowCorridor: spine + bridge. clusterArcade: stump-like runs + scatter to mushFill.
+     * random: uniform shuffle to mushFill + min walk.
+     */
+    function seedRoadblockBricks(spawn) {
+      if (!island) return;
+      for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+        for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+          if (grid[x][z] === CELL_BRICK) grid[x][z] = CELL_EMPTY;
+        }
+      }
+
+      const reserve = new Set();
+      const rRes = mushroomSpawnReserveChebyshevRValue();
+      for (let dx = -rRes; dx <= rRes; dx++) {
+        for (let dz = -rRes; dz <= rRes; dz++) {
+          const x = spawn.x + dx;
+          const z = spawn.z + dz;
+          if (!inPlayBounds(x, z)) continue;
+          reserve.add(`${x},${z}`);
+        }
+      }
+      if (mushroomSpawnReservePlusRingValue()) {
+        const sx = spawn.x,
+          sz = spawn.z;
+        const orth = [
+          [0, 0],
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ];
+        for (let oi = 0; oi < orth.length; oi++) {
+          const x = sx + orth[oi][0];
+          const z = sz + orth[oi][1];
+          if (!inPlayBounds(x, z)) continue;
+          reserve.add(`${x},${z}`);
+        }
+      }
+
+      const candidates = [];
+      for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+        for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+          if (grid[x][z] === CELL_SOLID) continue;
+          if (!inMushroomPlacementCore(x, z)) continue;
+          if (reserve.has(`${x},${z}`)) continue;
+          if (!CFG.mushroomRandomPlacement && CFG.mushroomCheckerboardHalf && (x + z) % 2 !== 0)
+            continue;
+          if (!mushroomDeckCellMatchesPlayPlane(x, z)) continue;
+          candidates.push({ x, z });
+        }
+      }
+
+      if (mushroomLayoutValue() === "narrowCorridor") {
+        const candSet = new Set(candidates.map((c) => `${c.x},${c.z}`));
+        const stripX = pickMushroomCorridorStripX(spawn, candSet);
+        const corridor = buildMushroomNarrowCorridorSet(
+          candSet,
+          reserve,
+          stripX
+        );
+        for (let ci = 0; ci < candidates.length; ci++) {
+          const c = candidates[ci];
+          if (!corridor.has(`${c.x},${c.z}`)) grid[c.x][c.z] = CELL_BRICK;
+        }
+        brickInteriorExceptSpawnAndKeepEmpty(reserve, corridor);
+        return;
+      }
+
+      if (mushroomLayoutValue() === "bnbHall") {
+        const candSet = new Set(candidates.map((c) => `${c.x},${c.z}`));
+        const bricks = buildBnBHallBrickSet(candSet, spawn, reserve);
+        for (let ci = 0; ci < candidates.length; ci++) {
+          const c = candidates[ci];
+          grid[c.x][c.z] = bricks.has(`${c.x},${c.z}`)
+            ? CELL_BRICK
+            : CELL_EMPTY;
+        }
+        return;
+      }
+
+      if (mushroomLayoutValue() === "snakePath") {
+        const candSet = new Set(candidates.map((c) => `${c.x},${c.z}`));
+        const pathKeys = buildSnakeGamePathKeys(candSet, spawn, reserve);
+        for (let ci = 0; ci < candidates.length; ci++) {
+          const c = candidates[ci];
+          grid[c.x][c.z] = pathKeys.has(`${c.x},${c.z}`)
+            ? CELL_EMPTY
+            : CELL_BRICK;
+        }
+        return;
+      }
+
+      if (mushroomLayoutValue() === "singlePath") {
+        const candSet = new Set(candidates.map((c) => `${c.x},${c.z}`));
+        const nCand = candidates.length;
+        const fracPath = mushroomBoardFillFractionValue();
+        const fromFrac = Math.ceil((1 - fracPath) * Math.max(nCand, 1));
+        const targetEmpty = Math.min(
+          nCand,
+          Math.max(CFG.mushroomMinWalkEmptyCells, fromFrac)
+        );
+        const pathKeys = carveSinglePathSnake(candSet, spawn, targetEmpty);
+        for (let ci = 0; ci < candidates.length; ci++) {
+          const c = candidates[ci];
+          const k = `${c.x},${c.z}`;
+          grid[c.x][c.z] = pathKeys.has(k) ? CELL_EMPTY : CELL_BRICK;
+        }
+        brickInteriorExceptSpawnAndKeepEmpty(reserve, pathKeys);
+        return;
+      }
+
+      const nCand = candidates.length;
+      const frac = mushroomBoardFillFractionValue();
+      const minWalk = Math.max(
+        CFG.mushroomMinWalkEmptyCells,
+        Math.ceil(CFG.mushroomMinWalkEmptyFrac * Math.max(nCand, 1))
+      );
+      const maxBricks = Math.max(0, nCand - minWalk);
+      let K = Math.min(Math.round(nCand * frac), maxBricks, nCand);
+
+      if (mushroomLayoutValue() === "clusterArcade") {
+        const candSet = new Set(candidates.map((c) => `${c.x},${c.z}`));
+        const bricks = new Set();
+
+        const cols = [];
+        for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 1; x++) {
+          cols.push(x);
+        }
+        for (let i = cols.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = cols[i];
+          cols[i] = cols[j];
+          cols[j] = t;
+        }
+        for (let ci = 0; ci < cols.length && bricks.size < K; ci++) {
+          const x = cols[ci];
+          const vertStarts = [];
+          for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 2; z++) {
+            const k0 = `${x},${z}`;
+            const k1 = `${x},${z + 1}`;
+            if (candSet.has(k0) && candSet.has(k1)) vertStarts.push(z);
+          }
+          for (let i = vertStarts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const t = vertStarts[i];
+            vertStarts[i] = vertStarts[j];
+            vertStarts[j] = t;
+          }
+          for (let vi = 0; vi < vertStarts.length && bricks.size < K; vi++) {
+            if (Math.random() > 0.44) continue;
+            const z0 = vertStarts[vi];
+            const k0 = `${x},${z0}`;
+            const k1 = `${x},${z0 + 1}`;
+            if (bricks.has(k0) || bricks.has(k1)) continue;
+            bricks.add(k0);
+            bricks.add(k1);
+          }
+        }
+
+        const rows = [];
+        for (let z = boardBounds.minY + 1; z <= boardBounds.maxY - 1; z++) {
+          rows.push(z);
+        }
+        for (let i = rows.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = rows[i];
+          rows[i] = rows[j];
+          rows[j] = t;
+        }
+        for (let ri = 0; ri < rows.length && bricks.size < K; ri++) {
+          const z = rows[ri];
+          const horizStarts = [];
+          for (let x = boardBounds.minX + 1; x <= boardBounds.maxX - 2; x++) {
+            const k0 = `${x},${z}`;
+            const k1 = `${x + 1},${z}`;
+            if (candSet.has(k0) && candSet.has(k1)) horizStarts.push(x);
+          }
+          for (let i = horizStarts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const t = horizStarts[i];
+            horizStarts[i] = horizStarts[j];
+            horizStarts[j] = t;
+          }
+          for (let hi = 0; hi < horizStarts.length && bricks.size < K; hi++) {
+            if (Math.random() > 0.3) continue;
+            const x0 = horizStarts[hi];
+            const k0 = `${x0},${z}`;
+            const k1 = `${x0 + 1},${z}`;
+            if (bricks.has(k0) || bricks.has(k1)) continue;
+            bricks.add(k0);
+            bricks.add(k1);
+          }
+        }
+
+        const pool = [];
+        for (let i = 0; i < candidates.length; i++) {
+          const c = candidates[i];
+          const key = `${c.x},${c.z}`;
+          if (!bricks.has(key)) pool.push(c);
+        }
+        orderCandidatesForPlacementBias(pool, spawn);
+        for (let pi = 0; pi < pool.length && bricks.size < K; pi++) {
+          bricks.add(`${pool[pi].x},${pool[pi].z}`);
+        }
+
+        bricks.forEach((key) => {
+          const [gx, gz] = key.split(",").map(Number);
+          grid[gx][gz] = CELL_BRICK;
+        });
+        const keepEmptyArcade = new Set();
+        for (let i = 0; i < candidates.length; i++) {
+          const c = candidates[i];
+          if (grid[c.x][c.z] === CELL_EMPTY) keepEmptyArcade.add(`${c.x},${c.z}`);
+        }
+        brickInteriorExceptSpawnAndKeepEmpty(reserve, keepEmptyArcade);
+        return;
+      }
+
+      orderCandidatesForPlacementBias(candidates, spawn);
+
+      let wantFromBoard = K;
+      for (let i = 0; i < wantFromBoard; i++) {
+        const c = candidates[i];
+        grid[c.x][c.z] = CELL_BRICK;
+      }
+      const keepEmptyRand = new Set();
+      for (let i = 0; i < candidates.length; i++) {
+        const c = candidates[i];
+        if (grid[c.x][c.z] === CELL_EMPTY) keepEmptyRand.add(`${c.x},${c.z}`);
+      }
+      brickInteriorExceptSpawnAndKeepEmpty(reserve, keepEmptyRand);
+    }
+
+    function seedMushroomRoadblocks(spawn) {
+      seedRoadblockBricks(spawn);
+    }
+
+    function tileBlockedForWalk(x, z) {
+      if (!inPlayBounds(x, z)) return true;
+      if (grid[x][z] === CELL_SOLID || grid[x][z] === CELL_BRICK) return true;
+      return bombs.some((b) => b.x === x && b.z === z);
+    }
+
+    /** Procedural PBR: canvas → WebGL (color / normal / roughness); indexed box + tangents for correct normal mapping. */
+    let outlineBoxCanvasTextures = null;
+    let outlineBoxSharedGeo = null;
+    let outlineBoxSharedMaterials = null;
+
+    function outlineBoxHash(x, y, seed) {
+      const t = Math.sin(x * 12.9898 + y * 78.233 + seed * 19.413) * 43758.5453123;
+      return t - Math.floor(t);
+    }
+
+    function heightCanvasToNormalTexture(heightCanvas, strength, maxAniso) {
+      const w = heightCanvas.width;
+      const h = heightCanvas.height;
+      const sctx = heightCanvas.getContext("2d");
+      const src = sctx.getImageData(0, 0, w, h);
+      const d = src.data;
+      const out = document.createElement("canvas");
+      out.width = w;
+      out.height = h;
+      const octx = out.getContext("2d");
+      const img = octx.createImageData(w, h);
+      const od = img.data;
+      function lum(ix, iy) {
+        const idx = (Math.min(h - 1, Math.max(0, iy)) * w + Math.min(w - 1, Math.max(0, ix))) * 4;
+        return d[idx] / 255;
+      }
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const dx = (lum(x + 1, y) - lum(x - 1, y)) * 0.5 * strength;
+          const dy = (lum(x, y + 1) - lum(x, y - 1)) * 0.5 * strength;
+          let nx = -dx;
+          let ny = -dy;
+          let nz = 1;
+          const len = Math.hypot(nx, ny, nz) || 1;
+          nx /= len;
+          ny /= len;
+          nz /= len;
+          const i = (y * w + x) * 4;
+          od[i] = (nx * 0.5 + 0.5) * 255;
+          od[i + 1] = (ny * 0.5 + 0.5) * 255;
+          od[i + 2] = (nz * 0.5 + 0.5) * 255;
+          od[i + 3] = 255;
+        }
+      }
+      octx.putImageData(img, 0, 0);
+      const tex = new THREE.CanvasTexture(out);
+      tex.colorSpace = THREE.LinearSRGBColorSpace;
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.generateMipmaps = true;
+      tex.anisotropy = maxAniso;
+      return tex;
+    }
+
+    function buildOutlineBoxCanvasTextures() {
+      const w = 384;
+      const mk = () => {
+        const c = document.createElement("canvas");
+        c.width = w;
+        c.height = w;
+        return c;
+      };
+      const maxAniso = Math.min(
+        8,
+        typeof renderer?.capabilities?.getMaxAnisotropy === "function"
+          ? renderer.capabilities.getMaxAnisotropy()
+          : 4
+      );
+
+      function finalizeColorCanvas(c) {
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.wrapS = THREE.ClampToEdgeWrapping;
+        tex.wrapT = THREE.ClampToEdgeWrapping;
+        tex.minFilter = THREE.LinearMipmapLinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        tex.generateMipmaps = true;
+        tex.anisotropy = maxAniso;
+        return tex;
+      }
+
+      function finalizeRoughCanvas(c) {
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.NoColorSpace;
+        tex.wrapS = THREE.ClampToEdgeWrapping;
+        tex.wrapT = THREE.ClampToEdgeWrapping;
+        tex.minFilter = THREE.LinearMipmapLinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        tex.generateMipmaps = true;
+        tex.anisotropy = maxAniso;
+        return tex;
+      }
+
+      const cSide = mk();
+      const hSide = mk();
+      const rSide = mk();
+      let ctx = cSide.getContext("2d");
+      let htx = hSide.getContext("2d");
+      let rtx = rSide.getContext("2d");
+
+      const gSide = ctx.createLinearGradient(0, 0, w * 0.6, w);
+      gSide.addColorStop(0, "#ebe1cf");
+      gSide.addColorStop(0.35, "#dcc29a");
+      gSide.addColorStop(1, "#c4a574");
+      ctx.fillStyle = gSide;
+      ctx.fillRect(0, 0, w, w);
+      htx.fillStyle = "rgb(148,148,148)";
+      htx.fillRect(0, 0, w, w);
+      rtx.fillStyle = "rgb(238,238,238)";
+      rtx.fillRect(0, 0, w, w);
+
+      for (let i = 0; i < 6200; i++) {
+        const x = outlineBoxHash(i * 1.1, i, 1) * w;
+        const y = outlineBoxHash(i, i * 0.9, 8) * w;
+        const n = outlineBoxHash(x, y, 1);
+        ctx.fillStyle = `rgba(92,58,28,${0.03 + n * 0.055})`;
+        ctx.fillRect(x, y, 2 + (n > 0.5 ? 2 : 0), 1);
+        htx.fillStyle = `rgb(${116 + Math.floor(n * 32)},${114 + Math.floor(n * 26)},${112 + Math.floor(n * 22)})`;
+        htx.fillRect(x, y, 3, 1);
+      }
+      const seam = 22;
+      ctx.fillStyle = "rgba(38,28,18,0.28)";
+      ctx.fillRect(0, 0, seam, w);
+      ctx.fillRect(w - seam, 0, seam, w);
+      htx.fillStyle = "rgb(78,78,82)";
+      htx.fillRect(0, 0, seam, w);
+      htx.fillRect(w - seam, 0, seam, w);
+      rtx.fillStyle = "rgb(248,248,248)";
+      rtx.fillRect(0, 0, seam, w);
+      rtx.fillRect(w - seam, 0, seam, w);
+
+      ctx.fillStyle = "rgba(255,252,245,0.12)";
+      ctx.fillRect(seam, 0, 8, w);
+      ctx.fillRect(w - seam - 8, 0, 8, w);
+
+      ctx.strokeStyle = "rgba(35,26,18,0.085)";
+      ctx.lineWidth = 1;
+      for (let y = 0; y < w; y += 9) {
+        const wave = Math.sin(y * 0.09) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, y + wave);
+        ctx.lineTo(w, y + wave);
+        ctx.stroke();
+        const shade = 135 + Math.floor(Math.sin(y * 0.11) * 12);
+        htx.fillStyle = `rgb(${shade},${shade - 2},${shade - 4})`;
+        htx.fillRect(0, y, w, 2);
+      }
+
+      const inset = 26;
+      ctx.strokeStyle = "rgba(48,36,24,0.14)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(inset, inset, w - inset * 2, w - inset * 2);
+      htx.strokeStyle = "rgb(108,108,112)";
+      htx.strokeRect(inset + 1, inset + 1, w - inset * 2 - 2, w - inset * 2 - 2);
+
+      const cTop = mk();
+      const hTop = mk();
+      const rTop = mk();
+      ctx = cTop.getContext("2d");
+      htx = hTop.getContext("2d");
+      rtx = rTop.getContext("2d");
+      const gTop = ctx.createRadialGradient(w * 0.38, w * 0.28, 0, w * 0.52, w * 0.52, w * 0.78);
+      gTop.addColorStop(0, "#faf6ee");
+      gTop.addColorStop(0.55, "#e8dcc6");
+      gTop.addColorStop(1, "#d2bc96");
+      ctx.fillStyle = gTop;
+      ctx.fillRect(0, 0, w, w);
+      htx.fillStyle = "rgb(155,155,158)";
+      htx.fillRect(0, 0, w, w);
+      rtx.fillStyle = "rgb(235,235,235)";
+      rtx.fillRect(0, 0, w, w);
+
+      for (let i = 0; i < 5200; i++) {
+        const x = outlineBoxHash(i, i * 0.7, 2) * w;
+        const y = outlineBoxHash(i * 1.3, i, 3) * w;
+        ctx.fillStyle = `rgba(120,82,42,${0.018})`;
+        ctx.fillRect(x, y, 1, 2);
+      }
+
+      const tapeY = w * 0.5 - 13;
+      const tapeH = 26;
+      ctx.fillStyle = "rgba(98, 68, 36, 0.62)";
+      ctx.fillRect(0, tapeY, w, tapeH);
+      ctx.fillStyle = "rgba(255,255,255,0.26)";
+      ctx.fillRect(0, tapeY, w, 5);
+      ctx.fillStyle = "rgba(22,14,8,0.2)";
+      ctx.fillRect(0, tapeY + tapeH - 6, w, 6);
+      htx.fillStyle = "rgb(198,198,202)";
+      htx.fillRect(0, tapeY, w, tapeH);
+      rtx.fillStyle = "rgb(68,68,72)";
+      rtx.fillRect(0, tapeY, w, tapeH);
+
+      const tapeX = w * 0.5 - 12;
+      const tapeW = 24;
+      ctx.fillStyle = "rgba(88, 62, 32, 0.58)";
+      ctx.fillRect(tapeX, 0, tapeW, w);
+      ctx.fillStyle = "rgba(255,255,255,0.2)";
+      ctx.fillRect(tapeX, 0, 5, w);
+      ctx.fillStyle = "rgba(18,12,6,0.18)";
+      ctx.fillRect(tapeX + tapeW - 5, 0, 5, w);
+      htx.fillStyle = "rgb(192,192,196)";
+      htx.fillRect(tapeX, 0, tapeW, w);
+      rtx.fillStyle = "rgb(72,72,76)";
+      rtx.fillRect(tapeX, 0, tapeW, w);
+
+      ctx.strokeStyle = "rgba(52,40,26,0.22)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(14, 14, w - 28, w - 28);
+      htx.strokeStyle = "rgb(98,98,102)";
+      htx.strokeRect(15, 15, w - 30, w - 30);
+
+      const cBot = mk();
+      const hBot = mk();
+      const rBot = mk();
+      ctx = cBot.getContext("2d");
+      htx = hBot.getContext("2d");
+      rtx = rBot.getContext("2d");
+      ctx.fillStyle = "#8f765c";
+      ctx.fillRect(0, 0, w, w);
+      htx.fillStyle = "rgb(118,118,120)";
+      htx.fillRect(0, 0, w, w);
+      rtx.fillStyle = "rgb(248,248,248)";
+      rtx.fillRect(0, 0, w, w);
+      for (let i = 0; i < 9000; i++) {
+        const x = outlineBoxHash(i * 1.7, i, 4) * w;
+        const y = outlineBoxHash(i, i * 2.1, 5) * w;
+        ctx.fillStyle = `rgba(36,24,14,${0.03 + outlineBoxHash(x, y, 6) * 0.06})`;
+        ctx.fillRect(x, y, 4, 3);
+        const v = 108 + Math.floor(outlineBoxHash(x, y, 7) * 35);
+        htx.fillStyle = `rgb(${v},${v - 2},${v - 4})`;
+        htx.fillRect(x, y, 4, 3);
+      }
+      ctx.strokeStyle = "rgba(255,255,255,0.06)";
+      ctx.strokeRect(20, 20, w - 40, w - 40);
+
+      const nStrengthSide = 5.2;
+      const nStrengthTop = 7.8;
+      const nStrengthBot = 4.4;
+
+      return {
+        mapSide: finalizeColorCanvas(cSide),
+        mapTop: finalizeColorCanvas(cTop),
+        mapBottom: finalizeColorCanvas(cBot),
+        normalSide: heightCanvasToNormalTexture(hSide, nStrengthSide, maxAniso),
+        normalTop: heightCanvasToNormalTexture(hTop, nStrengthTop, maxAniso),
+        normalBottom: heightCanvasToNormalTexture(hBot, nStrengthBot, maxAniso),
+        roughSide: finalizeRoughCanvas(rSide),
+        roughTop: finalizeRoughCanvas(rTop),
+        roughBottom: finalizeRoughCanvas(rBot),
+      };
+    }
+
+    function getOutlineBoxCanvasTextures() {
+      if (!outlineBoxCanvasTextures) {
+        outlineBoxCanvasTextures = buildOutlineBoxCanvasTextures();
+      }
+      return outlineBoxCanvasTextures;
+    }
+
+    function getOutlineBoxSharedGeometry() {
+      if (!outlineBoxSharedGeo) {
+        outlineBoxSharedGeo = new THREE.BoxGeometry(0.88, BLOCK_H, 0.88);
+        outlineBoxSharedGeo.computeTangents();
+      }
+      return outlineBoxSharedGeo;
+    }
+
+    /** Six entries: +X −X +Y −Y +Z −Z — PBR cardboard + tape (normal + roughness maps). */
+    function getOutlineBoxSharedMaterials() {
+      if (outlineBoxSharedMaterials) return outlineBoxSharedMaterials;
+      const tx = getOutlineBoxCanvasTextures();
+      const sideMat = new THREE.MeshStandardMaterial({
+        map: tx.mapSide,
+        normalMap: tx.normalSide,
+        normalScale: new THREE.Vector2(0.78, 0.78),
+        roughnessMap: tx.roughSide,
+        roughness: 1,
+        metalness: 0.02,
+        envMapIntensity: 0.78,
+      });
+      const topMat = new THREE.MeshStandardMaterial({
+        map: tx.mapTop,
+        normalMap: tx.normalTop,
+        normalScale: new THREE.Vector2(0.95, 0.95),
+        roughnessMap: tx.roughTop,
+        roughness: 1,
+        metalness: 0.02,
+        envMapIntensity: 0.92,
+      });
+      const botMat = new THREE.MeshStandardMaterial({
+        map: tx.mapBottom,
+        normalMap: tx.normalBottom,
+        normalScale: new THREE.Vector2(0.62, 0.62),
+        roughnessMap: tx.roughBottom,
+        roughness: 1,
+        metalness: 0.02,
+        envMapIntensity: 0.65,
+      });
+      outlineBoxSharedMaterials = [sideMat, sideMat, topMat, botMat, sideMat, sideMat];
+      return outlineBoxSharedMaterials;
+    }
+
+    function disposeObject3D(root) {
+      root.traverse((n) => {
+        if (!n.isMesh && !n.isSkinnedMesh) return;
+        if (n.userData.outlineBoxUsesSharedResources) return;
+        n.geometry?.dispose?.();
+        const m = n.material;
+        if (Array.isArray(m)) {
+          for (let i = 0; i < m.length; i++) m[i]?.dispose?.();
+        } else {
+          m?.dispose?.();
+        }
+      });
+    }
+
+    /** Remove node from parent; strip empty ancestors up to but not including stopAt. */
+    function detachAndPruneEmptyAncestors(obj, stopAt) {
+      let p = obj.parent;
+      if (!p) return;
+      p.remove(obj);
+      while (p && p !== stopAt && p.children.length === 0) {
+        const up = p.parent;
+        if (up) up.remove(p);
+        p = up;
+      }
+    }
+
+    function rebuildBlockMeshes() {
+      while (blocksRoot.children.length) {
+        const o = blocksRoot.children[0];
+        blocksRoot.remove(o);
+        disposeObject3D(o);
+      }
+      if (!island) return;
+
+      const tpl = modelState.brickPropTemplate;
+      for (let x = 0; x < COLS; x++) {
+        for (let z = 0; z < ROWS; z++) {
+          if (!inPlayBounds(x, z)) continue;
+          if (grid[x][z] !== CELL_BRICK) continue;
+          if (!mushroomDeckCellMatchesPlayPlane(x, z)) continue;
+          if (tpl) {
+            const prop = tpl.clone(true);
+            prop.traverse((n) => {
+              if (n.isMesh || n.isSkinnedMesh) {
+                n.castShadow = true;
+                n.receiveShadow = true;
+                n.renderOrder = 1;
+              }
+            });
+            placeMushroomBrickProp(prop, island, x, z);
+            blocksRoot.add(prop);
+          }
+        }
+      }
+    }
+
+    function clearBombs() {
+      for (const b of bombs) {
+        if (b.mesh) {
+          fxRoot.remove(b.mesh);
+          b.mesh.geometry.dispose();
+          /* Bomb uses shared Crazy-Arcade-style bubble material — only dispose geometry. */
+        }
+      }
+      bombs.length = 0;
+    }
+
+    function clearExplosions() {
+      for (const e of explosionsFx) {
+        fxRoot.remove(e.group);
+        e.group.traverse((o) => {
+          if (o.isMesh) {
+            o.geometry.dispose();
+            o.material.dispose();
+          }
+        });
+      }
+      explosionsFx.length = 0;
+    }
+
+    let bombBubbleCanvasTex = null;
+    let sharedBombBubbleMaterial = null;
+
+    /** Pale glass bubble: soft sky-blue base + white highlight (canvas → spherical UV). */
+    function getBombBubbleCanvasTexture() {
+      if (bombBubbleCanvasTex) return bombBubbleCanvasTex;
+      const w = 256;
+      const h = 512;
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+
+      const base = ctx.createLinearGradient(0, 0, 0, h);
+      base.addColorStop(0, "#f0f9ff");
+      base.addColorStop(0.3, "#dbeafe");
+      base.addColorStop(0.58, "#bfdbfe");
+      base.addColorStop(1, "#93c5fd");
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, w, h);
+
+      const glossMain = ctx.createRadialGradient(
+        w * 0.26,
+        h * 0.17,
+        0,
+        w * 0.26,
+        h * 0.17,
+        h * 0.5
+      );
+      glossMain.addColorStop(0, "rgba(255,255,255,0.98)");
+      glossMain.addColorStop(0.15, "rgba(255,255,255,0.78)");
+      glossMain.addColorStop(0.38, "rgba(255,255,255,0.28)");
+      glossMain.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = glossMain;
+      ctx.fillRect(0, 0, w, h);
+
+      const streakA = ctx.createRadialGradient(
+        w * 0.62,
+        h * 0.3,
+        0,
+        w * 0.74,
+        h * 0.36,
+        h * 0.2
+      );
+      streakA.addColorStop(0, "rgba(255,255,255,0.62)");
+      streakA.addColorStop(0.55, "rgba(255,255,255,0.12)");
+      streakA.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = streakA;
+      ctx.fillRect(0, 0, w, h);
+
+      const streakB = ctx.createRadialGradient(
+        w * 0.42,
+        h * 0.46,
+        0,
+        w * 0.34,
+        h * 0.52,
+        h * 0.14
+      );
+      streakB.addColorStop(0, "rgba(255,255,255,0.42)");
+      streakB.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = streakB;
+      ctx.fillRect(0, 0, w, h);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      bombBubbleCanvasTex = tex;
+      return tex;
+    }
+
+    function getSharedBombBubbleMaterial() {
+      if (sharedBombBubbleMaterial) return sharedBombBubbleMaterial;
+      sharedBombBubbleMaterial = new THREE.MeshPhysicalMaterial({
+        map: getBombBubbleCanvasTexture(),
+        color: 0xffffff,
+        roughness: 0.055,
+        metalness: 0,
+        transmission: 0.9,
+        thickness: 0.26,
+        ior: 1.36,
+        transparent: true,
+        opacity: 1,
+        depthWrite: false,
+        side: THREE.FrontSide,
+        attenuationDistance: 9,
+        attenuationColor: new THREE.Color("#dbeafe"),
+        clearcoat: 0.52,
+        clearcoatRoughness: 0.07,
+        specularIntensity: 1.22,
+        specularColor: new THREE.Color("#ffffff"),
+        emissive: new THREE.Color("#e8f4ff"),
+        emissiveIntensity: 0.048,
+      });
+      return sharedBombBubbleMaterial;
+    }
+
+    /**
+     * World-space bomb bubble radius: same scale chain as the hero in makePlayerChar
+     * (ACTOR_SCALE_TO_GROUND_GRID × gu × playerBoardScale × actorVisual).
+     * Diameter follows the larger of XZ footprint vs height so the sphere reads at character size.
+     */
+    function bubbleBombBaseRadiusWorld() {
+      const st = gridWorldStrideXZ();
+      const guRaw = modelState.groundWorldUnitsPerGrid;
+      let gu =
+        guRaw != null && Number.isFinite(guRaw) && guRaw > 0
+          ? guRaw
+          : (st.x + st.z) * 0.5;
+      if (!Number.isFinite(gu) || gu <= 0) gu = 1;
+      const pbs = playerBoardScaleMultiplier();
+      const avm = actorVisualScaleMultiplier();
+      const footprint =
+        ACTOR_SCALE_TO_GROUND_GRID.playerXZ * gu * pbs * avm;
+      const bodyH =
+        ACTOR_SCALE_TO_GROUND_GRID.playerY * gu * pbs * avm;
+      const mul = Number.isFinite(CFG.bombBubbleRadiusMul) ? CFG.bombBubbleRadiusMul : 1;
+      return 0.5 * Math.max(footprint, bodyH) * mul;
+    }
+
+    function createBombMesh(x, z) {
+      const r = bubbleBombBaseRadiusWorld();
+      const geo = new THREE.SphereGeometry(r, 28, 28);
+      const mesh = new THREE.Mesh(geo, getSharedBombBubbleMaterial());
+      const w = gridCellCenterWorld(x, z);
+      const probe = worldXZToNearestCellCenterWorld(w.x, w.z);
+      mesh.position.set(
+        probe.x,
+        bubbleFxDeckSurfaceY(probe.x, probe.z) + r,
+        probe.z
+      );
+      mesh.castShadow = true;
+      mesh.renderOrder = 1;
+      fxRoot.add(mesh);
+      return mesh;
+    }
+
+    function tryPlaceBomb() {
+      if (gameOver || hitPending || !island) return;
+      if (performance.now() < roundInputLockUntil) return;
+      const bx = Math.floor(playerGrid.x),
+        bz = Math.floor(playerGrid.z);
+      if (!inPlayBounds(bx, bz)) return;
+      if (bombs.some((b) => b.x === bx && b.z === bz)) return;
+      if (bombs.length >= CFG.maxPlacedBombs) return;
+      const tw = gridCellCenterWorld(bx, bz);
+      playerVis.x = tw.x;
+      playerVis.z = tw.z;
+      const placeNow = performance.now();
+      scheduleBombTick(CFG.bombFuse * 1000);
+      bombs.push({
+        x: bx,
+        z: bz,
+        fuse: CFG.bombFuse,
+        /** Wall-clock deadline so bombs still detonate if rAF dt is 0 / irregular (fixes “never explodes”). */
+        explodeAt: placeNow + CFG.bombFuse * 1000,
+        mesh: createBombMesh(bx, bz),
+        pulse: 0,
+        punchT: CFG.bombPlacePunchDur,
+      });
+      playUiTick();
+      focusGameCanvas();
+    }
+
+    function spawnExplosionFx(cells) {
+      const group = new THREE.Group();
+      const matBase = {
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.78,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      };
+      const st = gridWorldStrideXZ();
+      const decal = Math.min(st.x, st.z) * 0.94;
+      for (let i = 0; i < cells.length; i++) {
+        const { x, z } = cells[i];
+        const cw = gridCellCenterWorld(x, z);
+        const probe = worldXZToNearestCellCenterWorld(cw.x, cw.z);
+        const gy = bubbleFxDeckSurfaceY(probe.x, probe.z) + 0.026;
+        const m = new THREE.Mesh(
+          new THREE.PlaneGeometry(decal, decal),
+          new THREE.MeshBasicMaterial(matBase)
+        );
+        m.rotation.x = -Math.PI / 2;
+        m.position.set(probe.x, gy, probe.z);
+        m.renderOrder = 1;
+        group.add(m);
+      }
+      fxRoot.add(group);
+      explosionsFx.push({ group, t: 0, life: 0.42 });
+    }
+
+    function removeBombAt(x, z) {
+      const i = bombs.findIndex((b) => b.x === x && b.z === z);
+      if (i < 0) return false;
+      const b = bombs[i];
+      bombs.splice(i, 1);
+      if (b.mesh) {
+        fxRoot.remove(b.mesh);
+        b.mesh.geometry.dispose();
+      }
+      return true;
+    }
+
+    function computeFlameCells(bx, bz) {
+      const cells = [];
+      const bricks = [];
+      const bombCoords = [];
+      const seen = new Set();
+      function pushCell(px, pz) {
+        const k = `${px},${pz}`;
+        if (seen.has(k)) return;
+        seen.add(k);
+        cells.push({ x: px, z: pz });
+      }
+      pushCell(bx, bz);
+      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+      for (let d = 0; d < dirs.length; d++) {
+        const dx = dirs[d][0], dz = dirs[d][1];
+        for (let i = 1; i <= CFG.blastRange; i++) {
+          const x = bx + dx * i, z = bz + dz * i;
+          if (!inPlayBounds(x, z)) break;
+          const cell = grid[x][z];
+          if (cell === CELL_SOLID) break;
+          pushCell(x, z);
+          const chained = bombs.some((b) => b.x === x && b.z === z);
+          if (chained) {
+            bombCoords.push({ x, z });
+            break;
+          }
+          if (cell === CELL_BRICK) {
+            bricks.push({ x, z });
+            break;
+          }
+        }
+      }
+      return { cells, bricks, bombCoords };
+    }
+
+    function schedulePlayerHit() {
+      if (hitPending || roundWinPending) return;
+      hitPending = true;
+      gameOver = true;
+      showFlowBanner(FLOW_UI.loseTitle, "lose", {
+        durationMs: 800,
+        inputLockMs: 0,
+      });
+      playBumpJuice();
+      setStatus();
+      setTimeout(() => {
+        hitPending = false;
+        gameOver = false;
+        bootstrapLevelAfterIsland();
+        rebuildChars();
+        updateHud();
+        setStatus();
+      }, 1200);
+    }
+
+    function processBombChain(seedX, seedZ) {
+      const queue = [[seedX, seedZ]];
+      while (queue.length) {
+        const pair = queue.shift();
+        const sx = pair[0], sz = pair[1];
+        if (!removeBombAt(sx, sz)) continue;
+        triggerExplosionJuice(sx, sz);
+        const { cells, bricks, bombCoords } = computeFlameCells(sx, sz);
+        spawnExplosionFx(cells);
+        for (let i = 0; i < bricks.length; i++) {
+          const br = bricks[i];
+          grid[br.x][br.z] = CELL_EMPTY;
+        }
+        if (bricks.length) rebuildBlockMeshes();
+        let killed = false;
+        for (let i = 0; i < cells.length; i++) {
+          const c = cells[i];
+          if (c.x === playerGrid.x && c.z === playerGrid.z) killed = true;
+        }
+        if (killed) schedulePlayerHit();
+        for (let i = 0; i < bombCoords.length; i++) {
+          queue.push([bombCoords[i].x, bombCoords[i].z]);
+        }
+      }
+    }
+
+    function updateBombs(dt) {
+      /* Must tick fuses even while win/lose banners show (gameOver). Otherwise bombs freeze until
+       * bootstrapLevelAfterIsland clears them — feels like “bubbles never explode”. New bombs still
+       * blocked in tryPlaceBomb via gameOver / hitPending / locks. */
+      if (!bombs.length) return;
+      const now = performance.now();
+      const dtSafe = Number.isFinite(dt) ? Math.max(0, dt) : 0;
+      for (let i = bombs.length - 1; i >= 0; i--) {
+        const b = bombs[i];
+        if (!Number.isFinite(b.explodeAt))
+          b.explodeAt = now + Math.max(0, Number(b.fuse) || CFG.bombFuse) * 1000;
+        b.fuse = Math.max(0, (b.explodeAt - now) / 1000);
+        const fuseRef = CFG.bombFuse > 1e-6 ? CFG.bombFuse : 1e-6;
+        const urg = 1 - THREE.MathUtils.clamp(b.fuse / fuseRef, 0, 1);
+        b.pulse += dtSafe * (8 + urg * 26);
+        const pulseAmp = 0.055 + urg * 0.11;
+        let sc = 1 + Math.sin(b.pulse) * pulseAmp;
+        const pt = b.punchT ?? 0;
+        if (pt > 0) {
+          b.punchT = Math.max(0, pt - dtSafe);
+          const phase = b.punchT / CFG.bombPlacePunchDur;
+          sc *= 1 + 0.12 * phase * phase;
+        }
+        if (b.mesh) b.mesh.scale.setScalar(sc);
+      }
+      const due = bombs.filter((b) => now + 0.0005 >= b.explodeAt);
+      if (!due.length) return;
+      const seeds = [];
+      for (let i = 0; i < due.length; i++) seeds.push([due[i].x, due[i].z]);
+      const uniq = [];
+      const seen = new Set();
+      for (let i = 0; i < seeds.length; i++) {
+        const k = `${seeds[i][0]},${seeds[i][1]}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        uniq.push(seeds[i]);
+      }
+      for (let i = 0; i < uniq.length; i++) {
+        processBombChain(uniq[i][0], uniq[i][1]);
+      }
+      if (!hitPending && !roundWinPending && !gameOver && countBricks() === 0) {
+        checkRoundClearWin();
+      }
+    }
+
+    function updateExplosions(dt) {
+      for (let i = explosionsFx.length - 1; i >= 0; i--) {
+        const e = explosionsFx[i];
+        e.t += dt;
+        const a = Math.max(0, 1 - e.t / e.life);
+        e.group.scale.setScalar(0.92 + 0.08 * (1 - a));
+        e.group.traverse((o) => {
+          if (o.isMesh && o.material && o.material.opacity !== undefined) o.material.opacity = 0.82 * a;
+        });
+        if (e.t >= e.life) {
+          fxRoot.remove(e.group);
+          e.group.traverse((o) => {
+            if (o.isMesh) {
+              o.geometry.dispose();
+              o.material.dispose();
+            }
+          });
+          explosionsFx.splice(i, 1);
+        }
+      }
+    }
+
+    function tryMove(dx, dz) {
+      const nx = playerGrid.x + dx,
+        nz = playerGrid.z + dz;
+      if (tileBlockedForWalk(nx, nz)) return false;
+      playUiTick();
+      playerGrid.x = nx;
+      playerGrid.z = nz;
+      playerTargetYaw = PLAYER_MODEL_YAW_OFFSET + Math.atan2(dx, dz);
+      moveCooldown = CFG.moveGap;
+      return true;
+    }
+
+    /**
+     * Camera-relative move intent → up to two orthogonal grid steps (stronger axis first).
+     * If the primary tile is blocked (e.g. mushroom) but the sideways tile is free, the second
+     * step still runs in the same tick — fixes “stuck after planting bubble” when W only walks into a wall.
+     */
+    function pickGridStepCandidatesFromCamera() {
+      let fx = controls.target.x - camera.position.x;
+      let fz = controls.target.z - camera.position.z;
+      let len = Math.hypot(fx, fz);
+      if (len < 1e-5) {
+        fx = -Math.cos(yaw);
+        fz = -Math.sin(yaw);
+        len = Math.hypot(fx, fz) || 1;
+      }
+      const fvx = fx / len;
+      const fvz = fz / len;
+      const rvx = fvz;
+      const rvz = -fvx;
+
+      let ix = 0;
+      let iz = 0;
+      if (
+        keysDown.has("ArrowUp") ||
+        keysDown.has("KeyW") ||
+        keysDown.has("Numpad8")
+      ) {
+        ix += fvx;
+        iz += fvz;
+      }
+      if (
+        keysDown.has("ArrowDown") ||
+        keysDown.has("KeyS") ||
+        keysDown.has("Numpad2")
+      ) {
+        ix -= fvx;
+        iz -= fvz;
+      }
+      if (
+        keysDown.has("ArrowLeft") ||
+        keysDown.has("KeyA") ||
+        keysDown.has("Numpad4")
+      ) {
+        ix -= rvx;
+        iz -= rvz;
+      }
+      if (
+        keysDown.has("ArrowRight") ||
+        keysDown.has("KeyD") ||
+        keysDown.has("Numpad6")
+      ) {
+        ix += rvx;
+        iz += rvz;
+      }
+
+      const th = 1e-4;
+      if (Math.abs(ix) < th && Math.abs(iz) < th) return [];
+
+      const sx = ix > th ? 1 : ix < -th ? -1 : 0;
+      const sz = iz > th ? 1 : iz < -th ? -1 : 0;
+      const steps = [];
+      if (Math.abs(ix) >= Math.abs(iz)) {
+        if (sx !== 0) steps.push({ dx: sx, dz: 0 });
+        if (sz !== 0) steps.push({ dx: 0, dz: sz });
+      } else {
+        if (sz !== 0) steps.push({ dx: 0, dz: sz });
+        if (sx !== 0) steps.push({ dx: sx, dz: 0 });
+      }
+      return steps;
+    }
+
+    function updateMovement(dt) {
+      const alpha = 1 - Math.exp(-15 * dt);
+      const txz = gridCellCenterWorld(playerGrid.x, playerGrid.z);
+      playerVis.x += (txz.x - playerVis.x) * alpha;
+      playerVis.z += (txz.z - playerVis.z) * alpha;
+
+      const yawDelta = shortestAngleDelta(playerFaceYaw, playerTargetYaw);
+      playerFaceYaw += yawDelta * Math.min(1, PLAYER_TURN_SPEED * dt);
+
+      moveCooldown -= dt;
+      if (gameOver || hitPending) return;
+
+      const tw = gridCellCenterWorld(playerGrid.x, playerGrid.z);
+      const snapEps = gridSnapEpsilon();
+      const aligned =
+        Math.abs(playerVis.x - tw.x) < snapEps &&
+        Math.abs(playerVis.z - tw.z) < snapEps;
+      if (!aligned || moveCooldown > 0) return;
+      if (performance.now() < roundInputLockUntil) return;
+
+      const steps = pickGridStepCandidatesFromCamera();
+      let moved = false;
+      for (let i = 0; i < steps.length; i++) {
+        const { dx, dz } = steps[i];
+        if (tryMove(dx, dz)) {
+          moved = true;
+          break;
+        }
+      }
+      if (!moved && steps.length > 0) {
+        playBumpJuice();
+        bumpSquashT = CFG.bumpSquashDur;
+        moveCooldown = 0.06;
+      }
+    }
+
+    function bootstrapLevelAfterIsland(opts = {}) {
+      /**
+       * Drop stale input locks (e.g. countdown timers cleared by win/lose banner without updating this).
+       * Countdown / banners then set a fresh lock from "now".
+       */
+      roundInputLockUntil = performance.now();
+      dismissFlowBannerImmediately();
+      moveCooldown = 0;
+      bumpSquashT = 0;
+      shakeAmp = 0;
+      const announceStart = opts.announceStart !== false;
+      /** Before game-ground is mounted, slab rays are permissive — skip seed so final pass matches preview. */
+      const skipMushroomSeed = opts.skipMushroomSeed === true;
+      generateGrid();
+      clearBombs();
+      clearExplosions();
+      const sp = findSpawn();
+      if (!skipMushroomSeed) seedMushroomRoadblocks(sp);
+      playerGrid.x = sp.x;
+      playerGrid.z = sp.z;
+      const spw = gridCellCenterWorld(sp.x, sp.z);
+      playerVis.x = spw.x;
+      playerVis.z = spw.z;
+      resetPlayerFacing();
+      rebuildBlockMeshes();
+      rebuildDebugGrid();
+      updateHud();
+      refreshLayoutHud(skipMushroomSeed);
+      announceRoundStartIfEnabled(announceStart);
+    }
+
+    function loadGlb(url, timeoutMs = 120000) {
+      const ms = timeoutMs;
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(
+          () =>
+            reject(
+              new Error("GLB load timed out (" + ms + "ms), using fallback: " + url)
+            ),
+          ms
+        );
+        const loader = new GLTFLoader();
+        loader.load(
+          url,
+          (gltf) => {
+            clearTimeout(timer);
+            resolve(gltf.scene);
+          },
+          undefined,
+          (err) => {
+            clearTimeout(timer);
+            reject(err);
+          }
+        );
+      });
+    }
+    function normalizeModel(root, target) {
+      const box = new THREE.Box3().setFromObject(root);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const safe = (v) => (v > 1e-6 ? v : 1);
+      const sx = target.x ? target.x / safe(size.x) : Infinity;
+      const sy = target.y ? target.y / safe(size.y) : Infinity;
+      const sz = target.z ? target.z / safe(size.z) : Infinity;
+      const scale = Math.min(sx, sy, sz);
+      root.scale.multiplyScalar(Number.isFinite(scale) ? scale : 1);
+      root.position.sub(center.multiplyScalar(Number.isFinite(scale) ? scale : 1));
+      const nextBox = new THREE.Box3().setFromObject(root);
+      root.position.y -= nextBox.min.y;
+      return root;
+    }
+
+    /** Simple mushroom silhouette when Mushroom.glb fails to load (never use orange crate). */
+    function createFallbackMushroomBrickTemplate() {
+      const root = new THREE.Group();
+      root.userData.isFallbackBrickProp = true;
+      const stem = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.13, 0.17, 0.34, 10),
+        new THREE.MeshStandardMaterial({ color: 0xf5f0e6, roughness: 0.8 })
+      );
+      stem.position.y = 0.17;
+      stem.castShadow = true;
+      stem.receiveShadow = true;
+      root.add(stem);
+      const cap = new THREE.Mesh(
+        new THREE.SphereGeometry(0.32, 14, 12, 0, Math.PI * 2, 0, Math.PI / 2),
+        new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.65 })
+      );
+      cap.position.y = 0.3;
+      cap.castShadow = true;
+      cap.receiveShadow = true;
+      root.add(cap);
+      return root;
+    }
+
+    /**
+     * Actor scale follows real tile size: procedural board stride 1; imported GLB boards use bbox / cell count.
+     */
+    function refreshGroundDerivedScale() {
+      if (!island) {
+        modelState.groundWorldUnitsPerGrid = null;
+        return;
+      }
+      if (island.userData.isFallbackBoard) {
+        if (useBackdropPlayfieldMapping()) {
+          const st = gridWorldStrideXZ();
+          modelState.groundWorldUnitsPerGrid = (st.x + st.z) * 0.5;
+          return;
+        }
+        modelState.groundWorldUnitsPerGrid = 1;
+        return;
+      }
+      const st = gridWorldStrideXZ();
+      modelState.groundWorldUnitsPerGrid = (st.x + st.z) * 0.5;
+    }
+
+    function prepareBrickPropTemplate(root) {
+      const gu = modelState.groundWorldUnitsPerGrid;
+      const groundSized = gu != null && Number.isFinite(gu) && gu > 0;
+      if (!root.userData.isFallbackBrickProp) {
+        if (groundSized) {
+          normalizeModel(root, {
+            x: ACTOR_SCALE_TO_GROUND_GRID.mushroomXZ * gu,
+            y: ACTOR_SCALE_TO_GROUND_GRID.mushroomY * gu,
+            z: ACTOR_SCALE_TO_GROUND_GRID.mushroomXZ * gu,
+          });
+        } else {
+          normalizeModel(root, { x: 0.78, y: 0.88, z: 0.78 });
+        }
+      } else if (groundSized) {
+        root.scale.setScalar(gu * ACTOR_SCALE_TO_GROUND_GRID.fallbackMushroom);
+      }
+      const mvm = mushroomActorVisualScaleMultiplier();
+      if (Number.isFinite(mvm) && mvm > 0) root.scale.multiplyScalar(mvm);
+      /* Match hero GLB chain: board nudge only for imported mushroom (fallback uses same rule as fallback player: no board mul). */
+      if (groundSized && !root.userData.isFallbackBrickProp) {
+        const pbs = playerBoardScaleMultiplier();
+        if (Number.isFinite(pbs) && pbs > 0) root.scale.multiplyScalar(pbs);
+      }
+      const avm = actorVisualScaleMultiplier();
+      if (Number.isFinite(avm) && avm > 0) root.scale.multiplyScalar(avm);
+      if (BRICK_FLIP_X_180) {
+        root.rotation.x = Math.PI;
+        root.updateMatrixWorld(true);
+        const bb = new THREE.Box3().setFromObject(root);
+        root.position.y -= bb.min.y;
+      }
+      return root;
+    }
+
+    function rebuildBrickPropTemplateFromSource() {
+      if (modelState.brickPropSource) {
+        const tpl = modelState.brickPropSource.clone(true);
+        prepareBrickPropTemplate(tpl);
+        tpl.traverse((n) => {
+          if (n.isMesh || n.isSkinnedMesh) {
+            n.castShadow = true;
+            n.receiveShadow = true;
+            n.renderOrder = 1;
+          }
+        });
+        modelState.brickPropTemplate = tpl;
+        return;
+      }
+      const fb = createFallbackMushroomBrickTemplate();
+      prepareBrickPropTemplate(fb);
+      fb.traverse((n) => {
+        if (n.isMesh) {
+          n.castShadow = true;
+          n.receiveShadow = true;
+        }
+      });
+      modelState.brickPropTemplate = fb;
+    }
+
+    function brickPropHasSkinnedMesh(root) {
+      let sk = false;
+      root.traverse((n) => {
+        if (n.isSkinnedMesh) sk = true;
+      });
+      return sk;
+    }
+
+    /**
+     * World Y for root so bbox bottom matches actorFeetSurfaceY (same math for Mushroom.glb + primary-character.glb).
+     * world XZ should already be set on root; updates matrices + precise bbox when skinned.
+     */
+    function computeRootYFeetOnActorSurface(root, islandRoot, wx, wz, extraSurfaceY, gu, clampPlayerFeet) {
+      root.updateMatrixWorld(true);
+      const skinned =
+        !!root.userData.playerSkinnedMesh || brickPropHasSkinnedMesh(root);
+      const pb = new THREE.Box3().setFromObject(root, skinned);
+      let feetBottom = pb.min.y;
+      if (clampPlayerFeet)
+        feetBottom = clampPlayerFeetMinY(pb.min.y, gu);
+      const surface =
+        actorFeetSurfaceY(islandRoot, wx, wz) +
+        (Number.isFinite(extraSurfaceY) ? extraSurfaceY : 0);
+      return surface - feetBottom;
+    }
+
+    /**
+     * Place roadblock mushroom feet on deck under world XZ (GLB boards: cell centers from island bbox).
+     * Optional jx,jz offset world meters so decor jitter still samples the correct surface height.
+     */
+    function alignObjectFeetToGround(root, islandRoot, gridIx, gridIz, jx, jz) {
+      const ox = Number(jx) || 0;
+      const oz = Number(jz) || 0;
+      const wxz = gridCellCenterWorld(gridIx, gridIz);
+      const wx = wxz.x + ox;
+      const wz = wxz.z + oz;
+      root.position.set(wx, 0, wz);
+      const gu = modelState.groundWorldUnitsPerGrid || 1;
+      root.position.y = computeRootYFeetOnActorSurface(
+        root,
+        islandRoot,
+        wx,
+        wz,
+        mushroomFeetLiftExtra(),
+        gu,
+        false
+      );
+    }
+
+    /** Random yaw / XZ nudge / scale (grid walk + bombs unchanged — one mesh per brick cell). */
+    function placeMushroomBrickProp(prop, islandRoot, gridIx, gridIz) {
+      const gu = modelState.groundWorldUnitsPerGrid || 1;
+      const half = CFG.mushroomDecorXZHalfCell;
+      const jx =
+        half > 0
+          ? (outlineBoxHash(gridIx, gridIz, 607) - 0.5) * 2 * half * gu
+          : 0;
+      const jz =
+        half > 0
+          ? (outlineBoxHash(gridIx, gridIz, 709) - 0.5) * 2 * half * gu
+          : 0;
+      alignObjectFeetToGround(prop, islandRoot, gridIx, gridIz, jx, jz);
+      prop.rotation.y = outlineBoxHash(gridIx, gridIz, 501) * Math.PI * 2;
+      const sp = CFG.mushroomDecorScaleSpread;
+      if (sp > 0) {
+        const mul =
+          1 + (outlineBoxHash(gridIx, gridIz, 811) - 0.5) * 2 * sp;
+        if (Number.isFinite(mul) && mul > 0.45) prop.scale.multiplyScalar(mul);
+      }
+    }
+
+    /** Placeholder scene when GLB files are missing (e.g. repo without Assets/). */
+    function createFallbackBoardTemplate() {
+      const root = new THREE.Group();
+      root.userData.isFallbackBoard = true;
+      const dark = new THREE.Color("#5fa855");
+      const light = new THREE.Color("#8fd494");
+      for (let ix = 0; ix < COLS; ix++) {
+        for (let iy = 0; iy < ROWS; iy++) {
+          const geo = new THREE.BoxGeometry(0.92, 0.07, 0.92);
+          const mat = new THREE.MeshStandardMaterial({
+            color: (ix + iy) % 2 === 0 ? light : dark,
+            roughness: 0.88,
+            metalness: 0.02,
+          });
+          const cell = new THREE.Mesh(geo, mat);
+          cell.userData.isPlayfieldTile = true;
+          cell.position.set(ix - centerX, 0.035, iy - centerY);
+          cell.castShadow = true;
+          cell.receiveShadow = true;
+          root.add(cell);
+        }
+      }
+      return root;
+    }
+
+    function createFallbackPlayerTemplate() {
+      const root = new THREE.Group();
+      root.userData.isFallbackPlayer = true;
+      const bodyMat = new THREE.MeshStandardMaterial({ color: "#e89ac7", roughness: 0.62 });
+      const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.52, 6, 16), bodyMat);
+      body.position.y = 0.52;
+      body.castShadow = true;
+      root.add(body);
+      const hat = new THREE.Mesh(
+        new THREE.ConeGeometry(0.28, 0.22, 12),
+        new THREE.MeshStandardMaterial({ color: "#d94666", roughness: 0.68 })
+      );
+      hat.position.y = 0.92;
+      hat.castShadow = true;
+      root.add(hat);
+      return root;
+    }
+
+    function sceneHasRenderableMesh(root) {
+      let ok = false;
+      root.traverse((o) => {
+        if (o.isMesh || o.isSkinnedMesh) ok = true;
+      });
+      return ok;
+    }
+
+    async function loadPlayerSceneFromAssets() {
+      let lastErr = null;
+      for (let i = 0; i < PLAYER_GL_TRY_URLS.length; i++) {
+        const url = PLAYER_GL_TRY_URLS[i];
+        try {
+          const scene = await loadGlb(url);
+          if (!sceneHasRenderableMesh(scene)) {
+            lastErr = new Error("GLB has no drawable meshes: " + url);
+            continue;
+          }
+          return { scene, sourceUrl: url };
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      if (lastErr)
+        console.warn("[BubbleBattle] player GLB:", lastErr?.message || lastErr);
+      return null;
+    }
+
+    async function loadBrickPropSceneFromAssets() {
+      let lastErr = null;
+      for (let i = 0; i < BRICK_GL_TRY_URLS.length; i++) {
+        const url = BRICK_GL_TRY_URLS[i];
+        try {
+          const scene = await loadGlb(url, 90000);
+          if (!sceneHasRenderableMesh(scene)) {
+            lastErr = new Error("Obstacle GLB has no drawable meshes: " + url);
+            continue;
+          }
+          return { scene, sourceUrl: url };
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      if (lastErr)
+        console.warn("[BubbleBattle] mushroom GLB:", lastErr?.message || lastErr);
+      return null;
+    }
+
+    async function loadGameGroundBackdropFromAssets() {
+      const urls = flattenGlbCandidates([GAME_GROUND_GLB]);
+      let lastErr = null;
+      for (let i = 0; i < urls.length; i++) {
+        const url = urls[i];
+        try {
+          const sceneRoot = await loadGlb(url, 90000);
+          if (!sceneHasRenderableMesh(sceneRoot)) {
+            lastErr = new Error("game-ground GLB has no drawable meshes: " + url);
+            continue;
+          }
+          return { scene: sceneRoot, sourceUrl: url };
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      if (lastErr)
+        console.warn("[BubbleBattle] game-ground GLB:", lastErr?.message || lastErr);
+      return null;
+    }
+
+    /** Names / paths often used for Mushroom.glb copies baked into game-ground.glb (Blender defaults vary). */
+    const BACKDROP_DECOR_MUSH_NAME =
+      /mushroom|mush|shroom|fungus|toadstool|kinoko|agaric|props?_?mush|props?_?fungi|msht|キノコ|きのこ/i;
+
+    function backdropDecorNameMatches(obj) {
+      const parts = [];
+      let p = obj;
+      while (p && p !== groundBackdropRoot) {
+        if (p.name) parts.push(String(p.name));
+        p = p.parent;
+      }
+      const chain = parts.join("/").toLowerCase();
+      return BACKDROP_DECOR_MUSH_NAME.test(chain);
+    }
+
+    /**
+     * Remove baked-in sky mushrooms from game-ground.glb (dispose + detach). Gameplay CELL_BRICK clones are untouched.
+     * ?backdropCull=0 skips. ?backdropCullStrict=0 skips the generic tiny-floater pass (non–mushroom-named).
+     */
+    function cullFloatingBackdropMushrooms() {
+      if (!BACKDROP_CULL_FLOATERS || !groundBackdropRoot || !island) return;
+      const cref = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
+      const refY = actorFeetSurfaceY(island, cref.x, cref.z);
+      groundBackdropRoot.updateMatrixWorld(true);
+
+      const removeMush = [];
+      const removeGeneric = [];
+
+      groundBackdropRoot.traverse((n) => {
+        if (!n.isMesh && !n.isSkinnedMesh) return;
+        if (n.userData && n.userData.keepBackdropVisible) return;
+        n.updateMatrixWorld(true);
+        const b = new THREE.Box3().setFromObject(n, n.isSkinnedMesh === true);
+        const dx = b.max.x - b.min.x;
+        const dy = b.max.y - b.min.y;
+        const dz = b.max.z - b.min.z;
+        const footprint = dx * dz;
+        const named = backdropDecorNameMatches(n);
+        const aboveSlab = b.min.y > refY + 0.22;
+        const mushroomSized =
+          dy < 8 &&
+          footprint < 220 &&
+          Math.max(dx, dz) < 18;
+
+        if (named && aboveSlab && mushroomSized) {
+          removeMush.push(n);
+          return;
+        }
+
+        const strict = _qs.get("backdropCullStrict") !== "0";
+        if (
+          strict &&
+          !named &&
+          dy < 2.85 &&
+          footprint < 72 &&
+          b.min.y > refY + 2.05 &&
+          Math.max(dx, dz) < 11
+        ) {
+          removeGeneric.push(n);
+        }
+      });
+
+      function runRemove(list) {
+        for (let i = 0; i < list.length; i++) {
+          const n = list[i];
+          if (!n.parent) continue;
+          disposeObject3D(n);
+          detachAndPruneEmptyAncestors(n, groundBackdropRoot);
+        }
+      }
+
+      runRemove(removeMush);
+      runRemove(removeGeneric);
+    }
+
+    /**
+     * Mount cloned game-ground.glb once. Walk height uses this mesh when present; checker tiles hide so visuals match.
+     */
+    function rebuildGroundBackdrop() {
+      if (groundBackdropRoot) {
+        scene.remove(groundBackdropRoot);
+        groundBackdropRoot = null;
+      }
+      const tpl = modelState.groundBackdropTemplate;
+      if (!tpl) {
+        refreshBackdropUnifiedPlaneY();
+        updatePlayfieldTileVisibility();
+        applyCameraPreset(cameraMode);
+        controls.update();
+        return;
+      }
+      const root = tpl.clone(true);
+      root.userData.isBackdropOnly = true;
+      normalizeModel(root, { x: COLS + 18, y: 8, z: ROWS + 18 });
+      root.position.set(centerX, -2.15, centerY);
+      root.traverse((n) => {
+        if (n.isMesh || n.isSkinnedMesh) {
+          n.castShadow = false;
+          n.receiveShadow = true;
+          n.renderOrder = -12;
+          const mats = Array.isArray(n.material) ? n.material : [n.material];
+          for (let mi = 0; mi < mats.length; mi++) {
+            const m = mats[mi];
+            if (!m) continue;
+            m.depthTest = true;
+            m.depthWrite = true;
+            m.polygonOffset = true;
+            m.polygonOffsetFactor = 3;
+            m.polygonOffsetUnits = 3;
+          }
+        }
+      });
+      groundBackdropRoot = root;
+      scene.add(groundBackdropRoot);
+      cullFloatingBackdropMushrooms();
+      refreshBackdropUnifiedPlaneY();
+      updatePlayfieldTileVisibility();
+      applyCameraPreset(cameraMode);
+      controls.update();
+    }
+
+    function updateGlbPills() {}
+
+    async function initModels() {
+      modelState.board = createFallbackBoardTemplate();
+      modelState.player = createFallbackPlayerTemplate();
+      modelState.brickPropSource = null;
+      rebuildIsland();
+      rebuildBrickPropTemplateFromSource();
+      bootstrapLevelAfterIsland({
+        announceStart: false,
+        skipMushroomSeed: true,
+      });
+      rebuildChars();
+      syncChars();
+      updateHud();
+      startAnimationLoop();
+
+      const [playerResult, brickResult, groundBackdropResult] = await Promise.allSettled([
+        loadPlayerSceneFromAssets(),
+        loadBrickPropSceneFromAssets(),
+        loadGameGroundBackdropFromAssets(),
+      ]);
+      modelState.playerSourceUrl = null;
+      if (playerResult.status === "fulfilled" && playerResult.value) {
+        modelState.player = playerResult.value.scene;
+        modelState.playerSourceUrl = playerResult.value.sourceUrl;
+      }
+
+      const brickPayload =
+        brickResult.status === "fulfilled" ? brickResult.value : null;
+      const brickScene = brickPayload?.scene ?? null;
+      modelState.brickPropSource = brickScene || null;
+      const usedGlbMushroomBrick = !!brickScene;
+
+      const playerFromGlb =
+        playerResult.status === "fulfilled" && !!playerResult.value;
+      updateGlbPills(usedGlbMushroomBrick, playerFromGlb);
+
+      if (
+        groundBackdropResult.status === "fulfilled" &&
+        groundBackdropResult.value
+      ) {
+        modelState.groundBackdropTemplate = groundBackdropResult.value.scene;
+      } else {
+        modelState.groundBackdropTemplate = null;
+        if (groundBackdropResult.status === "rejected") {
+          console.warn(
+            "[BubbleBattle] game-ground GLB promise rejected:",
+            groundBackdropResult.reason?.message || groundBackdropResult.reason
+          );
+        }
+      }
+
+      rebuildGroundBackdrop();
+      rebuildIsland();
+      rebuildBrickPropTemplateFromSource();
+
+      if (playerResult.status !== "fulfilled") {
+        console.warn(
+          "[BubbleBattle] Player GLB failed:",
+          playerResult.reason?.message || playerResult.reason
+        );
+      } else if (!playerResult.value) {
+        console.warn(
+          "[BubbleBattle] Player GLB missing — using placeholder (run npm run start; check Assets/3D Model/characters/primary-character.glb)."
+        );
+      }
+      if (!usedGlbMushroomBrick) {
+        console.warn(
+          "[BubbleBattle] Mushroom GLB missing — using placeholder (props/Mushroom.glb)."
+        );
+      }
+
+      try {
+        bootstrapLevelAfterIsland();
+        rebuildChars();
+        syncChars();
+        updateHud();
+      } catch (e) {
+        console.error(e);
+        bootErr.style.display = "block";
+        bootErr.textContent = "Failed to assemble scene: " + (e?.message || String(e));
+        return;
+      }
+    }
+
+    function rebuildIsland() {
+      if (island) scene.remove(island);
+      if (modelState.board) {
+        const board = modelState.board.clone(true);
+        const skipNormalize = !!board.userData.isFallbackBoard;
+        if (!skipNormalize) normalizeModel(board, { x: COLS + 5.5, y: 2.4, z: ROWS + 5.5 });
+        board.position.set(centerX, -0.5, centerY);
+        board.traverse((n) => {
+          if (n.isMesh) {
+            n.castShadow = true;
+            n.receiveShadow = true;
+            n.renderOrder = 1;
+          }
+        });
+        const box = new THREE.Box3().setFromObject(board);
+        boardBounds.minX = Math.ceil(box.min.x + 1.0);
+        boardBounds.maxX = Math.floor(box.max.x - 1.0);
+        boardBounds.minY = Math.ceil(box.min.z + 1.0);
+        boardBounds.maxY = Math.floor(box.max.z - 1.0);
+        boardBounds.minX = THREE.MathUtils.clamp(boardBounds.minX, 0, COLS - 1);
+        boardBounds.maxX = THREE.MathUtils.clamp(boardBounds.maxX, 0, COLS - 1);
+        boardBounds.minY = THREE.MathUtils.clamp(boardBounds.minY, 0, ROWS - 1);
+        boardBounds.maxY = THREE.MathUtils.clamp(boardBounds.maxY, 0, ROWS - 1);
+        if (boardBounds.minX > boardBounds.maxX) [boardBounds.minX, boardBounds.maxX] = [0, COLS - 1];
+        if (boardBounds.minY > boardBounds.maxY) [boardBounds.minY, boardBounds.maxY] = [0, ROWS - 1];
+        island = board;
+      } else return;
+      scene.add(island);
+      rebuildDebugGrid();
+      updatePlayfieldTileVisibility();
+      refreshGroundDerivedScale();
+      refreshBackdropUnifiedPlaneY();
+    }
+
+    function syncChars() {
+      if (!playerMesh || !island) return;
+      playerMesh.visible = true;
+      playerMesh.frustumCulled = false;
+      const bs = playerMesh.userData.baseScale ?? 1;
+      /* Bump squash must run before bbox — otherwise foot Y uses wrong scale. */
+      if (bumpSquashT > 0) {
+        const k = bumpSquashT / CFG.bumpSquashDur;
+        const w = 1 + 0.11 * Math.sin((1 - k) * Math.PI);
+        playerMesh.scale.set(bs * w, bs / w, bs * w);
+      } else {
+        playerMesh.scale.set(bs, bs, bs);
+      }
+      const gx = playerVis.x, gz = playerVis.z;
+      /* Same cell-centered deck sample as mushrooms so primary-character matches Mushroom.glb height on the slab. */
+      const probe = worldXZToNearestCellCenterWorld(gx, gz);
+      const bob = groundBackdropActive()
+        ? 0
+        : Math.sin(performance.now() * 0.00215) * 0.024;
+      playerMesh.position.set(gx, 0, gz);
+      playerMesh.rotation.y = playerFaceYaw;
+      playerMesh.updateMatrixWorld(true);
+      playerMesh.traverse((n) => {
+        if (n.isSkinnedMesh && n.skeleton) {
+          try {
+            n.skeleton.update();
+          } catch (_) {}
+        }
+      });
+      playerMesh.updateMatrixWorld(true);
+      const gu = modelState.groundWorldUnitsPerGrid || 1;
+      let py =
+        computeRootYFeetOnActorSurface(
+          playerMesh,
+          island,
+          probe.x,
+          probe.z,
+          playerFeetLiftExtra(),
+          gu,
+          true
+        ) + bob;
+      if (!Number.isFinite(py)) py = 0;
+      playerMesh.position.y = py;
+    }
+
+    function makePlayerChar() {
+      if (!modelState.player) return null;
+      const g = modelState.player.clone(true);
+      const gu = modelState.groundWorldUnitsPerGrid;
+      const groundSized = gu != null && Number.isFinite(gu) && gu > 0;
+      if (!g.userData.isFallbackPlayer) {
+        if (groundSized) {
+          normalizeModel(g, {
+            x: ACTOR_SCALE_TO_GROUND_GRID.playerXZ * gu,
+            y: ACTOR_SCALE_TO_GROUND_GRID.playerY * gu,
+            z: ACTOR_SCALE_TO_GROUND_GRID.playerXZ * gu,
+          });
+          g.scale.multiplyScalar(playerBoardScaleMultiplier());
+        } else {
+          normalizeModel(g, { x: 0.7, y: 1.0, z: 0.7 });
+        }
+      } else if (groundSized) {
+        const fs = gu * ACTOR_SCALE_TO_GROUND_GRID.fallbackPlayer;
+        g.scale.setScalar(fs);
+      } else {
+        g.scale.setScalar(1);
+      }
+      const avm = actorVisualScaleMultiplier();
+      if (Number.isFinite(avm) && avm > 0) g.scale.multiplyScalar(avm);
+      /* normalizeModel writes scale — keep it; syncChars uses baseScale for bump squash. */
+      g.userData.baseScale = g.scale.x;
+      g.rotation.y = playerFaceYaw;
+      g.frustumCulled = false;
+      let skinned = false;
+      g.traverse((n) => {
+        if (n.isSkinnedMesh) skinned = true;
+        if (n.isMesh || n.isSkinnedMesh) {
+          n.castShadow = true;
+          n.receiveShadow = true;
+          n.renderOrder = 2;
+          n.frustumCulled = false;
+        }
+      });
+      g.userData.playerSkinnedMesh = skinned;
+      return g;
+    }
+
+    function rebuildChars() {
+      if (playerMesh) scene.remove(playerMesh);
+      playerMesh = makePlayerChar();
+      if (playerMesh) scene.add(playerMesh);
+    }
+
+    let animationStarted = false;
+    function startAnimationLoop() {
+      if (animationStarted) return;
+      animationStarted = true;
+      lastTick = performance.now();
+      animate();
+    }
+
+    function animate() {
+      const now = performance.now();
+      const dt = Math.max(
+        0,
+        Math.min(0.05, (now - lastTick) / 1000)
+      );
+      lastTick = now;
+
+      updateMovement(dt);
+      updateBombs(dt);
+      updateExplosions(dt);
+
+      if (cameraMode === "portrait" && island) {
+        controls.target.set(playerVis.x, portraitCameraGroundTargetY(), playerVis.z);
+      }
+
+      bumpSquashT = Math.max(0, bumpSquashT - dt);
+      try {
+        syncChars();
+      } catch (err) {
+        console.error("[BubbleBattle] syncChars:", err);
+      }
+
+      controls.update();
+      shakeAmp *= Math.exp(-dt * CFG.shakeDecay);
+      _shakeOff.set(
+        (Math.random() - 0.5) * shakeAmp * 2.6,
+        (Math.random() - 0.5) * shakeAmp * 1.05,
+        (Math.random() - 0.5) * shakeAmp * 2.6
+      );
+      camera.position.add(_shakeOff);
+      renderer.render(scene, camera);
+      camera.position.sub(_shakeOff);
+      requestAnimationFrame(animate);
+    }
+
+    function onKeyDown(e) {
+      if (e.target && e.target.closest && e.target.closest("input, textarea, select, [contenteditable=true]"))
+        return;
+      /* Early: stop Space from scrolling the page or activating a focused control before we sync keys. */
+      if (e.code === "Space") e.preventDefault();
+      const k = e.key.toLowerCase();
+      if (k === "h" && helpPanel) {
+        setInstructionsVisible(helpPanel.hidden);
+        e.preventDefault();
+      }
+      if (k === "g" && !e.repeat && debugGridRoot) {
+        debugGridRoot.visible = !debugGridRoot.visible;
+      }
+      if (e.code === "KeyP" && !e.repeat) {
+        const next = cameraMode === "gameplay" ? "portrait" : "gameplay";
+        applyLightPreset(next);
+        applyCameraPreset(next);
+        setActiveCamUi(next);
+        playUiTick();
+        e.preventDefault();
+      }
+
+      syncKeysDownFromKeyboardEvent(e, true);
+      if (!e.repeat) {
+        const zoomInKey =
+          e.code === "NumpadAdd" ||
+          (e.code === "Equal" && e.shiftKey);
+        const zoomOutKey =
+          e.code === "NumpadSubtract" || e.code === "Minus";
+        if (zoomInKey) {
+          dollyCamera(0.92);
+          playUiTick();
+          e.preventDefault();
+        } else if (zoomOutKey) {
+          dollyCamera(1.09);
+          playUiTick();
+          e.preventDefault();
+        }
+      }
+
+      if (e.code === "Space" && !e.repeat) tryPlaceBomb();
+      if (
+        e.code === "ArrowUp" ||
+        e.code === "ArrowDown" ||
+        e.code === "ArrowLeft" ||
+        e.code === "ArrowRight" ||
+        e.code === "Numpad8" ||
+        e.code === "Numpad2" ||
+        e.code === "Numpad4" ||
+        e.code === "Numpad6" ||
+        e.code === "KeyW" ||
+        e.code === "KeyA" ||
+        e.code === "KeyS" ||
+        e.code === "KeyD" ||
+        e.key === "ArrowUp" ||
+        e.key === "ArrowDown" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight"
+      ) {
+        e.preventDefault();
+      }
+    }
+
+    function onKeyUp(e) {
+      syncKeysDownFromKeyboardEvent(e, false);
+    }
+
+    window.addEventListener("keydown", onKeyDown, true);
+    window.addEventListener("keyup", onKeyUp, true);
+    window.addEventListener("blur", () => keysDown.clear());
+
+    const btnGameplay = document.getElementById("camGameplay");
+    const btnPortrait = document.getElementById("camPortrait");
+    function setActiveCamUi(which) {
+      btnGameplay?.classList.toggle("active", which === "gameplay");
+      btnPortrait?.classList.toggle("active", which === "portrait");
+    }
+    btnGameplay?.addEventListener("click", () => {
+      applyLightPreset("gameplay");
+      applyCameraPreset("gameplay");
+      playUiTick();
+      setActiveCamUi("gameplay");
+    });
+    btnPortrait?.addEventListener("click", () => {
+      applyLightPreset("portrait");
+      applyCameraPreset("portrait");
+      playUiTick();
+      setActiveCamUi("portrait");
+    });
+
+    const btnZoomIn = document.getElementById("zoomIn");
+    const btnZoomOut = document.getElementById("zoomOut");
+    btnZoomIn?.addEventListener("click", () => {
+      dollyCamera(0.92);
+      playUiTick();
+    });
+    btnZoomOut?.addEventListener("click", () => {
+      dollyCamera(1.09);
+      playUiTick();
+    });
+
+    window.addEventListener("pointerdown", (ev) => {
+      if (stage.contains(ev.target)) focusGameCanvas();
+    });
+
+    applyLightPreset("gameplay");
+    applyCameraPreset("gameplay");
+
+    async function startGame() {
+      try {
+        const ctx = renderer.getContext();
+        if (!ctx)
+          throw new Error("WebGL unavailable (GPU disabled or blocked?)");
+
+        await initModels();
+
+        resize();
+        applyCameraPreset(cameraMode);
+        controls.update();
+
+        lastTick = performance.now();
+        requestAnimationFrame(() => {
+          resize();
+          controls.update();
+          focusGameCanvas();
+        });
+        startAnimationLoop();
+      } catch (err) {
+        bootErr.style.display = "block";
+        bootErr.style.background = "#fef2f2";
+        bootErr.style.color = "#991b1b";
+        bootErr.textContent =
+          "Startup failed: " +
+          (err?.message || String(err)) +
+          " · From the project folder run npm run start and open http://127.0.0.1:3000/ (use npm run start -- 8080 if the port is busy). Do not open index.html directly.";
+        console.error(err);
+        setStatus();
+        try {
+          if (!modelState.board) modelState.board = createFallbackBoardTemplate();
+          if (!modelState.player) modelState.player = createFallbackPlayerTemplate();
+          rebuildIsland();
+          bootstrapLevelAfterIsland();
+          rebuildChars();
+          syncChars();
+          applyLightPreset("gameplay");
+          applyCameraPreset("gameplay");
+          setStatus();
+          startAnimationLoop();
+          requestAnimationFrame(() => focusGameCanvas());
+        } catch (fallbackErr) {
+          console.error("fallback bootstrap failed", fallbackErr);
+        }
+      }
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

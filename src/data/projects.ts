@@ -6,7 +6,7 @@ import projectCoverAdobeFirewall from "@/assets/project-cover-adobe firewall rul
 import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
-import vibeCodingCover from "@/assets/projects/vibe-coding/vibe-coding-cover.png";
+import vibeCodingCover from "@/assets/projects/vibe-coding/bubble-battle-preview.png";
 
 // Purchase Order Group project images
 import purchaseOrder2 from "@/assets/projects/Inventory Ordering Platform/purchase-order-2.png";
@@ -82,7 +82,7 @@ export const projects: Project[] = [
     date: "2026",
     image: vibeCodingCover,
     description:
-      "SnapMind prototype in-page, motion GIF studies, and Bubble Battle UI exploration—experiments in one case study.",
+      "SnapMind prototype in-page, Bubble Battle linked demo, and motion GIF studies in one case study.",
     category: "design-engineering",
     detail: {
       title: "Vibe Coding",
@@ -92,7 +92,7 @@ export const projects: Project[] = [
       duration: "Ongoing",
       team: "Solo",
       overview:
-        "A custom experiments page: SnapMind as a same-origin HTML prototype in an iframe, motion studies as GIFs, and Bubble Battle as a static UI showcase—add links or embeds as more demos ship.",
+        "A custom experiments page: SnapMind as a same-origin HTML iframe, Bubble Battle with a demo link (local prototype or URL from VITE_BUBBLE_BATTLE_DEMO_URL), then motion GIF rows.",
       problem: {
         title: "About",
         description:
@@ -109,7 +109,7 @@ export const projects: Project[] = [
           { label: "Year", value: "2026" },
         ],
         description:
-          "SnapMind uses `/snapmind-demo/`. Optional `VITE_VIBE_CODING_DEMO_URL` is the default “Try it here” target for other rows when no URL is set.",
+          "SnapMind uses `/snapmind-demo/`. Bubble Battle ships under `/bubble-battle/` and plays at `/play/bubble-battle` (or set `VITE_BUBBLE_BATTLE_DEMO_URL`). Optional `VITE_VIBE_CODING_DEMO_URL` is the fallback “Try it here” target for rows without a URL.",
       },
       media: [],
     },

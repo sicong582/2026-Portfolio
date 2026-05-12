@@ -18,6 +18,12 @@ export type VibeCodingExperiment = {
 /** Same-origin interactive prototype shipped from `/public/snapmind-demo/` */
 export const snapMindDemoPath = "/snapmind-demo/index.html";
 
+/** Bubble Battle (Three.js) from `/public/bubble-battle/` — portfolio shell with back link at `/play/bubble-battle` */
+export const bubbleBattleDemoPath = "/play/bubble-battle";
+
+const bubbleBattleTryUrl =
+  (import.meta.env.VITE_BUBBLE_BATTLE_DEMO_URL as string | undefined)?.trim() || bubbleBattleDemoPath;
+
 export const vibeCodingExperiments: VibeCodingExperiment[] = [
   {
     id: "exp-01",
@@ -32,6 +38,16 @@ export const vibeCodingExperiments: VibeCodingExperiment[] = [
   },
   {
     id: "exp-02",
+    title: "Bubble Battle",
+    paragraphs: [
+      "Bubble Battle is a bite-sized arcade game about reflex and focus: bubbles drift upward from the bottom of the screen, and your job is to tap them before they slip away. Each successful pop adds to your score; misses add tension and keep rounds short enough for a one-minute break or a quick challenge with a friend.",
+      "I treated the project as both a game loop and a UI exercise—clear hierarchy, thumb-friendly hit targets, and immediate visual payoff on every interaction. The preview above sketches the shell direction; use Try it here to open the in-browser prototype and feel the timing and feedback for yourself.",
+    ],
+    preview: bubbleBattlePreview,
+    tryUrl: bubbleBattleTryUrl,
+  },
+  {
+    id: "exp-03",
     title: "Midnight Alley · Night Scene Animation",
     paragraphs: [
       "An atmospheric illustration of a moonlit cobblestone street—crooked timber facades, hanging lanterns, and a small figure in a cloak with a softly pulsing wand.",
@@ -41,23 +57,13 @@ export const vibeCodingExperiments: VibeCodingExperiment[] = [
     hideTryLink: true,
   },
   {
-    id: "exp-03",
+    id: "exp-04",
     title: "Miniature Creamery · Stop-Motion Brand Film",
     paragraphs: [
       "A tactile, tilt-shift miniature world: tiny construction crews on scaffolding around an oversized squeeze tube, set on fuzzy felt ground with pastel towers and giant ingredient props.",
       "Rhythmic stop-motion beats—workers paint, haul, and rebuild around the hero packshot. Preview-only animation until a hosted player or case study link ships.",
     ],
     preview: photoTapingCover3,
-    hideTryLink: true,
-  },
-  {
-    id: "exp-04",
-    title: "Bubble Battle",
-    paragraphs: [
-      "A playful, mobile-first concept for quick bubble duels—readable meters, chunky controls, and instant feedback so every round feels snappy.",
-      "High-fidelity UI pass on the home shell: hero meter, action strip, and soft 3D accents tuned for thumb reach and glanceable state. Ship a playable build or embed when the loop is ready.",
-    ],
-    preview: bubbleBattlePreview,
     hideTryLink: true,
   },
 ];

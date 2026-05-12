@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Work from "./pages/Work";
 import About from "./pages/About";
 import ProjectDetail from "./pages/ProjectDetail";
+import BubbleBattle from "./pages/BubbleBattle";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/work" element={<Work />} />
               <Route path="/about" element={<About />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
+              <Route path="/play/bubble-battle" element={<BubbleBattle />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

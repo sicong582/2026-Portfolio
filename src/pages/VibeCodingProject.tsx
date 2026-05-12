@@ -13,7 +13,7 @@ const DEFAULT_TRY_URL =
   "https://stackblitz.com/edit/vitejs-vite-react-ts?embed=1&file=src%2FApp.tsx&theme=light";
 
 const PAGE_INTRO =
-  "Vibe-coded experiments: SnapMind as an in-page HTML prototype; motion studies as GIFs; Bubble Battle as a UI showcase—link playable demos when they ship.";
+  "Vibe-coded experiments: SnapMind as an in-page HTML prototype; Bubble Battle with a linked playable demo; motion studies as GIFs below.";
 
 const VibeCodingProject = () => {
   const { language, t } = useLanguage();

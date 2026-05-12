@@ -7,7 +7,7 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!snapmind-demo)(?!assets/).*)",
+      "source": "/((?!snapmind-demo)(?!bubble-battle-demo)(?!bubble-battle)(?!assets/).*)",
       "destination": "/index.html"
     }
   ]

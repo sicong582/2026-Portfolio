@@ -5,6 +5,7 @@
   "type": "module",
   "packageManager": "bun@1.1.0",
   "scripts": {
+    "sync:bubble-battle": "node scripts/sync-bubble-battle.mjs",
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
