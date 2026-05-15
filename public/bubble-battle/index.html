@@ -529,7 +529,7 @@
        */
       mushroomLayout: "bnbHall",
       /** Max |XZ| mesh offset from cell center, as fraction of one grid stride (visual only; grid logic unchanged). */
-      mushroomDecorXZHalfCell: 0.2,
+      mushroomDecorXZHalfCell: 0.055,
       /** Per-mushroom uniform scale spread ± around 1 from cell hash (visual only). */
       mushroomDecorScaleSpread: 0.08,
       /** Only if mushroomRandomPlacement is false: half of core candidates (checker). */
@@ -644,6 +644,9 @@
 
     let playerMesh, island;
     /** Visual-only terrain below the playable island; never used for sampleGroundY raycasts. */
+    /** Logical grid keys intersecting stump / pillar decor baked into game-ground.glb — skip mushrooms here */
+    let backdropStumpBlockKeys = new Set();
+
     let groundBackdropRoot = null;
     /** When set, hero + roadblock mushrooms use this world Y for feet (game-ground + fallback board). */
     let backdropUnifiedPlaneY = null;
@@ -1111,6 +1114,7 @@
      */
     function mushroomDeckCellMatchesPlayPlane(x, z) {
       if (!island || !inPlayBounds(x, z)) return false;
+      if (backdropStumpBlockKeys.has(`${x},${z}`)) return false;
       const cw = gridCellCenterWorld(x, z);
       if (!cellXZOverGroundBackdropSlab(cw.x, cw.z)) return false;
       const cref = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
@@ -1118,6 +1122,149 @@
       const deck = feetAdjustedGroundY(island, cw.x, cw.z);
       const tol = mushroomSlabPlaneToleranceValue();
       return Math.abs(deck - planeRef) <= tol;
+    }
+
+    /**
+     * Terrain obstacles baked into game-ground (stumps, posts, rims). Name match + stump-like vertical heuristic.
+     * Skips meshes tagged as mushroom décor (`backdropDecorNameMatches`).
+     */
+    const BACKDROP_STUMP_DECOR_NAME =
+      /stump|trunk|\blog\b|木桩|树桩|树墩|fence|pole|石柱|围挡|pillar|post|stakes?|木桶|cylinder|\bcyl\b|rimb|障碍物|stalk/i;
+
+    function backdropStumpDecorNameMatches(obj) {
+      const parts = [];
+      let p = obj;
+      while (p && p !== groundBackdropRoot) {
+        if (p.name) parts.push(String(p.name));
+        p = p.parent;
+      }
+      const chain = parts.join("/").toLowerCase();
+      if (/checker|tile|floor|terrain|grass|棋盘|checkerboard|slab|deck|mesa|level|小岛|島/i.test(chain))
+        return false;
+      if (!BACKDROP_STUMP_DECOR_NAME.test(chain)) return false;
+      if (backdropDecorNameMatches(obj)) return false;
+      return true;
+    }
+
+    function worldXZToGridIxIz(wx, wz) {
+      if (
+        island &&
+        island.userData &&
+        island.userData.isFallbackBoard &&
+        !useBackdropPlayfieldMapping()
+      ) {
+        return [
+          THREE.MathUtils.clamp(
+            Math.round(wx),
+            boardBounds.minX,
+            boardBounds.maxX
+          ),
+          THREE.MathUtils.clamp(
+            Math.round(wz),
+            boardBounds.minY,
+            boardBounds.maxY
+          ),
+        ];
+      }
+      updatePlayfieldGridBox();
+      const box = _playfieldGridBox;
+      const minX = boardBounds.minX;
+      const maxX = boardBounds.maxX;
+      const minZ = boardBounds.minY;
+      const maxZ = boardBounds.maxY;
+      const cellsX = maxX - minX + 1;
+      const cellsZ = maxZ - minZ + 1;
+      const spanX = Math.max(box.max.x - box.min.x, 1e-6);
+      const spanZ = Math.max(box.max.z - box.min.z, 1e-6);
+      const cellW = spanX / cellsX;
+      const cellD = spanZ / cellsZ;
+      const ix = THREE.MathUtils.clamp(
+        minX + Math.floor((wx - box.min.x) / Math.max(cellW, 1e-9)),
+        minX,
+        maxX
+      );
+      const iz = THREE.MathUtils.clamp(
+        minZ + Math.floor((wz - box.min.z) / Math.max(cellD, 1e-9)),
+        minZ,
+        maxZ
+      );
+      return [ix, iz];
+    }
+
+    function addBackdropStumpBlockKeys(ix, iz) {
+      const orth = [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ];
+      for (let o = 0; o < orth.length; o++) {
+        const gx = ix + orth[o][0],
+          gz = iz + orth[o][1];
+        if (!inPlayBounds(gx, gz)) continue;
+        backdropStumpBlockKeys.add(`${gx},${gz}`);
+      }
+    }
+
+    /** Recompute cells under baked stump meshes so mushrooms are not seeded there (?stumpGuard=0 disables). */
+    function rebuildBackdropStumpBlockCells() {
+      backdropStumpBlockKeys.clear();
+      const raw = ((_qs.get("stumpGuard") || "1") + "").trim().toLowerCase();
+      if (
+        raw === "0" ||
+        raw === "false" ||
+        raw === "off" ||
+        raw === "no"
+      )
+        return;
+      if (
+        !groundBackdropRoot ||
+        !groundBackdropActive() ||
+        !island ||
+        island.userData.isFallbackBoard
+      )
+        return;
+
+      groundBackdropRoot.updateMatrixWorld(true);
+      const st = gridWorldStrideXZ();
+      const gu =
+        (Number(modelState.groundWorldUnitsPerGrid) ||
+          Math.min(st.x, st.z) ||
+          1);
+      const cref = gridCellCenterWorld(Math.floor(centerX), Math.floor(centerY));
+      const refDeck = feetAdjustedGroundY(island, cref.x, cref.z);
+
+      groundBackdropRoot.traverse((n) => {
+        if (!(n.isMesh || n.isSkinnedMesh)) return;
+        if (n.userData && n.userData.keepBackdropVisible) return;
+        n.updateMatrixWorld(true);
+        const b = new THREE.Box3().setFromObject(n, n.isSkinnedMesh === true);
+        const dx = b.max.x - b.min.x;
+        const dy = b.max.y - b.min.y;
+        const dz = b.max.z - b.min.z;
+        const footprint = Math.max(dx, dz);
+
+        let isStump = backdropStumpDecorNameMatches(n);
+        if (
+          !isStump &&
+          dy >= Math.max(gu * 0.42, 0.36) &&
+          footprint <= gu * 1.35 &&
+          footprint >= gu * 0.08 &&
+          b.min.y <= refDeck + gu * 0.62 &&
+          b.min.y >= refDeck - gu * 1.05 &&
+          !backdropDecorNameMatches(n)
+        ) {
+          /* Short vertical garnish on slab (generic stump/cylinder meshes without mushroom names). */
+          isStump = true;
+        }
+        if (!isStump) return;
+
+        const cx = (b.min.x + b.max.x) * 0.5;
+        const cz = (b.min.z + b.max.z) * 0.5;
+        const [ix, iz] = worldXZToGridIxIz(cx, cz);
+        addBackdropStumpBlockKeys(ix, iz);
+      });
     }
 
     function mushroomSpatialBiasCornerValue() {
@@ -4322,6 +4469,7 @@
       if (!tpl) {
         refreshBackdropUnifiedPlaneY();
         updatePlayfieldTileVisibility();
+        backdropStumpBlockKeys.clear();
         applyCameraPreset(cameraMode);
         controls.update();
         return;
@@ -4474,6 +4622,7 @@
       updatePlayfieldTileVisibility();
       refreshGroundDerivedScale();
       refreshBackdropUnifiedPlaneY();
+      rebuildBackdropStumpBlockCells();
     }
 
     function syncChars() {

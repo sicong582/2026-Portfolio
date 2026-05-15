@@ -12,9 +12,6 @@ import { getTranslatedProjectSummaries } from "@/utils/projectTranslations";
 const DEFAULT_TRY_URL =
   "https://stackblitz.com/edit/vitejs-vite-react-ts?embed=1&file=src%2FApp.tsx&theme=light";
 
-const PAGE_INTRO =
-  "Vibe-coded experiments: SnapMind as an in-page HTML prototype; Bubble Battle with a linked playable demo; motion studies as GIFs below.";
-
 const VibeCodingProject = () => {
   const { language, t } = useLanguage();
   const summary = getProjectSummary("vibe-coding");
@@ -61,9 +58,6 @@ const VibeCodingProject = () => {
               </span>
               <span>{summary.date}</span>
             </div>
-            <p className="max-w-2xl font-sans text-[15px] leading-relaxed text-muted-foreground md:text-base">
-              {PAGE_INTRO}
-            </p>
           </header>
 
           <div className="rounded-2xl border border-border/90 bg-card/45 shadow-sm ring-1 ring-foreground/[0.03]">
