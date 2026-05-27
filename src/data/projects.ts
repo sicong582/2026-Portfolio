@@ -73,6 +73,14 @@ export interface Project extends ProjectSummary {
   detail: ProjectDetail;
 }
 
+/** Remove ids from this list to show projects again (local toggle). */
+export const DISABLED_PROJECT_IDS = ["fulfillment-operation-tooling"] as const;
+
+export const isProjectDisabled = (id: string): boolean =>
+  (DISABLED_PROJECT_IDS as readonly string[]).includes(id);
+
+const visibleProjects = () => projects.filter((p) => !isProjectDisabled(p.id));
+
 // Full project data
 export const projects: Project[] = [
   {
@@ -396,6 +404,7 @@ export const projects: Project[] = [
 
 // Helper functions to get project data
 export const getProjectSummary = (id: string): ProjectSummary | undefined => {
+  if (isProjectDisabled(id)) return undefined;
   const project = projects.find((p) => p.id === id);
   return project ? { 
     id: project.id, 
@@ -409,12 +418,13 @@ export const getProjectSummary = (id: string): ProjectSummary | undefined => {
 };
 
 export const getProjectDetail = (id: string): ProjectDetail | undefined => {
+  if (isProjectDisabled(id)) return undefined;
   const project = projects.find((p) => p.id === id);
   return project?.detail;
 };
 
 export const getAllProjectSummaries = (): ProjectSummary[] => {
-  return projects.map((p) => ({
+  return visibleProjects().map((p) => ({
     id: p.id,
     title: p.title,
     type: p.type,
@@ -427,7 +437,7 @@ export const getAllProjectSummaries = (): ProjectSummary[] => {
 
 // Project categories for homepage
 export const getB2BProjects = (): ProjectSummary[] => {
-  return projects.filter((p) => p.category === "b2b").map((p) => ({
+  return visibleProjects().filter((p) => p.category === "b2b").map((p) => ({
     id: p.id,
     title: p.title,
     type: p.type,
@@ -439,7 +449,7 @@ export const getB2BProjects = (): ProjectSummary[] => {
 };
 
 export const getVisualBrandProjects = (): ProjectSummary[] => {
-  return projects.filter((p) => p.category === "visual-brand").map((p) => ({
+  return visibleProjects().filter((p) => p.category === "visual-brand").map((p) => ({
     id: p.id,
     title: p.title,
     type: p.type,
@@ -451,15 +461,17 @@ export const getVisualBrandProjects = (): ProjectSummary[] => {
 };
 
 export const getDesignEngineeringProjects = (): ProjectSummary[] => {
-  return projects.filter((p) => p.category === "design-engineering").map((p) => ({
-    id: p.id,
-    title: p.title,
-    type: p.type,
-    date: p.date,
-    image: p.image,
-    description: p.description,
-    category: p.category,
-  }));
+  return visibleProjects()
+    .filter((p) => p.category === "design-engineering")
+    .map((p) => ({
+      id: p.id,
+      title: p.title,
+      type: p.type,
+      date: p.date,
+      image: p.image,
+      description: p.description,
+      category: p.category,
+    }));
 };
 
 // Legacy function names for backward compatibility

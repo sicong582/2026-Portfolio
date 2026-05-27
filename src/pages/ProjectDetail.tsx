@@ -12,7 +12,12 @@ import PayPalProject from "./PayPalProject";
 import AdobeSecurityProject from "./AdobeSecurityProject";
 import FulfillmentOperationProject from "./FulfillmentOperationProject";
 import VibeCodingProject from "./VibeCodingProject";
-import { getProjectDetail, getAllProjectSummaries, type MediaItem } from "@/data/projects";
+import {
+  getProjectDetail,
+  getAllProjectSummaries,
+  isProjectDisabled,
+  type MediaItem,
+} from "@/data/projects";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedProjectDetail, getTranslatedProjectSummaries } from "@/utils/projectTranslations";
 import { PROTECTED_PROJECTS } from "@/components/PasswordProtection";
@@ -294,7 +299,24 @@ const ParallaxMedia = ({
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { language, t } = useLanguage();
-  
+
+  if (id && isProjectDisabled(id)) {
+    return (
+      <>
+        <Header />
+        <main className="pt-32 pb-32 md:pb-40">
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            <h1 className="font-serif text-4xl mb-4">{t("project.notFound")}</h1>
+            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+              ← {t("common.back")} {t("nav.home")}
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
   // Use custom visual showcase page for REWORLDING project
   if (id === "rewording-poster-design") {
     return <RewordingProject />;
