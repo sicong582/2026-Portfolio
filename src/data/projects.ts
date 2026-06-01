@@ -7,6 +7,7 @@ import projectCoverAudi from "@/assets/project-cover-audi.png";
 import projectCoverPaypal from "@/assets/project-cover-paypal.gif";
 import rewordingCover from "@/assets/project-cover-Futurist Conference Poster Design.png";
 import vibeCodingCover from "@/assets/projects/vibe-coding/bubble-battle-preview.png";
+import motionShowreelCover from "@/assets/projects/motion-c4d-showreel/cover.jpg";
 
 // Purchase Order Group project images
 import purchaseOrder2 from "@/assets/projects/Inventory Ordering Platform/purchase-order-2.png";
@@ -400,6 +401,47 @@ export const projects: Project[] = [
       ],
     },
   },
+  {
+    id: "motion-c4d-showreel",
+    title: "Motion Graphics & C4D Showreel",
+    type: "Motion Design, 3D",
+    date: "2025",
+    image: motionShowreelCover,
+    description:
+      "A curated reel of motion graphics and Cinema 4D work—typography, product moments, and atmospheric 3D scenes.",
+    category: "visual-brand",
+    detail: {
+      title: "Motion Graphics & C4D Showreel",
+      type: "Motion Design, 3D",
+      date: "2025",
+      role: "Motion Designer",
+      duration: "Ongoing",
+      team: "Solo",
+      overview:
+        "This showreel brings together selected motion graphics and Cinema 4D pieces—brand moments, kinetic type, and 3D-driven storytelling. Each clip focuses on rhythm, materiality, and clear visual hierarchy, whether the goal is a product hero, an event opener, or an atmospheric loop.",
+      problem: {
+        title: "Scope",
+        description:
+          "The reel is edited as a single narrative arc: fast openings to establish energy, mid-section studies that show craft in lighting and camera, and closing beats that land on brand or product clarity.",
+      },
+      process: {
+        title: "Pipeline",
+        description:
+          "Work moves between **After Effects** for compositing and type, and **Cinema 4D** for modeling, lighting, and render. Layout and timing are locked early; polish comes from material passes, grain, and sound-ready pacing.",
+      },
+      results: {
+        title: "Details",
+        metrics: [
+          { label: "Format", value: "1080p showreel" },
+          { label: "Tools", value: "After Effects, Cinema 4D" },
+          { label: "Year", value: "2025" },
+        ],
+        description:
+          "Use the player above for the full reel. Individual case studies can be split out later as standalone portfolio entries.",
+      },
+      media: [{ type: "video", src: "/videos/portfolio-animation-showreel.mp4" }],
+    },
+  },
 ];
 
 // Helper functions to get project data
@@ -433,6 +475,27 @@ export const getAllProjectSummaries = (): ProjectSummary[] => {
     description: p.description,
     category: p.category,
   }));
+};
+
+/** Homepage floating cards — ids listed first appear higher in the stack. */
+export const HOMEPAGE_PROJECT_ORDER = [
+  "vibe-coding",
+  "motion-c4d-showreel",
+  "purchase-order-group",
+  "security-tooling",
+  "paypal",
+  "audi",
+  "rewording-poster-design",
+] as const;
+
+export const getHomepageProjects = (): ProjectSummary[] => {
+  const all = getAllProjectSummaries();
+  const order = HOMEPAGE_PROJECT_ORDER as readonly string[];
+  const ordered = order
+    .map((id) => all.find((p) => p.id === id))
+    .filter((p): p is ProjectSummary => !!p);
+  const rest = all.filter((p) => !order.includes(p.id));
+  return [...ordered, ...rest];
 };
 
 // Project categories for homepage

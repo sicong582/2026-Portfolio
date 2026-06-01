@@ -44,7 +44,7 @@ const Index = () => {
       {/* Dynamic background */}
       <DynamicBackground />
       
-      <main id="main-content" className="min-h-screen relative pt-40 pb-64">
+      <main id="main-content" className="min-h-screen relative pt-40 pb-24 md:pb-32">
         <div className="w-full h-full px-4 md:px-8 lg:px-12 pl-20 md:pl-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left side - Hero text */}

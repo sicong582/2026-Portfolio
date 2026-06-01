@@ -1,4 +1,9 @@
-import { getProjectDetail, getAllProjectSummaries, type ProjectSummary } from "@/data/projects";
+import {
+  getProjectDetail,
+  getAllProjectSummaries,
+  getHomepageProjects,
+  type ProjectSummary,
+} from "@/data/projects";
 import { Language } from "@/contexts/LanguageContext";
 
 // Helper function to get translated project detail
@@ -93,6 +98,37 @@ export const getTranslatedProjectSummaries = (language: Language): ProjectSummar
   }
 
   // For Chinese, translate summaries
+  if (language === "zh") {
+    const translations: Record<string, { title: string; description: string }> = {
+      "security-tooling": {
+        title: "Adobe防火墙规则管理",
+        description: "将工程师构建的安全工具转变为清晰、值得信赖的体验",
+      },
+    };
+
+    return summaries.map((summary) => {
+      const translation = translations[summary.id];
+      if (translation) {
+        return {
+          ...summary,
+          title: translation.title,
+          description: translation.description,
+        };
+      }
+      return summary;
+    });
+  }
+
+  return summaries;
+};
+
+export const getTranslatedHomepageProjects = (language: Language): ProjectSummary[] => {
+  const summaries = getHomepageProjects();
+
+  if (language === "en") {
+    return summaries;
+  }
+
   if (language === "zh") {
     const translations: Record<string, { title: string; description: string }> = {
       "security-tooling": {

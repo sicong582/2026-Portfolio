@@ -18,6 +18,9 @@ export type VibeCodingExperiment = {
 /** Same-origin interactive prototype shipped from `/public/snapmind-demo/` */
 export const snapMindDemoPath = "/snapmind-demo/index.html";
 
+/** Bubble Battle hosted prototype */
+export const bubbleBattleExternalUrl = "https://bubble-battle-prototype.vercel.app/";
+
 /** Bubble Battle (Three.js) from `/public/bubble-battle/` — portfolio shell with back link at `/play/bubble-battle` */
 export const bubbleBattleDemoPath = "/play/bubble-battle";
 
@@ -25,7 +28,8 @@ export const bubbleBattleDemoPath = "/play/bubble-battle";
 export const flowerParticlesDemoPath = "/flower-particles/index.html";
 
 const bubbleBattleTryUrl =
-  (import.meta.env.VITE_BUBBLE_BATTLE_DEMO_URL as string | undefined)?.trim() || bubbleBattleDemoPath;
+  (import.meta.env.VITE_BUBBLE_BATTLE_DEMO_URL as string | undefined)?.trim() ||
+  bubbleBattleExternalUrl;
 
 export const vibeCodingExperiments: VibeCodingExperiment[] = [
   {
