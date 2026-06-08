@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import ProjectCard from "@/components/ProjectCard";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { cn } from "@/lib/utils";
 import { getTranslatedHomepageProjects } from "@/utils/projectTranslations";
 
 const fadeInUp = {
@@ -42,7 +41,7 @@ const ProjectsSection = () => {
         initial="hidden"
         animate="visible"
         variants={staggerContainer}
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-x-5 sm:gap-y-8"
+        className="flex flex-col gap-10 sm:gap-12"
       >
         {allProjects.map((project, index) => {
           const isEven = index % 2 === 0;
@@ -55,7 +54,7 @@ const ProjectsSection = () => {
                 delay: index * 0.06,
                 ease: [0.25, 0.46, 0.45, 0.94],
               }}
-              className={cn("w-full", !isEven && "sm:mt-8")}
+              className="w-full"
               style={{ rotate: isEven ? -1.25 : 1.25 }}
               whileHover={{
                 scale: 1.03,
@@ -63,7 +62,7 @@ const ProjectsSection = () => {
                 rotate: 0,
               }}
             >
-              <ProjectCard {...project} variant="small" aspectRatio="1/1" />
+              <ProjectCard {...project} variant="small" aspectRatio="4/3" />
             </motion.div>
           );
         })}
