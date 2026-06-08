@@ -21,6 +21,9 @@ export const snapMindDemoPath = "/snapmind-demo/index.html";
 /** Bubble Battle (Three.js) from `/public/bubble-battle/` — portfolio shell with back link at `/play/bubble-battle` */
 export const bubbleBattleDemoPath = "/play/bubble-battle";
 
+/** Flower particle study shipped from `/public/flower-particles/` */
+export const flowerParticlesDemoPath = "/flower-particles/index.html";
+
 const bubbleBattleTryUrl =
   (import.meta.env.VITE_BUBBLE_BATTLE_DEMO_URL as string | undefined)?.trim() || bubbleBattleDemoPath;
 
@@ -48,6 +51,17 @@ export const vibeCodingExperiments: VibeCodingExperiment[] = [
   },
   {
     id: "exp-03",
+    title: "Bloom in Motion · Particle Flower",
+    paragraphs: [
+      "A Three.js particle study built from a GLB flower model: the sculpture dissolves into a field of responsive points, then gathers back into botanical form.",
+      "I treated the interaction like a digital specimen under touch. Pointer proximity pushes particles outward, a hold control triggers a full scatter, and the visual system keeps the flower legible through restrained sampling, soft bloom, and petal-to-leaf color mapping.",
+    ],
+    preview: flowerParticlesDemoPath,
+    tryUrl: flowerParticlesDemoPath,
+    interactiveEmbed: true,
+  },
+  {
+    id: "exp-04",
     title: "Midnight Alley · Night Scene Animation",
     paragraphs: [
       "An atmospheric illustration of a moonlit cobblestone street—crooked timber facades, hanging lanterns, and a small figure in a cloak with a softly pulsing wand.",
@@ -57,7 +71,7 @@ export const vibeCodingExperiments: VibeCodingExperiment[] = [
     hideTryLink: true,
   },
   {
-    id: "exp-04",
+    id: "exp-05",
     title: "Miniature Creamery · Stop-Motion Brand Film",
     paragraphs: [
       "A tactile, tilt-shift miniature world: tiny construction crews on scaffolding around an oversized squeeze tube, set on fuzzy felt ground with pastel towers and giant ingredient props.",

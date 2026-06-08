@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom / Particle Study</title>
+    <style>
+        :root {
+            --paper: #e9eee9;
+            --muted: rgba(233, 238, 233, 0.54);
+            --line: rgba(233, 238, 233, 0.2);
+            --accent: #eeb778;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            color: var(--paper);
+            background:
+                radial-gradient(circle at 50% 46%, #17221d 0%, #080d0b 35%, #020403 76%);
+            font-family: "Avenir Next Condensed", "Arial Narrow", sans-serif;
+        }
+
+        body::before {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            content: "";
+            opacity: 0.34;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+            mix-blend-mode: soft-light;
+        }
+
+        canvas {
+            position: fixed;
+            inset: 0;
+            display: block;
+        }
+
+        .frame {
+            position: fixed;
+            inset: 18px;
+            z-index: 3;
+            pointer-events: none;
+            border: 1px solid rgba(233, 238, 233, 0.09);
+        }
+
+        .frame::before,
+        .frame::after {
+            position: absolute;
+            content: "";
+            width: 38px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .frame::before { top: -1px; left: 12%; }
+        .frame::after { right: 8%; bottom: -1px; }
+
+        #info {
+            position: fixed;
+            top: 42px;
+            left: 44px;
+            z-index: 4;
+            max-width: 340px;
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-size: 10px;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: Didot, "Bodoni 72", serif;
+            font-size: clamp(30px, 4.8vw, 66px);
+            font-weight: 400;
+            letter-spacing: -0.045em;
+            line-height: 0.88;
+        }
+
+        #status {
+            max-width: 280px;
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.55;
+            letter-spacing: 0.06em;
+        }
+
+        #status strong {
+            color: var(--paper);
+            font-weight: 500;
+        }
+
+        .index {
+            position: fixed;
+            right: 42px;
+            top: 42px;
+            z-index: 4;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+            letter-spacing: 0.2em;
+            text-align: right;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .controls {
+            position: fixed;
+            right: 42px;
+            bottom: 40px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        #burstButton {
+            width: 116px;
+            height: 38px;
+            color: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            outline: 0;
+            background: rgba(10, 17, 14, 0.48);
+            backdrop-filter: blur(10px);
+            font: inherit;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        #burstButton:hover,
+        #burstButton:focus-visible,
+        #burstButton.is-active {
+            border-color: rgba(238, 183, 120, 0.72);
+            background: rgba(61, 45, 30, 0.54);
+            transform: translateY(-2px);
+        }
+
+        #meter {
+            width: min(180px, 22vw);
+            height: 1px;
+            overflow: hidden;
+            background: var(--line);
+        }
+
+        #meter span {
+            display: block;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #7ca28a, var(--accent), #db7e86);
+            box-shadow: 0 0 12px var(--accent);
+        }
+
+        @media (max-width: 720px) {
+            .frame { inset: 10px; }
+            #info { top: 28px; left: 26px; }
+            .index { display: none; }
+            .controls { right: 24px; bottom: 26px; }
+            #meter { width: 90px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="frame"></div>
+
+    <header id="info">
+        <div class="eyebrow">Digital specimen · 001</div>
+        <h1>Bloom<br>in Motion</h1>
+        <div id="status"><strong>Loading flower model</strong><br>Particles are gathering into form.</div>
+    </header>
+
+    <div class="index">
+        Flower.glb<br>
+        Particle field<br>
+        Pointer reactive
+    </div>
+
+    <div class="controls">
+        <button id="burstButton" type="button">Hold to scatter</button>
+        <div id="meter" aria-hidden="true"><span></span></div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        let THREE;
+        let OrbitControls;
+        let GLTFLoader;
+        let EffectComposer;
+        let RenderPass;
+        let UnrealBloomPass;
+
+        let scene;
+        let camera;
+        let renderer;
+        let composer;
+        let controls;
+        let flowerPoints;
+        let raycaster;
+        let clock;
+        let holdToScatter = false;
+        let targetProgress = 0;
+        let currentProgress = 0;
+
+        let mouse;
+        let pointerLocal;
+        const statusEl = document.getElementById("status");
+        const meterEl = document.querySelector("#meter span");
+        const burstButton = document.getElementById("burstButton");
+
+        init();
+
+        async function init() {
+            if (location.protocol === "file:") {
+                statusEl.innerHTML = [
+                    "<strong>Open this project through a local server</strong>",
+                    "Double-clicking index.html cannot load Flower.glb in most browsers.",
+                    "Run: <code>cd /Users/sicongchen/visual-storytelling-studio/public/flower-particles && python3 -m http.server 8080</code>",
+                    "Then open: <code>http://localhost:8080</code>"
+                ].join("<br>");
+                return;
+            }
+
+            try {
+                await loadThreeModules();
+            } catch (error) {
+                console.error(error);
+                statusEl.innerHTML = [
+                    "<strong>Unable to load Three.js modules</strong>",
+                    "Check your internet connection, then open this page from the local server again.",
+                    "Run: <code>cd /Users/sicongchen/visual-storytelling-studio/public/flower-particles && python3 -m http.server 8080</code>"
+                ].join("<br>");
+                return;
+            }
+
+            mouse = new THREE.Vector2(10, 10);
+            pointerLocal = new THREE.Vector3();
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x020403);
+            scene.fog = new THREE.FogExp2(0x020403, 0.12);
+
+            camera = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.1, 100);
+            camera.position.set(0, 0.05, 3.75);
+
+            renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(innerWidth, innerHeight);
+            renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 0.68;
+            document.body.prepend(renderer.domElement);
+
+            composer = new EffectComposer(renderer);
+            composer.addPass(new RenderPass(scene, camera));
+            composer.addPass(new UnrealBloomPass(
+                new THREE.Vector2(innerWidth, innerHeight),
+                0.34,
+                0.68,
+                0.86
+            ));
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.enablePan = false;
+            controls.minDistance = 2.5;
+            controls.maxDistance = 6;
+
+            raycaster = new THREE.Raycaster();
+            raycaster.params.Points.threshold = 0.085;
+            clock = new THREE.Clock();
+
+            createAtmosphere();
+            bindEvents();
+
+            const loader = new GLTFLoader();
+            loader.load(
+                "Flower.glb",
+                (gltf) => {
+                    createFlowerParticles(gltf.scene);
+                    statusEl.innerHTML = "<strong>Move your pointer over the flower</strong><br>Push the particles apart, then move away to let them gather.";
+                },
+                (event) => {
+                    if (!event.total) return;
+                    const percent = Math.round(event.loaded / event.total * 100);
+                    statusEl.innerHTML = `<strong>Loading flower model · ${percent}%</strong><br>Particles are gathering into form.`;
+                },
+                (error) => {
+                    console.error(error);
+                    statusEl.innerHTML = "<strong>Unable to load Flower.glb</strong><br>Make sure the model and page are in the same folder.";
+                }
+            );
+
+            animate();
+        }
+
+        async function loadThreeModules() {
+            const threeModule = await import("three");
+            const controlsModule = await import("three/addons/controls/OrbitControls.js");
+            const gltfModule = await import("three/addons/loaders/GLTFLoader.js");
+            const composerModule = await import("three/addons/postprocessing/EffectComposer.js");
+            const renderPassModule = await import("three/addons/postprocessing/RenderPass.js");
+            const bloomModule = await import("three/addons/postprocessing/UnrealBloomPass.js");
+
+            THREE = threeModule;
+            OrbitControls = controlsModule.OrbitControls;
+            GLTFLoader = gltfModule.GLTFLoader;
+            EffectComposer = composerModule.EffectComposer;
+            RenderPass = renderPassModule.RenderPass;
+            UnrealBloomPass = bloomModule.UnrealBloomPass;
+        }
+
+        function createAtmosphere() {
+            const count = innerWidth < 720 ? 650 : 1200;
+            const positions = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+
+            for (let i = 0; i < count; i++) {
+                const radius = 4 + Math.random() * 13;
+                const theta = Math.random() * Math.PI * 2;
+                const y = THREE.MathUtils.randFloatSpread(9);
+                positions[i * 3] = Math.cos(theta) * radius;
+                positions[i * 3 + 1] = y;
+                positions[i * 3 + 2] = Math.sin(theta) * radius - 2;
+                sizes[i] = 0.45 + Math.random();
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+
+            const material = new THREE.ShaderMaterial({
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                vertexShader: `
+                    attribute float aSize;
+                    void main() {
+                        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                        gl_PointSize = aSize * (7.0 / -mvPosition.z);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+                fragmentShader: `
+                    void main() {
+                        float d = distance(gl_PointCoord, vec2(0.5));
+                        float alpha = smoothstep(0.5, 0.0, d) * 0.34;
+                        gl_FragColor = vec4(0.55, 0.74, 0.62, alpha);
+                    }
+                `
+            });
+
+            scene.add(new THREE.Points(geometry, material));
+        }
+
+        function createFlowerParticles(model) {
+            const sources = [];
+
+            model.updateMatrixWorld(true);
+            model.traverse((child) => {
+                if (!child.isMesh || !child.geometry.attributes.position) return;
+                sources.push({
+                    position: child.geometry.attributes.position,
+                    normal: child.geometry.attributes.normal,
+                    matrix: child.matrixWorld.clone(),
+                    normalMatrix: new THREE.Matrix3().getNormalMatrix(child.matrixWorld)
+                });
+            });
+
+            const totalVertices = sources.reduce((sum, source) => sum + source.position.count, 0);
+            const particleLimit = innerWidth < 720 ? 26000 : 46000;
+            const sampleRate = Math.max(1, Math.ceil(totalVertices / particleLimit));
+            const particleCount = Math.ceil(totalVertices / sampleRate);
+
+            const positions = new Float32Array(particleCount * 3);
+            const normals = new Float32Array(particleCount * 3);
+            const velocities = new Float32Array(particleCount * 3);
+            const randoms = new Float32Array(particleCount);
+            const delays = new Float32Array(particleCount);
+            const tones = new Float32Array(particleCount);
+            const sizes = new Float32Array(particleCount);
+
+            const point = new THREE.Vector3();
+            const normal = new THREE.Vector3();
+            const radial = new THREE.Vector3();
+            const velocity = new THREE.Vector3();
+            const randomVector = new THREE.Vector3();
+            const bounds = new THREE.Box3();
+            let cursor = 0;
+            let globalIndex = 0;
+
+            for (const source of sources) {
+                for (let i = 0; i < source.position.count; i++, globalIndex++) {
+                    if (globalIndex % sampleRate !== 0) continue;
+
+                    point.fromBufferAttribute(source.position, i).applyMatrix4(source.matrix);
+                    if (source.normal) {
+                        normal.fromBufferAttribute(source.normal, i).applyMatrix3(source.normalMatrix).normalize();
+                    } else {
+                        normal.set(0, 0, 1);
+                    }
+
+                    bounds.expandByPoint(point);
+                    positions.set([point.x, point.y, point.z], cursor * 3);
+                    normals.set([normal.x, normal.y, normal.z], cursor * 3);
+                    cursor++;
+                }
+            }
+
+            const center = bounds.getCenter(new THREE.Vector3());
+            const height = bounds.max.y - bounds.min.y || 1;
+            const halfHeight = height * 0.5;
+
+            for (let i = 0; i < cursor; i++) {
+                point.fromArray(positions, i * 3).sub(center);
+                normal.fromArray(normals, i * 3);
+
+                positions.set([point.x, point.y, point.z], i * 3);
+
+                randomVector.set(
+                    Math.random() - 0.5,
+                    Math.random() - 0.44,
+                    Math.random() - 0.5
+                ).normalize();
+                radial.copy(point).setZ(point.z * 2.5).normalize();
+                velocity.copy(radial).multiplyScalar(0.52)
+                    .addScaledVector(normal, 0.78)
+                    .addScaledVector(randomVector, 0.78)
+                    .normalize()
+                    .multiplyScalar(0.58 + Math.random() * 1.48);
+
+                velocities.set([velocity.x, velocity.y, velocity.z], i * 3);
+                randoms[i] = Math.random();
+                delays[i] = Math.random() * 0.26 + Math.max(0, -point.y / height) * 0.08;
+                tones[i] = THREE.MathUtils.clamp((point.y + halfHeight) / height, 0, 1);
+                sizes[i] = 0.42 + Math.random() * 0.58;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute("position", new THREE.BufferAttribute(positions.slice(0, cursor * 3), 3));
+            geometry.setAttribute("normal", new THREE.BufferAttribute(normals.slice(0, cursor * 3), 3));
+            geometry.setAttribute("aVelocity", new THREE.BufferAttribute(velocities.slice(0, cursor * 3), 3));
+            geometry.setAttribute("aRandom", new THREE.BufferAttribute(randoms.slice(0, cursor), 1));
+            geometry.setAttribute("aDelay", new THREE.BufferAttribute(delays.slice(0, cursor), 1));
+            geometry.setAttribute("aTone", new THREE.BufferAttribute(tones.slice(0, cursor), 1));
+            geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes.slice(0, cursor), 1));
+            geometry.computeBoundingSphere();
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uBurst: { value: 0 },
+                    uPointer: { value: pointerLocal },
+                    uPointerActive: { value: 0 },
+                    uPixelRatio: { value: Math.min(devicePixelRatio, 1.75) }
+                },
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                vertexShader: `
+                    uniform float uTime;
+                    uniform float uBurst;
+                    uniform float uPointerActive;
+                    uniform float uPixelRatio;
+                    uniform vec3 uPointer;
+
+                    attribute vec3 aVelocity;
+                    attribute float aRandom;
+                    attribute float aDelay;
+                    attribute float aTone;
+                    attribute float aSize;
+
+                    varying vec3 vColor;
+                    varying float vAlpha;
+
+                    float easeInOut(float x) {
+                        return x < 0.5
+                            ? 4.0 * x * x * x
+                            : 1.0 - pow(-2.0 * x + 2.0, 3.0) * 0.5;
+                    }
+
+                    void main() {
+                        float burst = easeInOut(clamp((uBurst - aDelay) / (1.0 - aDelay), 0.0, 1.0));
+                        float pointerDistance = distance(position.xy, uPointer.xy);
+                        float localPush = smoothstep(0.7, 0.02, pointerDistance) * uPointerActive;
+
+                        vec2 away = normalize(position.xy - uPointer.xy + vec2(0.0001));
+                        vec3 pointerForce = vec3(away * localPush, localPush * (aRandom - 0.45) * 0.7);
+                        float travel = burst * (0.24 + localPush * 0.92);
+                        float flutter = sin(uTime * (1.2 + aRandom * 1.6) + aRandom * 18.0);
+
+                        vec3 pos = position;
+                        pos += normal * flutter * (0.006 + burst * 0.018);
+                        pos += aVelocity * travel * (0.8 + burst * 1.1);
+                        pos += pointerForce * burst * 0.42;
+                        pos.y += burst * burst * (aRandom - 0.38) * 0.24;
+
+                        vec3 leaf = vec3(0.25, 0.50, 0.34);
+                        vec3 sage = vec3(0.62, 0.77, 0.59);
+                        vec3 petal = vec3(0.92, 0.57, 0.61);
+                        vec3 pollen = vec3(1.00, 0.76, 0.40);
+                        vec3 stemColor = mix(leaf, sage, smoothstep(0.0, 0.48, aTone));
+                        vec3 bloomColor = mix(petal, pollen, aRandom * 0.7 + burst * 0.3);
+                        vColor = mix(stemColor, bloomColor, smoothstep(0.38, 0.72, aTone));
+                        vColor = mix(vColor, pollen, localPush * burst * 0.32);
+                        vAlpha = 0.24 + aSize * 0.16 + burst * 0.1;
+
+                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                        float perspective = 7.0 / max(1.0, -mvPosition.z);
+                        gl_PointSize = aSize * perspective * uPixelRatio * (1.0 + localPush * burst * 0.55);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vColor;
+                    varying float vAlpha;
+
+                    void main() {
+                        float d = distance(gl_PointCoord, vec2(0.5));
+                        if (d > 0.5) discard;
+                        float soft = smoothstep(0.5, 0.08, d);
+                        float core = smoothstep(0.17, 0.0, d);
+                        gl_FragColor = vec4(vColor * (0.58 + core * 0.42), soft * vAlpha);
+                    }
+                `
+            });
+
+            flowerPoints = new THREE.Points(geometry, material);
+            flowerPoints.scale.setScalar(1.08);
+            flowerPoints.rotation.x = -0.03;
+            scene.add(flowerPoints);
+        }
+
+        function bindEvents() {
+            window.addEventListener("pointermove", (event) => {
+                mouse.x = event.clientX / innerWidth * 2 - 1;
+                mouse.y = -(event.clientY / innerHeight) * 2 + 1;
+            });
+
+            document.documentElement.addEventListener("pointerleave", () => {
+                mouse.set(10, 10);
+            });
+
+            burstButton.addEventListener("pointerdown", (event) => {
+                event.preventDefault();
+                holdToScatter = true;
+                burstButton.classList.add("is-active");
+                burstButton.setPointerCapture(event.pointerId);
+            });
+
+            const releaseBurst = () => {
+                holdToScatter = false;
+                burstButton.classList.remove("is-active");
+            };
+
+            burstButton.addEventListener("pointerup", releaseBurst);
+            burstButton.addEventListener("pointercancel", releaseBurst);
+            window.addEventListener("resize", onResize);
+        }
+
+        function onResize() {
+            camera.aspect = innerWidth / innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(innerWidth, innerHeight);
+            renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+            composer.setSize(innerWidth, innerHeight);
+
+            if (flowerPoints) {
+                flowerPoints.material.uniforms.uPixelRatio.value = Math.min(devicePixelRatio, 1.75);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const delta = Math.min(clock.getDelta(), 0.05);
+            const time = clock.elapsedTime;
+            let pointerActive = 0;
+
+            if (flowerPoints) {
+                raycaster.setFromCamera(mouse, camera);
+                const hit = raycaster.intersectObject(flowerPoints, false)[0];
+
+                if (hit) {
+                    pointerLocal.copy(hit.point);
+                    flowerPoints.worldToLocal(pointerLocal);
+                    pointerActive = 1;
+                }
+
+                targetProgress = holdToScatter || hit ? 1 : 0;
+                const response = targetProgress > currentProgress ? 4.4 : 2.8;
+                currentProgress += (targetProgress - currentProgress) * (1 - Math.exp(-response * delta));
+
+                flowerPoints.material.uniforms.uTime.value = time;
+                flowerPoints.material.uniforms.uBurst.value = currentProgress;
+                flowerPoints.material.uniforms.uPointerActive.value = pointerActive;
+                flowerPoints.rotation.y = Math.sin(time * 0.17) * 0.16;
+                flowerPoints.rotation.z = Math.sin(time * 0.11) * 0.025;
+
+                meterEl.style.width = `${(currentProgress * 100).toFixed(1)}%`;
+            }
+
+            controls.update();
+            composer.render();
+        }
+    </script>
+</body>
+</html>
