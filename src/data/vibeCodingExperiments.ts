@@ -7,6 +7,7 @@ export type VibeCodingExperiment = {
   title: string;
   paragraphs: [string, string];
   preview: string;
+  mediaType?: "image" | "video";
   /** Opens in a new tab; omit to use env default in the page */
   tryUrl?: string;
   /** Embed same-origin HTML prototype in-page (clickable inside the iframe) */
@@ -26,6 +27,9 @@ export const bubbleBattleDemoPath = "/play/bubble-battle";
 
 /** Flower particle study shipped from `/public/flower-particles/` */
 export const flowerParticlesDemoPath = "/flower-particles/index.html";
+
+/** Motion collection showreel shipped from `/public/videos/` */
+export const animationCollectionVideoPath = "/videos/portfolio-animation-showreel.mp4";
 
 const bubbleBattleTryUrl =
   (import.meta.env.VITE_BUBBLE_BATTLE_DEMO_URL as string | undefined)?.trim() ||
@@ -66,6 +70,17 @@ export const vibeCodingExperiments: VibeCodingExperiment[] = [
   },
   {
     id: "exp-04",
+    title: "Animation Collection · Motion & 3D Showreel",
+    paragraphs: [
+      "A collected reel of past animation work edited into one sequence: kinetic type, product moments, atmospheric 3D scenes, and Cinema 4D material studies.",
+      "I keep it inside Vibe Coding because this collection was assembled through Codex as part of the same experimental workflow: bringing older motion work together, shaping the edit, and publishing it as one living archive rather than a separate case study.",
+    ],
+    preview: animationCollectionVideoPath,
+    mediaType: "video",
+    hideTryLink: true,
+  },
+  {
+    id: "exp-05",
     title: "Midnight Alley · Night Scene Animation",
     paragraphs: [
       "An atmospheric illustration of a moonlit cobblestone street—crooked timber facades, hanging lanterns, and a small figure in a cloak with a softly pulsing wand.",
@@ -75,7 +90,7 @@ export const vibeCodingExperiments: VibeCodingExperiment[] = [
     hideTryLink: true,
   },
   {
-    id: "exp-05",
+    id: "exp-06",
     title: "Miniature Creamery · Stop-Motion Brand Film",
     paragraphs: [
       "A tactile, tilt-shift miniature world: tiny construction crews on scaffolding around an oversized squeeze tube, set on fuzzy felt ground with pastel towers and giant ingredient props.",

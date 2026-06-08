@@ -12,7 +12,6 @@ import PayPalProject from "./PayPalProject";
 import AdobeSecurityProject from "./AdobeSecurityProject";
 import FulfillmentOperationProject from "./FulfillmentOperationProject";
 import VibeCodingProject from "./VibeCodingProject";
-import MotionShowreelProject from "./MotionShowreelProject";
 import {
   getProjectDetail,
   getAllProjectSummaries,
@@ -342,10 +341,6 @@ const ProjectDetail = () => {
 
   if (id === "vibe-coding") {
     return <VibeCodingProject />;
-  }
-
-  if (id === "motion-c4d-showreel") {
-    return <MotionShowreelProject />;
   }
 
   const project = id ? getTranslatedProjectDetail(id, language) : null;

@@ -89,7 +89,18 @@ const VibeCodingProject = () => {
                     </div>
 
                     <div className="flex min-w-0 flex-col gap-4 lg:col-span-5">
-                      {exp.interactiveEmbed ? (
+                      {exp.mediaType === "video" ? (
+                        <div className="relative overflow-hidden rounded-xl border border-border bg-zinc-950 shadow-sm ring-1 ring-foreground/[0.04] transition-all duration-300 ease-in-out group-hover:border-border group-hover:shadow-md group-hover:ring-foreground/[0.06]">
+                          <video
+                            src={exp.preview}
+                            controls
+                            playsInline
+                            preload="metadata"
+                            className="block aspect-video w-full bg-zinc-950"
+                            aria-label={`${exp.title} video`}
+                          />
+                        </div>
+                      ) : exp.interactiveEmbed ? (
                         <div className="w-full rounded-xl border border-border bg-background shadow-sm ring-1 ring-foreground/[0.04] transition-all duration-300 ease-in-out group-hover:border-border group-hover:shadow-md group-hover:ring-foreground/[0.06]">
                           <iframe
                             title={`${exp.title} interactive prototype`}
