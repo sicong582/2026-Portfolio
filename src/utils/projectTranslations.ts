@@ -20,6 +20,20 @@ export const getTranslatedProjectDetail = (projectId: string, language: Language
   if (language === "zh") {
     // Import translations dynamically to avoid circular dependency
     const translations: Record<string, Record<string, string>> = {
+      "artarch-studio": {
+        title: "ArtArch Studio：生成卡片",
+        description: "竖排参考把提示词挤出视野。我把生成卡片改成一眼能看到素材、提示词和设置。",
+        overview:
+          "专业创作者是在导演制作，不是等一次惊喜。现有卡片把 Image1–3 竖着叠，写 Prompt 时参考和结果都不在视野里，模型设置还在远处的面板。我把参考改为横向，让提示词留在同一眼。",
+        "problem.title": "一次决策，三个位置",
+        "problem.description": "专业创作者要把一次生成，从过高的卡片、过小的预览和远处的设置面板里拼起来。",
+        "process.title": "实时生成节点",
+        "process.description": "产品已经超出新手的提示词到结果模型。参考、模型和消耗变多时，卡片仍要能扫读。",
+        "approach.title": "浏览时紧凑，编辑时详细",
+        "approach.description": "参考横向排列。核心控制靠近提示词。低频参数只在选中时出现。深色界面让生成内容保持焦点。",
+        "results.title": "改变了什么",
+        "results.description": "专业工作流不该被简化，而应该被给出更清晰的结构。可点击原型让团队在接入后端前就能测试这一点。",
+      },
       "security-tooling": {
         title: "Adobe防火墙规则管理",
         description: "将工程师构建的安全工具转变为清晰、值得信赖的体验",
@@ -42,48 +56,41 @@ export const getTranslatedProjectDetail = (projectId: string, language: Language
       return project; // Return original if no translation available
     }
 
-    // Create translated project
-    const translatedProject: any = {
+    return {
       ...project,
       title: projectTranslations.title || project.title,
-      description: projectTranslations.description || project.description,
-      detail: {
-        ...project.detail,
-        title: projectTranslations.title || project.detail.title,
-        overview: projectTranslations.overview || project.detail.overview,
-        problem: {
-          ...project.detail.problem,
-          title: projectTranslations["problem.title"] || project.detail.problem.title,
-          description: projectTranslations["problem.description"] || project.detail.problem.description,
-        },
-        process: {
-          ...project.detail.process,
-          title: projectTranslations["process.title"] || project.detail.process.title,
-          description: projectTranslations["process.description"] || project.detail.process.description,
-        },
-        approach: project.detail.approach ? {
-          ...project.detail.approach,
-          title: projectTranslations["approach.title"] || project.detail.approach.title,
-          description: projectTranslations["approach.description"] || project.detail.approach.description,
-        } : undefined,
-        results: {
-          ...project.detail.results,
-          title: projectTranslations["results.title"] || project.detail.results.title,
-          description: projectTranslations["results.description"] || project.detail.results.description,
-        },
+      overview: projectTranslations.overview || project.overview,
+      problem: {
+        ...project.problem,
+        title: projectTranslations["problem.title"] || project.problem.title,
+        description: projectTranslations["problem.description"] || project.problem.description,
       },
+      process: {
+        ...project.process,
+        title: projectTranslations["process.title"] || project.process.title,
+        description: projectTranslations["process.description"] || project.process.description,
+      },
+      approach: project.approach
+        ? {
+            ...project.approach,
+            title: projectTranslations["approach.title"] || project.approach.title,
+            description: projectTranslations["approach.description"] || project.approach.description,
+          }
+        : undefined,
+      results: {
+        ...project.results,
+        title: projectTranslations["results.title"] || project.results.title,
+        description: projectTranslations["results.description"] || project.results.description,
+      },
+      context:
+        project.context && projectTranslations["context.title"]
+          ? {
+              ...project.context,
+              title: projectTranslations["context.title"],
+              description: projectTranslations["context.description"] || project.context.description,
+            }
+          : project.context,
     };
-
-    // Handle context field if it exists
-    if ((project.detail as any).context && projectTranslations["context.title"]) {
-      translatedProject.detail.context = {
-        ...(project.detail as any).context,
-        title: projectTranslations["context.title"],
-        description: projectTranslations["context.description"],
-      };
-    }
-
-    return translatedProject;
   }
 
   return project;
@@ -100,6 +107,10 @@ export const getTranslatedProjectSummaries = (language: Language): ProjectSummar
   // For Chinese, translate summaries
   if (language === "zh") {
     const translations: Record<string, { title: string; description: string }> = {
+      "artarch-studio": {
+        title: "ArtArch Studio",
+        description: "竖排参考把提示词挤出视野。生成卡片改成一眼能看到素材、提示词和设置。",
+      },
       "security-tooling": {
         title: "Adobe防火墙规则管理",
         description: "将工程师构建的安全工具转变为清晰、值得信赖的体验",
@@ -131,6 +142,10 @@ export const getTranslatedHomepageProjects = (language: Language): ProjectSummar
 
   if (language === "zh") {
     const translations: Record<string, { title: string; description: string }> = {
+      "artarch-studio": {
+        title: "ArtArch Studio",
+        description: "竖排参考把提示词挤出视野。生成卡片改成一眼能看到素材、提示词和设置。",
+      },
       "security-tooling": {
         title: "Adobe防火墙规则管理",
         description: "将工程师构建的安全工具转变为清晰、值得信赖的体验",

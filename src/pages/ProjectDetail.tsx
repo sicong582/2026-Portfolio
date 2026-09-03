@@ -12,6 +12,7 @@ import PayPalProject from "./PayPalProject";
 import AdobeSecurityProject from "./AdobeSecurityProject";
 import FulfillmentOperationProject from "./FulfillmentOperationProject";
 import VibeCodingProject from "./VibeCodingProject";
+import ArtArchProject from "./ArtArchProject";
 import {
   getProjectDetail,
   getAllProjectSummaries,
@@ -28,6 +29,7 @@ import purchaseOrder5 from "@/assets/projects/Inventory Ordering Platform/purcha
 import purchaseOrder6 from "@/assets/projects/Inventory Ordering Platform/purchase-order-6.png";
 import purchaseOrder7 from "@/assets/projects/Inventory Ordering Platform/purchase-order-7.gif";
 import purchaseOrder8 from "@/assets/projects/Inventory Ordering Platform/purchase-order-8.gif";
+import artarchCanvas from "@/assets/projects/artarch-studio/canvas.png";
 
 // Helper function to parse markdown (bold **text**, h2/h3 headings, bullet lists, images)
 const parseMarkdown = (text: string, projectId?: string) => {
@@ -97,6 +99,10 @@ const parseMarkdown = (text: string, projectId?: string) => {
           const imageName = trimmed.substring(7, trimmed.length - 1);
           let imageSrc: string | null = null;
           
+          if (projectId === "artarch-studio" && imageName === "artarch-canvas") {
+            imageSrc = artarchCanvas;
+          }
+
           if (projectId === "purchase-order-group") {
             if (imageName === "purchase-order-2") {
               imageSrc = purchaseOrder2;
@@ -128,6 +134,19 @@ const parseMarkdown = (text: string, projectId?: string) => {
           return null;
         }
         
+        // Check if it's a blockquote
+        if (trimmed.startsWith('>')) {
+          const quoteText = trimmed
+            .split('\n')
+            .map((line) => line.replace(/^>\s?/, ""))
+            .join(" ");
+          return (
+            <blockquote key={pIndex} className="border-l-4 border-foreground/20 pl-6 my-6 italic text-muted-foreground">
+              {parseInlineMarkdown(quoteText)}
+            </blockquote>
+          );
+        }
+
         // Check if it's an h2 heading
         if (trimmed.startsWith('##') && !trimmed.startsWith('###')) {
           const headingText = trimmed.substring(2).trim();
@@ -181,10 +200,25 @@ const parseMarkdown = (text: string, projectId?: string) => {
 
 // Helper function to parse inline markdown (bold **text**)
 const parseInlineMarkdown = (text: string) => {
-  const parts = text.split(/(\*\*.*?\*\*)/g);
+  const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(.*?\))/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
+    if (linkMatch) {
+      const href = linkMatch[2];
+      const isInternal = href.startsWith("/");
+      return (
+        <a
+          key={index}
+          href={href}
+          className="text-foreground underline underline-offset-4 hover:opacity-70 transition-opacity"
+          {...(isInternal ? {} : { target: "_blank", rel: "noreferrer" })}
+        >
+          {linkMatch[1]}
+        </a>
+      );
     }
     return <span key={index}>{part}</span>;
   });
@@ -341,6 +375,10 @@ const ProjectDetail = () => {
 
   if (id === "vibe-coding") {
     return <VibeCodingProject />;
+  }
+
+  if (id === "artarch-studio") {
+    return <ArtArchProject />;
   }
 
   const project = id ? getTranslatedProjectDetail(id, language) : null;

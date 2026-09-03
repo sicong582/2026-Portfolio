@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111214" />
+    <title>Artarch Studio — AI Canvas</title>
+    <link rel="stylesheet" href="./styles.css?v=product-canvas-4" />
+  </head>
+  <body>
+    <div class="app-shell library-collapsed inspector-collapsed">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button menu-button" aria-label="Main menu"><span></span><span></span></button>
+          <a class="wordmark" href="#" aria-label="Artarch Studio home">
+            <span class="brand-symbol" aria-hidden="true"><i></i><i></i></span>
+            <span>ARTARCH</span>
+          </a>
+          <span class="topbar-divider"></span>
+          <div class="project-title">
+            <strong>Moonlight campaign</strong>
+            <span><i></i> Saved</span>
+          </div>
+        </div>
+
+        <div class="topbar-center">
+          <button class="history-button" id="undoButton" aria-label="Undo">↶</button>
+          <button class="history-button" id="redoButton" aria-label="Redo">↷</button>
+          <button class="zoom-top" id="zoomTop">82%</button>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="credit-pill"><span class="credit-gem">◆</span><strong id="workspaceCredits">1,248</strong></button>
+          <div class="avatar-stack" aria-label="Collaborators"><span>SC</span><span>JM</span></div>
+          <button class="secondary-button">Share</button>
+          <button class="primary-button" id="exportButton">Export</button>
+        </div>
+      </header>
+
+      <aside class="tool-rail" aria-label="Canvas tools">
+        <button class="rail-button active" data-tool="select" aria-label="Select"><span class="cursor-icon">↖</span><em>Select</em></button>
+        <button class="rail-button" data-tool="add" aria-label="Add node"><span class="plus-icon">＋</span><em>Add</em></button>
+        <span class="rail-separator"></span>
+        <button class="rail-button" data-tool="image" aria-label="Add image"><span class="image-icon"></span><em>Image</em></button>
+        <button class="rail-button" data-tool="video" aria-label="Add video"><span class="video-icon"></span><em>Video</em></button>
+        <button class="rail-button" data-tool="text" aria-label="Add note"><span class="text-icon">T</span><em>Text</em></button>
+        <button class="rail-button" data-tool="upload" aria-label="Upload"><span class="upload-icon">↑</span><em>Upload</em></button>
+        <div class="rail-spacer"></div>
+        <button class="rail-button" data-tool="help" aria-label="Help"><span>?</span><em>Help</em></button>
+      </aside>
+
+      <aside class="library-panel" id="libraryPanel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">Workspace</span>
+            <h1>Assets</h1>
+          </div>
+          <button class="panel-icon" id="collapseLibrary" aria-label="Collapse assets panel">‹</button>
+        </div>
+
+        <label class="search-field">
+          <span>⌕</span>
+          <input type="search" placeholder="Search assets" />
+          <kbd>⌘K</kbd>
+        </label>
+
+        <nav class="panel-tabs" aria-label="Asset views">
+          <button class="active" data-panel-tab="library">Library</button>
+          <button data-panel-tab="history">History</button>
+        </nav>
+
+        <div class="library-content" id="libraryContent">
+          <section class="asset-section">
+            <div class="section-title"><span>PROJECT FILES</span><button>＋</button></div>
+            <div class="asset-grid">
+              <button class="asset-card" draggable="true" data-asset="reference-1">
+                <img src="./assets/figma-reference-1.jpeg" alt="Black and white dog reference" />
+                <span>Hero reference</span>
+              </button>
+              <button class="asset-card" draggable="true" data-asset="reference-2">
+                <img src="./assets/figma-reference-2.jpeg" alt="Golden dog reference" />
+                <span>Light study</span>
+              </button>
+              <button class="asset-card wide" draggable="true" data-asset="preview">
+                <img src="./assets/figma-preview.jpeg" alt="Dog beside a laptop" />
+                <span>Campaign still 04</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="asset-section compact-section">
+            <div class="section-title"><span>GENERATORS</span><button>＋</button></div>
+            <button class="generator-list-item" data-add-generator="image">
+              <span class="list-icon image-icon"></span>
+              <span><strong>Image generator</strong><small>Create a new image node</small></span>
+              <b>＋</b>
+            </button>
+            <button class="generator-list-item" data-add-generator="video">
+              <span class="list-icon video-icon"></span>
+              <span><strong>Video generator</strong><small>Animate an image or prompt</small></span>
+              <b>＋</b>
+            </button>
+          </section>
+        </div>
+
+        <div class="history-content" id="historyContent" hidden>
+          <div class="history-item"><span class="history-dot complete"></span><div><strong>Video generated</strong><small>Gemini Omni Flash · just now</small></div></div>
+          <div class="history-item"><span class="history-dot complete"></span><div><strong>Image refined</strong><small>Flux Pro · 8 min ago</small></div></div>
+          <div class="history-item"><span class="history-dot"></span><div><strong>Project opened</strong><small>Today, 6:42 PM</small></div></div>
+        </div>
+      </aside>
+
+      <main class="workspace" id="workspace">
+        <div class="canvas-viewport" id="canvasViewport">
+          <div class="canvas-world" id="canvasWorld">
+            <svg class="connections" id="connections" aria-hidden="true">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z"></path></marker>
+              </defs>
+              <path class="connection-line" data-from="sourceNode" data-to="generatorNode"></path>
+              <path class="connection-line active-line" data-from="generatorNode" data-to="resultNode"></path>
+            </svg>
+
+            <section class="canvas-node source-node selected" id="sourceNode" data-node-title="Source image" style="left: 110px; top: 318px; width: 266px;">
+              <header class="node-header drag-handle">
+                <div><span class="node-kind image-icon"></span><strong>Source image</strong></div>
+                <button class="node-menu" aria-label="Node menu">•••</button>
+              </header>
+              <div class="source-image-wrap">
+                <img src="./assets/figma-reference-2.jpeg" alt="Golden dog source" />
+                <span class="source-badge">SOURCE 01</span>
+              </div>
+              <footer class="node-meta"><span>2048 × 2048</span><span>PNG</span></footer>
+              <i class="port output-port" aria-hidden="true"></i>
+            </section>
+
+            <section class="canvas-node note-node" id="noteNode" data-node-title="Creative direction" style="left: 126px; top: 120px; width: 250px;">
+              <header class="node-header drag-handle">
+                <div><span class="note-mark">T</span><strong>Creative direction</strong></div>
+                <button class="node-menu" aria-label="Node menu">•••</button>
+              </header>
+              <p contenteditable="true">Soft moonlight, believable fur detail, quiet camera movement. Keep the framing editorial, not commercial.</p>
+              <div class="note-author"><span>SC</span><small>Updated just now</small></div>
+            </section>
+
+            <section class="canvas-node generator-node" id="generatorNode" data-node-title="Image to video" style="left: 498px; top: 184px; width: 531px;">
+              <header class="node-header drag-handle generator-header">
+                <div><span class="node-kind video-icon"></span><strong id="generatorTitle">Image to video</strong><span class="live-badge">LIVE</span></div>
+                <button class="node-menu" aria-label="Node menu">•••</button>
+              </header>
+
+              <form class="prompt-card" id="promptCard">
+                <div class="prompt-light" aria-hidden="true"></div>
+
+                <div class="reference-row" id="referenceRow">
+                  <button class="reference-thumb" type="button" aria-label="Remove first reference">
+                    <img src="./assets/figma-reference-1.jpeg" alt="Black and white dog reference" />
+                    <img class="replace-icon" src="./assets/reference-replace.svg" alt="" />
+                  </button>
+                  <button class="reference-thumb" type="button" aria-label="Remove second reference">
+                    <img src="./assets/figma-reference-2.jpeg" alt="Golden dog reference" />
+                    <img class="replace-icon" src="./assets/reference-replace.svg" alt="" />
+                  </button>
+                  <button class="reference-add" id="referenceAdd" type="button" aria-label="Add reference">+</button>
+                </div>
+
+                <label class="prompt-field">
+                  <span class="sr-only">Prompt</span>
+                  <textarea id="promptInput" rows="4" spellcheck="true">A cinematic close-up of a small dog in soft moonlight. Natural fur detail, shallow depth of field, subtle camera push-in. Keep the scene calm and realistic.</textarea>
+                  <span class="prompt-sheen" aria-hidden="true"></span>
+                </label>
+
+                <footer class="prompt-footer">
+                  <div class="settings-row">
+                    <label class="select-control"><span class="sr-only">Model</span><select id="modelSelect"><option>Gemini Omni Flash</option><option>Runway Gen-4</option><option>Seedance 2.0</option><option>Kling 3.0</option></select></label>
+                    <label class="select-control compact"><span class="sr-only">Resolution</span><select id="resolutionSelect"><option>1080p</option><option>720p</option><option>4K</option></select></label>
+                    <label class="select-control compact"><span class="sr-only">Aspect ratio</span><select id="ratioSelect"><option>16:9</option><option>4:3</option><option>1:1</option><option>9:16</option></select></label>
+                  </div>
+                  <div class="run-area">
+                    <span class="credit-copy" id="creditCopy">24 Credits</span>
+                    <button class="run-button" id="runButton" type="submit" aria-label="Generate video">
+                      <img class="run-default" src="./assets/run-default.svg" alt="" />
+                      <img class="run-progress" src="./assets/run-spinner.svg" alt="" />
+                    </button>
+                  </div>
+                </footer>
+              </form>
+              <div class="node-status" id="nodeStatus"><span></span><b id="nodeStatusText">Ready to generate</b><kbd>⌘↵</kbd></div>
+              <i class="port input-port" aria-hidden="true"></i>
+              <i class="port output-port" aria-hidden="true"></i>
+            </section>
+
+            <section class="canvas-node result-node complete" id="resultNode" data-node-title="Generated video" style="left: 1155px; top: 280px; width: 390px;">
+              <header class="node-header drag-handle">
+                <div><span class="node-kind sparkle-icon">✦</span><strong id="resultTitle">Generated video</strong></div>
+                <div class="node-header-actions"><span class="version-pill">V1</span><button class="node-menu" aria-label="Node menu">•••</button></div>
+              </header>
+              <div class="result-media" id="resultCard">
+                <img class="result-image" src="./assets/figma-preview.jpeg" alt="Generated dog beside a laptop" />
+                <div class="result-overlay" id="resultOverlay">
+                  <div class="render-spinner"><span></span></div>
+                  <strong id="resultStatus">Generating video · 0%</strong>
+                  <small id="renderPhase">Preparing scene</small>
+                </div>
+                <button class="play-button" id="playButton" aria-label="Play generated video"><span class="play-icon"></span></button>
+                <div class="result-gradient"></div>
+                <div class="timecode"><span>00:00</span><i></i><span>00:05</span></div>
+              </div>
+              <footer class="result-actions">
+                <span id="resultMeta">Video · 1080p · 16:9</span>
+                <div><button aria-label="Download">↓</button><button aria-label="More options">•••</button></div>
+              </footer>
+              <i class="port input-port" aria-hidden="true"></i>
+            </section>
+          </div>
+        </div>
+
+        <div class="canvas-breadcrumb"><span>Moonlight campaign</span><b>/</b><strong>Concept board 01</strong></div>
+        <div class="canvas-toolbar">
+          <button id="fitButton" title="Fit canvas">⌗</button>
+          <span></span>
+          <button id="zoomOut" title="Zoom out">−</button>
+          <button class="zoom-value" id="zoomValue">82%</button>
+          <button id="zoomIn" title="Zoom in">＋</button>
+        </div>
+        <div class="minimap" aria-hidden="true"><div class="mini-node n1"></div><div class="mini-node n2"></div><div class="mini-node n3"></div><span></span></div>
+        <div class="shortcut-toast" id="shortcutToast">Hold <kbd>Space</kbd> to pan</div>
+      </main>
+
+      <aside class="inspector-panel" id="inspectorPanel">
+        <div class="inspector-heading"><div><span class="eyebrow">Selected</span><h2 id="inspectorTitle">Source image</h2></div><button class="panel-icon" id="collapseInspector" aria-label="Collapse inspector">›</button></div>
+        <div class="inspector-preview"><img id="inspectorPreview" src="./assets/figma-reference-2.jpeg" alt="Selected node preview" /><span>01</span></div>
+        <section class="inspector-section">
+          <div class="section-title"><span>TRANSFORM</span><button>⌄</button></div>
+          <div class="property-grid"><label>X <input id="propX" value="110" /></label><label>Y <input id="propY" value="318" /></label><label>W <input id="propW" value="266" /></label><label>H <input id="propH" value="318" /></label></div>
+        </section>
+        <section class="inspector-section">
+          <div class="section-title"><span>GENERATION</span><button>⌃</button></div>
+          <div class="property-row"><span>Model</span><strong id="propertyModel">Gemini Omni Flash</strong></div>
+          <div class="property-row"><span>Seed</span><strong>124 008</strong></div>
+          <div class="property-row"><span>Created</span><strong>Just now</strong></div>
+        </section>
+        <section class="inspector-section">
+          <div class="section-title"><span>APPEARANCE</span><button>⌃</button></div>
+          <label class="slider-row"><span>Opacity</span><input type="range" min="0" max="100" value="100" /><b>100%</b></label>
+          <label class="slider-row"><span>Corner</span><input type="range" min="0" max="32" value="12" /><b>12</b></label>
+        </section>
+        <button class="delete-node" id="deleteNode">Remove from canvas</button>
+      </aside>
+
+      <button class="floating-panel-toggle left-toggle" id="showLibrary" aria-label="Show assets">Assets</button>
+      <button class="floating-panel-toggle right-toggle" id="showInspector" aria-label="Show inspector">Inspector</button>
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+    <script src="./app.js?v=product-canvas-6"></script>
+  </body>
+</html>

@@ -84,7 +84,54 @@ const visibleProjects = () => projects.filter((p) => !isProjectDisabled(p.id));
 // Full project data
 export const projects: Project[] = [
   {
+    id: "artarch-studio",
+    title: "ArtArch Studio",
+    type: "AI Product Design",
+    date: "2026",
+    image: "/videos/artarch-prompt-card.mp4",
+    description:
+      "Vertical references hid the prompt. I redesigned the generation card so media, prompt, and settings stay in one glance.",
+    category: "design-engineering",
+    detail: {
+      title: "ArtArch Studio: Generation Card",
+      type: "Generation card",
+      date: "2026",
+      role: "Product Designer",
+      duration: "Product design engagement",
+      team: "30-person Series A startup",
+      overview:
+        "Professional creators were directing a production, not waiting on a surprise. The live card stacked Image1–3 until the prompt fell out of view, while model settings sat in a separate panel. I redesigned the generation card so references sit horizontally and the prompt stays in the same glance.",
+      problem: {
+        title: "One decision, three places",
+        description:
+          "Professionals were assembling a single generation across a tall card, tiny previews, and a distant settings panel.",
+      },
+      process: {
+        title: "Live generation node",
+        description:
+          "The product had outgrown a beginner prompt-to-output model. The card had to stay scannable as references, models, and cost piled up.",
+      },
+      approach: {
+        title: "Compact while scanning. Detailed while editing.",
+        description:
+          "Horizontal references. Core controls beside the prompt. Advanced settings only when selected. Dark chrome so generated media stays in focus.",
+      },
+      results: {
+        title: "What changed",
+        metrics: [
+          { label: "Role", value: "Product Designer" },
+          { label: "Year", value: "2026" },
+          { label: "Tools", value: "Figma, Codex, HTML/CSS" },
+        ],
+        description:
+          "Professional workflows should not be simplified. They need a clearer structure. The clickable prototype is how the team could test that.",
+      },
+      media: [],
+    },
+  },
+  {
     id: "vibe-coding",
+
     title: "Vibe Coding",
     type: "Interactive",
     date: "2026",
@@ -437,6 +484,7 @@ export const getAllProjectSummaries = (): ProjectSummary[] => {
 
 /** Homepage floating cards — ids listed first appear higher in the stack. */
 export const HOMEPAGE_PROJECT_ORDER = [
+  "artarch-studio",
   "vibe-coding",
   "purchase-order-group",
   "security-tooling",

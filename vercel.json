@@ -7,7 +7,7 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!snapmind-demo)(?!bubble-battle-demo)(?!bubble-battle)(?!assets/).*)",
+      "source": "/((?!snapmind-demo)(?!bubble-battle-demo)(?!bubble-battle)(?!artarch-studio)(?!assets/).*)",
       "destination": "/index.html"
     }
   ]

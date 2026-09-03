@@ -58,20 +58,40 @@ const ProjectCard = ({
             : "0 4px 12px rgba(0, 0, 0, 0.08)",
         }}
       >
-        <figure className={`card-content relative inline-block ${finalAspectRatio} w-full overflow-hidden bg-card`}>
-          <motion.img
-            src={image}
-            alt={title}
-            className="w-full h-full object-contain"
-            loading="lazy"
-            animate={{ 
-              scale: isHovered ? 1.08 : 1,
-            }}
-            transition={{ 
-              duration: 0.6, 
-              ease: [0.25, 0.46, 0.45, 0.94] // Smooth, elegant zoom
-            }}
-          />
+        <figure className={`card-content relative inline-block ${finalAspectRatio} w-full overflow-hidden bg-zinc-950`}>
+          {image.endsWith(".mp4") || image.endsWith(".webm") ? (
+            <motion.video
+              src={image}
+              className="h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={title}
+              animate={{
+                scale: isHovered ? 1.08 : 1,
+              }}
+              transition={{
+                duration: 0.6,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+            />
+          ) : (
+            <motion.img
+              src={image}
+              alt={title}
+              className="h-full w-full object-contain"
+              loading="lazy"
+              animate={{
+                scale: isHovered ? 1.08 : 1,
+              }}
+              transition={{
+                duration: 0.6,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+            />
+          )}
           {/* Subtle overlay on hover */}
           <motion.div
             className="absolute inset-0 bg-foreground/0"
